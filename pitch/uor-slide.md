@@ -72,11 +72,65 @@
 
 ---
 
+## SLIDE 3 (the two-standard-stack story — show this if recruiting collaborators is the goal)
+
+### Title
+**The two-standard stack for the agent economy**
+
+### Visual
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  VTEAI                          (settlement)             │
+│  Verified Task Escrow + Attestation Interface            │
+│  ERC draft, April 4 2026 — author: Maura Clark           │
+│  STATE: published draft, CC0, ports cleanly to XRPL      │
+└──────────────────────────────────────────────────────────┘
+                          ▲
+                          │ taskSpecHash, attestationHash
+                          │ are addressed via...
+                          ▼
+┌──────────────────────────────────────────────────────────┐
+│  UOR-ADDR-1                    (addressing)              │
+│  Universal Addressing for Agent Content                  │
+│  Community proposal, April 27 2026 — Maura Clark + co.   │
+│  STATE: v0.1 draft, Rust crates published, recruiting    │
+└──────────────────────────────────────────────────────────┘
+                          ▲
+                          │ built on...
+                          ▼
+┌──────────────────────────────────────────────────────────┐
+│  PRISM                         (primitive)               │
+│  UOR Foundation algebraic content-addressing             │
+│  STATE: MIT, Lean-formalized, vendored at vendor/prism.py│
+└──────────────────────────────────────────────────────────┘
+```
+
+### Punchline
+
+> *"AgentLevy isn't an isolated demo. It's the **first reference implementation of a two-standard stack** for the agent economy. VTEAI for settlement, UOR-ADDR-1 for addressing, both grounded in PRISM. Both standards are open and recruiting collaborators."*
+
+### Open call (the ask)
+
+> *"If you're building agent infrastructure on XRPL, Sui, Solana, Cosmos, or EVM — and you'd be a fool to keep reinventing content addressing — talk to me at Consensus. We need collaborators on:*
+>
+> - *Reference implementations* (Solidity, TypeScript joining the existing Rust)
+> - *Chain-specific bindings* (your chain, your turn)
+> - *Integrations with agent commerce frameworks* (Moca, Hedera AgentKit, Kite, Skyfire — if you're here, find me)
+>
+> *We have Rust crates live at crates.io/crates/uor-foundation. The v0.1 spec is open and the community is forming."*
+
+---
+
 ## Speaker notes
 
 ### What to say if you have only 30 seconds on UOR (Slide 1 only)
 
 > *"Underneath AgentLevy's settlement layer sits a content addressing primitive called PRISM, an implementation of the UOR Foundation's algebra. Every cert, every input, every output gets a unique triadic coordinate — datum, stratum, spectrum. Same content, same coordinate. Always. The reason this matters: the audit trail isn't just a log file. It's a coordinate space. Anyone, anywhere, computing on the same content arrives at the same address. That's what makes our certs verifiable from public keys alone."*
+
+### What to say if you're recruiting collaborators (Slide 3 only, ~45 seconds)
+
+> *"Two standards in play. VTEAI is the on-chain settlement interface — I authored the draft a month ago, AgentLevy on Flare was the first implementation, this one on XRPL is the second. UOR-ADDR-1 is the addressing layer — chain-agnostic canonical identity for agent-produced content, built on PRISM, proposed last week, Rust crates live on crates.io. The agent economy is converging on chain-specific identity silos right now. UOR-ADDR-1 stops that, the same way CAIP stopped chain-specific account silos. We need collaborators on Solidity and TypeScript reference implementations and on chain bindings. If you build on a chain that isn't XRPL or Rust, find me at Consensus — we'd rather have a working binding than a written spec."*
 
 ### What to say if you have 90 seconds (Slide 1 + 2)
 
@@ -119,4 +173,8 @@
 - UOR Foundation: https://uor.foundation
 - PRISM repo (MIT): https://github.com/UOR-Foundation/prism
 - UOR-Framework (Rust + Lean ontology, MIT): https://github.com/UOR-Foundation/UOR-Framework
+- UOR Foundation Rust crates: https://crates.io/crates/uor-foundation
+- VTEAI ERC draft (CC0): [`pitch/VTEAI-DRAFT.md`](VTEAI-DRAFT.md)
+- UOR-ADDR-1 community proposal: [`pitch/UOR-ADDR-PROPOSAL.md`](UOR-ADDR-PROPOSAL.md)
+- Moca airkit (intended agent-identity framework): https://docs.moca.network/airkit
 - AgentLevy uses: PRISM @ commit `6cafdac`, vendored at `vendor/prism.py`

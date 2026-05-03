@@ -6,13 +6,19 @@
 
 ## Map
 
-There are three layers to the agent-economy stack. Most projects live cleanly in one. Where AgentLevy is and isn't is the pitch:
+There are five layers to the agent-economy stack. Most projects live cleanly in one. Where AgentLevy is and isn't is the pitch:
 
 ```
             ┌─────────────────────────────────────────────────────────────┐
             │  SETTLEMENT  /  COORDINATION  (payment for verified work)   │
             │   ★ AgentLevy-XRPL-UOR    x402 (Coinbase)    AP2 (Google)   │
             │   Hedera AgentKit         Kite               Skyfire         │
+            │   Standard: ★ VTEAI (ERC draft, Maura Clark, Apr 2026)      │
+            └─────────────────────────────────────────────────────────────┘
+            ┌─────────────────────────────────────────────────────────────┐
+            │  ADDRESSING  /  IDENTITY  (canonical identity for content)  │
+            │   ★ PRISM (UOR Foundation, MIT)    CAIP    DID    IPFS CIDs │
+            │   Standard: ★ UOR-ADDR-1 (community proposal, Apr 27 2026)  │
             └─────────────────────────────────────────────────────────────┘
             ┌─────────────────────────────────────────────────────────────┐
             │  MEMORY / STORAGE  (what agents remember and share)         │
@@ -28,7 +34,7 @@ There are three layers to the agent-economy stack. Most projects live cleanly in
             └─────────────────────────────────────────────────────────────┘
 ```
 
-**AgentLevy is at the settlement layer.** We compose with the others rather than re-implement them.
+**AgentLevy is at the settlement layer, implementing two open standards (VTEAI + UOR-ADDR-1) on XRPL with PRISM as the addressing primitive.** We compose with everything else rather than re-implement.
 
 ## Per-project notes (Q&A prep)
 
@@ -57,6 +63,25 @@ There are three layers to the agent-economy stack. Most projects live cleanly in
 #### Skyfire
 - Recently-funded agent payment infrastructure (institutional positioning).
 - **Q&A line:** *"Skyfire is at the rails / billing layer. We're at the protocol layer — the cryptographic structure of what 'agent did work, here's the proof, release the funds' looks like."*
+
+### Addressing / Identity
+
+This is the layer for **canonical identity of content** — given a piece of agent-produced data, what's its globally-unique, chain-agnostic, cryptographically-derived address. Distinct from account/asset addressing (CAIP) and entity addressing (DID).
+
+#### UOR-ADDR-1 (community proposal, April 27 2026 — Maura Clark + co.)
+- **What it is:** v0.1 draft of a chain-agnostic standard for canonical content addressing built on PRISM. Defines URI scheme + wire format for portable triads, deterministic canonicalization rules, derivation cert format, minimal verification interface, chain-specific bindings (EVM, XRPL, Solana, Cosmos, Flare).
+- **What gap it fills:** CAIP addresses chain accounts; DID addresses entities; IPFS CIDs are single-axis hashes without algebraic structure; Hugging Face IDs are centrally-namespaced; x402 isn't an identity standard at all. **None of these address agent-produced content with chain-agnostic canonical identity** — that's what UOR-ADDR-1 is for.
+- **Status:** Rust crates published at https://crates.io/crates/uor-foundation. Spec at v0.1; goal v1.0 with reference implementations (Solidity, TypeScript) and chain bindings.
+- **Relation to AgentLevy:** AgentLevy is the first reference implementation. Every triad in `agentlevy/prism_layer/triad.py` IS a UOR-ADDR-1-shaped address. We're producing v0.1 addresses today; the Phase 2 design doc (`docs/PHASE_2_DESIGN.md`) bakes the vocabulary in.
+- **Q&A line:** *"UOR-ADDR-1 is to content what CAIP is to accounts and DID is to entities — chain-agnostic canonical identity, but for the data agents actually produce. AgentLevy is the first reference implementation. We're recruiting collaborators on Solidity and TypeScript impls and on chain bindings."*
+- **Full proposal text:** [`pitch/UOR-ADDR-PROPOSAL.md`](../pitch/UOR-ADDR-PROPOSAL.md)
+
+#### PRISM (UOR Foundation, MIT)
+- The algebraic primitive UOR-ADDR-1 builds on. Single-file Python module; produces triadic coordinates (datum/stratum/spectrum) for any value in a closed modular ring. See `vendor/prism.py` (commit `6cafdac`, byte-identical to upstream).
+- **Q&A line:** *"PRISM is the engine; UOR-ADDR-1 is the spec for how everyone uses the engine compatibly."*
+
+#### CAIP, DID, IPFS CIDs, Hugging Face IDs
+- **Each addressed in the table above** — relevant only as the gap UOR-ADDR-1 explicitly fills, not as competitors. **Q&A composite:** *"Each of these solves a piece. CAIP standardized account references across chains. DID standardized identity URIs. IPFS gave content-addressed hashes. None of them solve chain-agnostic canonical identity for agent-produced content with algebraic structure for similarity reasoning. UOR-ADDR-1 is precisely that gap."*
 
 ### Memory / Storage
 
@@ -105,10 +130,11 @@ We use **Anthropic Claude with tool use** — verified working in `scripts/test_
 |---|---|---|
 | Compute | Reason about messy inputs | Anthropic / OpenAI / open |
 | Memory | Remember across sessions | **MemWal** (verifiable) / Mem0 (centralized) |
-| **Settlement** | **Pay for verified work, with audit trail** | **★ AgentLevy-XRPL-UOR ★** |
+| **Settlement** | **Pay for verified work, with audit trail** | **★ AgentLevy-XRPL-UOR ★** (impl) + **★ VTEAI ★** (spec) |
+| **Addressing** | **Canonical identity for content** | **★ PRISM ★** (engine) + **★ UOR-ADDR-1 ★** (spec) |
 | Dispute | Resolve contested outputs | Kleros (decentralized arbitration) |
 
-**AgentLevy occupies the settlement layer. We compose upward with memory, downward with dispute, sideward with compute providers. The bet is that this layer is currently empty for KYC compliance and adjacent verifiable-work domains, and that XRPL Smart Escrow + PRISM content addressing is the right primitive to fill it.**
+**AgentLevy occupies the settlement layer AND co-authors the two open standards underneath it (VTEAI for settlement, UOR-ADDR-1 for addressing). We compose upward with memory, downward with dispute, sideward with compute providers. The bet is that the settlement+addressing layers are currently empty for agent commerce, that XRPL Smart Escrow + PRISM content addressing is the right primitive to fill them, and that the protocol layer should be open standards anyone can implement.**
 
 ## What we explicitly do NOT do (out of scope)
 

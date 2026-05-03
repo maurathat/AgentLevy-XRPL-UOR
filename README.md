@@ -14,7 +14,7 @@ A protocol-layer demo: two AI agents negotiate and execute a KYC compliance task
 - ✅ **Phase 0.4** — XRPL testnet wallets funded (10 XRP each), `scripts/test_xrpl.py` confirms `Wallet.from_seed` / `submit_and_wait` round-trip works on xrpl-py 4.5.0
 - ✅ **Phase 0.6** — Anthropic API connectivity + tool use confirmed via `scripts/test_llm.py` (model `claude-sonnet-4-5`, structured-output extraction works end-to-end)
 - ✅ **Phase 0.8** — XLS-100 `SmartEscrow` is **enabled on WASM Devnet** (rippled 3.2.0-b0), not on Testnet/Devnet (3.1.2). Phase 2.8 targets **Path A** (real WASM `FinishFunction`) on `wasm.devnet.rippletest.net`. See [docs/NETWORK_CHOICE.md](docs/NETWORK_CHOICE.md).
-- ⏳ **Phase 0.9** — review existing AgentLevy code (`~/AgentLevy/`, `~/AgentLevy-origin-main/`)
+- ✅ **Phase 0.9** — existing AgentLevy code reviewed; decision = fresh-repo-with-narrative-port (code rewrites from scratch; pitch material + VTEAI spec ported). See [MIGRATION_NOTES.md](MIGRATION_NOTES.md).
 
 None of the application components below are implemented yet — only the layout.
 

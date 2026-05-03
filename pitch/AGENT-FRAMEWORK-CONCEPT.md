@@ -207,7 +207,7 @@ The framework is much smaller in v0.2 than the v0.1 framing suggested — most o
 | **XRPL settlement binding** (UOR-ADDR-1 chain-binding pattern, XLS-100 SmartEscrow + WASM FinishFunction) | XRPL developers; AgentLevy seeds this for the demo |
 | **EVM settlement binding** (Treasury-style escrow, ERC-VTEAI compliant) | EVM/Solidity developers (the original AgentLevy on Flare seeds this design) |
 | **Discovery integration** (compose UNS `UnsAgentGateway` for capability lookup) | UNS contributors |
-| **Reputation thin-add** (aggregate UOR Certificate history; optional ATLAS embeddings) | Researchers interested in similarity reasoning over PRISM coordinates |
+| **Reputation thin-add** (aggregate UOR Certificate history; optional ATLAS embeddings) | Researchers interested in similarity reasoning over UOR coordinates |
 
 ## References
 

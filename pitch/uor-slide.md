@@ -22,13 +22,13 @@
   │   any content                        │
   │      ↓ canonicalize                  │
   │   bytes → SHA-256 → ring element     │
-  │      ↓ engine.triad()                │
+  │      ↓ compute triad                 │
   │   ╔══════════════════╗               │
-  │   ║   datum          ║   identity    │
-  │   ║   stratum        ║   magnitude   │
-  │   ║   spectrum       ║   structure   │
+  │   ║  The Value       ║   identity    │
+  │   ║  The Weight      ║   magnitude   │
+  │   ║  The Components  ║   structure   │
   │   ╚══════════════════╝               │
-  │      a unique coordinate             │
+  │      one UOR address                 │
   │      for every value, ever           │
   └──────────────────────────────────────┘
 ```
@@ -57,7 +57,7 @@
 
 | # | Unlock | What it means in practice |
 |---|---|---|
-| **1** | **Cross-domain compliance composition** | Bank pulls KYC from one agent, sanctions from another, beneficial-ownership from a third — all resolve to the *same* PRISM coordinates. Compose certs across domains without reconciling schemas. |
+| **1** | **Cross-domain compliance composition** | Bank pulls KYC from one agent, sanctions from another, beneficial-ownership from a third — all resolve to the *same* UOR coordinates. Compose certs across domains without reconciling schemas. |
 | **2** | **Model-agnostic interoperability** | Different LLMs (Anthropic, OpenAI, open models) reasoning about the same document produce comparable certs. *Algebraic distance* between coordinates, not vibes. |
 | **3** | **Long-lived audit trails** | A cert from 2026 is still verifiable in 2036. The algebra is invariant. Critical for regulatory tail (financial records, court evidence, medical disclosures). |
 | **4** | **Standards-grade portability** | UOR-Framework is formalized in Lean (theorem prover), published as JSON-LD, Turtle, OWL. Off-the-shelf semantic-web tooling can reason about UOR data. Not a proprietary format. |
@@ -126,7 +126,7 @@
 
 ### What to say if you have only 30 seconds on UOR (Slide 1 only)
 
-> *"Underneath AgentLevy's settlement layer sits a content addressing primitive called PRISM, an implementation of the UOR Foundation's algebra. Every cert, every input, every output gets a unique triadic coordinate — datum, stratum, spectrum. Same content, same coordinate. Always. The reason this matters: the audit trail isn't just a log file. It's a coordinate space. Anyone, anywhere, computing on the same content arrives at the same address. That's what makes our certs verifiable from public keys alone."*
+> *"Underneath AgentLevy's settlement layer sits a content addressing primitive: UOR — Universal Object Reference. PRISM is its reference implementation. Every cert, every input, every output gets a unique UOR address with three coordinates: Value, Weight, and Components. Same content, same address. Always. The audit trail isn't a log file — it's a coordinate space. Anyone, anywhere, computing on the same content arrives at the same address. That's what makes our certs verifiable from public keys alone."*
 
 ### What to say if you're recruiting collaborators (Slide 3 only, ~45 seconds)
 
@@ -152,7 +152,7 @@
 | *"Why not just use a hash?"* | "Hashes are 1-D — collision-resistant, but no structure. UOR coordinates are 3-D — algebraically meaningful. You can measure distance between two values, you can reason about transformations as algebraic operations, you can prove computational confinement. A hash gives you 'are these the same?' UOR gives you 'how related are these and is this transformation provably bounded?'" |
 | *"Why does the algebraic structure matter for KYC?"* | "For the demo it's about cryptographic chain integrity. For the longer roadmap it's about model-agnostic semantic comparison — when two different LLMs extract beneficial ownership, you can measure how close their answers are in coordinate space, instead of doing fuzzy string matching. That's the unlock for AI interoperability across vendors." |
 | *"What about quantum-resistance / future-proofing?"* | "UOR's algebra is bit-level over a finite ring; SHA-256 is the bridge but it's swappable. If SHA-256 is ever broken, the substrate moves to a quantum-resistant hash with no protocol change. The coordinates and the algebra survive." |
-| *"Sounds abstract — what's the concrete benefit today?"* | "Concretely today: our certs are deterministic, content-addressed, cross-system comparable, and small (4 bytes of datum + a few bytes of stratum/spectrum). A judge or regulator with our public keys can verify the entire chain in milliseconds, without any of our infrastructure. That's what 'universal coordinate system' delivers in practice." |
+| *"Sounds abstract — what's the concrete benefit today?"* | "Concretely today: our content addresses are deterministic, cross-system comparable, and verified byte-identical to UOR Foundation's canonical reference implementation. A judge or regulator with our public keys can verify the entire chain in milliseconds, without any of our infrastructure. That's what 'universal coordinate system' delivers in practice." |
 
 ### What NOT to say (anti-patterns the slide protects you from)
 
@@ -164,7 +164,7 @@
 ## Visual design notes for slide creator
 
 - **Color**: PRISM brand cover image at `~/prism/docs/cover.png` is a good visual reference for color palette (likely deep blues + spectral accents).
-- **Triadic visual**: the three-coordinate breakdown (datum/stratum/spectrum) is the strongest visual anchor. Could be three concentric rings, three axes of a 3D plot, or three intersecting circles. Avoid making it look like a Venn diagram (the three are *constraints*, not *overlapping sets*).
+- **Triadic visual**: the three-coordinate breakdown (Value/Weight/Components — public-facing names per `docs/TERMINOLOGY.md`) is the strongest visual anchor. Could be three concentric rings, three axes of a 3D plot, or three intersecting circles. Avoid making it look like a Venn diagram (the three are *constraints*, not *overlapping sets*). The technical names (datum/stratum/spectrum) belong only in code-adjacent docs, never on stage.
 - **Avoid**: walls of text, code blocks, or the 64-line `prism.py` snippet. The slide is about *what UOR is for the audience*, not *how it works under the hood*.
 - **Citations footer**: small text on the slide should credit "PRISM/UOR Foundation, MIT" with a URL — defends against "did you ask permission?" questions and signals open-source maturity.
 

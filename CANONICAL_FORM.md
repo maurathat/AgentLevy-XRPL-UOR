@@ -148,10 +148,36 @@ It always takes `bytes`, never raw objects. This enforces the discipline.
 
 Recommendation, to be implemented in `canonical.py`:
 
-- **Use [RFC 8785 (JSON Canonicalization Scheme / JCS)](https://datatracker.ietf.org/doc/html/rfc8785)** for any structured content (Pydantic models → `.model_dump()` → JCS bytes).
-- Why JCS: it's a published IETF standard, deterministic across implementations, and widely used in cryptographic-signing contexts (W3C VC, JWS, COSE adjacent ecosystems). Easier to defend in a design conversation than a custom canonicalizer.
-- For the hackathon, `json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")` is JCS-adjacent and almost identical for the schemas we'll use (no NaN, no Infinity, no integer/float ambiguity), but full JCS handles edge cases like number normalization that simple `sort_keys` does not.
+- **Use [RFC 8785 (JSON Canonicalization Scheme / JCS)](https://datatracker.ietf.org/doc/html/rfc8785) plus Unicode NFC normalization on every string field.** This matches UOR Passport's `jcs-rfc8785+nfc` algorithm byte-for-byte (verified live against `mcp.uor.foundation/encode_address` — see [`docs/UOR_PASSPORT_VERIFIED.md`](docs/UOR_PASSPORT_VERIFIED.md)).
+- **NFC normalization is required for non-ASCII content.** Without it, "café" with composed `é` (U+00E9) hashes differently than "café" with decomposed `e` + combining acute (U+0301), even though they render identically. Empirically verified: same input, NFC vs no-NFC produces different SHA-256 addresses for non-ASCII strings. For KYC compliance with international names ("Müller", "São Paulo"), this matters.
+- For the hackathon initial implementation, `unicodedata.normalize("NFC", s)` recursively on all string values + `json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")` is sufficient. Full RFC 8785 (which also handles number-formatting edge cases like `1.0` → `1`) can graduate to a library like [`jcs`](https://pypi.org/project/jcs/) if any test surfaces a divergence.
 - **Decide once** in `canonical.py`. Document the choice at the top of the module. Do not let it drift.
+
+Reference implementation sketch (full text in `docs/UOR_PASSPORT_VERIFIED.md`):
+
+```python
+import json
+import unicodedata
+
+
+def to_canonical_bytes(obj) -> bytes:
+    obj = _nfc_recursive(obj)  # NFC every string, recursively
+    return json.dumps(
+        obj, sort_keys=True, separators=(",", ":"),
+        ensure_ascii=False, allow_nan=False,
+    ).encode("utf-8")
+
+
+def _nfc_recursive(value):
+    if isinstance(value, str):
+        return unicodedata.normalize("NFC", value)
+    if isinstance(value, dict):
+        return {unicodedata.normalize("NFC", k): _nfc_recursive(v)
+                for k, v in value.items()}
+    if isinstance(value, list):
+        return [_nfc_recursive(x) for x in value]
+    return value
+```
 
 For raw bytes (file contents, opaque blobs), no canonicalization is needed — they go through `to_canonical_bytes()` as a passthrough.
 

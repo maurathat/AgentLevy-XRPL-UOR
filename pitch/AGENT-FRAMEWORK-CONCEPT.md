@@ -6,6 +6,29 @@
 
 A multi-language **agent framework SDK** parallel in shape to Moca's [AIR Kit](https://docs.moca.network/airkit) but oriented toward agent-to-agent commerce instead of user identity. It packages five service pillars on top of the UOR Foundation primitives (PRISM, UOR-ADDR-1, VTEAI, UOR-Framework ontology, optionally ATLAS embeddings) into a developer-facing SDK that any agent runtime can adopt without re-implementing the substrate.
 
+## Position in UOR's 6-layer architecture
+
+The UOR Foundation defines a [6-layer architecture](../docs/UOR_FOUNDATION_OVERVIEW.md): Foundation (L0), Identity (L1), Structure (L2), Resolution (L3), Verification (L4), Transformation (L5). UOR Foundation also names six application domains where the architecture applies — and **"Agentic AI"** is one of them, defined as: *"Give AI systems a single, reliable map of all available data so they can find, verify, and use information on their own."*
+
+This framework is **the canonical Agentic AI application of UOR's 6-layer architecture.** The five pillars implement specific layers, and add two agent-economy-specific extensions on top:
+
+| UOR Layer | This framework's pillar(s) | What we add |
+|---|---|---|
+| **L0 Foundation** | (depended on, not re-implemented) | PRISM via `vendor/prism.py` |
+| **L1 Identity** | Account Services, Content Services | Agent identity (Ed25519 keypair binding to a UOR address — gap UOR Foundation hasn't filled). Cert addresses use UOR-ADDR-1 unchanged. |
+| **L2 Structure** | Content Services | Derivation cert canonicalization, subcontract chains, per-VTEAI cert composition rules. |
+| **L3 Resolution** | Discovery Services, Reputation Services | Find agents by capability, by reputation, by historical cert similarity. Capability vocabulary anchored in UOR-Framework namespaces. |
+| **L4 Verification** | Content Services, Settlement Services | Ed25519 signature verification + triad-chain validity + WASM `FinishFunction` on-chain verification (per VTEAI). |
+| **L5 Transformation** | (depended on, not re-implemented) | Lossless format adapters when agent content needs to cross format boundaries (ontology files from UOR-Framework downloads). |
+| **(Above L5) Settlement** | Settlement Services | **Not in UOR's 6 layers** — the framework adds settlement (VTEAI) as the layer that turns "verified content" into "released payment." |
+| **(Parallel to L1) Agent Identity** | Account Services | **Not in UOR's 6 layers** — UOR L1 addresses *content*; the framework adds *agent* identity (a keypair-bound entity, distinct from the content it produces). |
+
+Stated differently: **the framework is the developer-facing packaging of UOR layers 1–5 for the Agentic AI use case, plus two layers (Agent Identity binding + Settlement) that UOR doesn't address because they're agent-economy-specific.**
+
+This positioning matters for the pitch:
+
+> *"AIR Kit packages user-identity primitives. We're packaging the Agentic AI application of UOR's 6-layer architecture — every layer UOR defines plus two we add. UOR Foundation named 'Agentic AI' as one of its six application domains; we're the canonical implementation of that domain."*
+
 ## Why this exists (the gap)
 
 Moca's AIR Kit identifies fragmentation in user identity and packages a solution: SSO + credential issuance/verification with privacy-preserving ZK. The agent economy has the **same fragmentation pattern, one layer over**:
@@ -168,6 +191,31 @@ The two-line pitch differentiation:
 
 > *"AIR Kit packaged user identity for the consumer Web3 stack. We're packaging agent identity, content, settlement, reputation, and discovery for the agent economy stack — on open standards, with formally proven primitives, and with the SDK form factors agent developers actually use today (Python and TypeScript, not just Web SDKs)."*
 
+## Path into the UOR Foundation ecosystem (Sandbox submission)
+
+UOR Foundation runs a [3-stage maturity program](../docs/UOR_FOUNDATION_PROJECTS.md): **Sandbox → Incubating → Graduated** (CNCF-style). Existing Sandbox-stage projects include PRISM (the reference implementation we already use), Atlas Embeddings, Hologram, Hologram SDK, UOR MCP, and Atomic Language Model.
+
+**The framework is designed for Sandbox submission from day one.** Submission criteria match what we have:
+
+| Sandbox criterion | This framework's status |
+|---|---|
+| Aligns with UOR Foundation mission | ✓ — implements UOR L1–L5 for the Agentic AI domain (a UOR-named application slot) |
+| Clear problem statement | ✓ — "agent identity, content, settlement, reputation, discovery — packaged as a developer SDK on UOR primitives" |
+| At least one committed maintainer | ✓ — Maura Clark, with AgentLevy as the working reference implementation |
+| Open-source license (Apache 2.0 or MIT) | ✓ — recommend **Apache 2.0** for explicit patent grant (right for protocol/cryptographic work) |
+
+**Likely category:** Developer Tools (parallel to Hologram SDK and UOR MCP). Not Core Infrastructure (PRISM holds that slot) and not pure Systems or Open Science.
+
+**Pre-submission overlap audit needed:**
+
+Before formal submission, read the docs/repos for these existing Sandbox projects to disambiguate scope:
+
+- **UOR MCP** ("server that connects AI models to the UOR verification engine; every response is graded, traceable, and independently verifiable") — sounds adjacent to Content Services + Verification. Need to know its API surface to ensure the framework *composes with* MCP rather than duplicating it. **High priority to read before spec.**
+- **Hologram SDK** ("developer toolkit, one identity, one build, every device") — sounds adjacent to Account Services + Discovery Services. Same — confirm complementarity, not overlap.
+- **Atomic Language Model** ("output follows defined rules, fully traceable") — likely downstream consumer of the framework, not overlap.
+
+**Submission timing recommendation:** Sandbox submission AFTER spec doc is drafted (not just the conceptual draft). Technical committee evaluation is much easier with a real spec to reference. AgentLevy demoing at Consensus is a strong "production usage" signal even at Sandbox stage.
+
 ## What's open (call to collaborate)
 
 This conceptual draft establishes the shape. To advance to v1.0 we need:
@@ -181,6 +229,18 @@ This conceptual draft establishes the shape. To advance to v1.0 we need:
 | **Reputation embeddings adapter** (optional ATLAS integration) | Researchers interested in similarity reasoning over PRISM coordinates |
 | **Discovery / capability registry** | Anyone with experience in DID-resolver / OpenAPI-style registries |
 | **Chain-specific bindings** (XRPL, EVM, Sui, Solana, Cosmos) | Per-chain implementers; one per ecosystem |
+
+## Adjacent UOR Sandbox projects to read before drafting the spec
+
+Per [`docs/UOR_FOUNDATION_PROJECTS.md`](../docs/UOR_FOUNDATION_PROJECTS.md), three existing Sandbox projects need disambiguation:
+
+| Project | What it claims | Why it matters | Pre-spec action |
+|---|---|---|---|
+| **UOR MCP** | Server connecting AI models to UOR verification engine; every response is graded, traceable, independently verifiable | Adjacent to Content Services + Verification — could be the *server-side* of what our SDK is the *client-side* of | Read its repo / API. If MCP exposes a verification HTTP endpoint, our SDK should *call into* it rather than reimplement. |
+| **Hologram SDK** | Developer toolkit, one identity, one build, every device | Adjacent to Account Services + Discovery — the "one identity" claim overlaps directly with agent identity binding | Read its repo / API. If Hologram SDK already provides agent identity primitives, we wrap/extend rather than duplicate. |
+| **Atomic Language Model** | Language model where every output follows defined rules and is fully traceable. Fits in under 50 KB | Likely a downstream *consumer* of the framework rather than overlap (it's an LLM, the framework is the SDK an LLM-driven agent uses) | Lower priority. Note as a candidate downstream user / partner. |
+
+**Recommendation:** spec doc should not be drafted without reading at least UOR MCP and Hologram SDK first. Both are high-overlap; misalignment risks the spec being rejected at Sandbox review or duplicating work the Foundation already adopted.
 
 ## Open questions for spec-phase
 
@@ -205,6 +265,7 @@ Three follow-on docs to create after this one is reviewed:
 
 ## References
 
+- [UOR Foundation public architecture overview (6 layers, vocabulary, application domains)](../docs/UOR_FOUNDATION_OVERVIEW.md)
 - [Moca AIR Kit (the inspiration / parallel)](https://docs.moca.network/airkit)
 - [UOR Foundation — Make Data Identity Universal](https://uor.foundation/)
 - [UOR-Framework — namespaces overview](https://uor-foundation.github.io/UOR-Framework/namespaces/)

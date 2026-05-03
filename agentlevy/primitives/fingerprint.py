@@ -1,14 +1,21 @@
 """Bridge between canonical bytes and PRISM ring elements.
 
-This is a Phase 0 placeholder. The implementation is sketched here for
-reference and will be exercised by ``scripts/test_prism.py``. Real
-production-shape code lands in Phase 2.3 alongside ``canonical.py``.
-
 The bridge exists because PRISM's engines operate on integers in a finite
-modular ring (``Q(3)`` = 32-bit, 4,294,967,296 states). AgentLevy content
-(task specs, derivation certs, LLM outputs) is structured data that vastly
-exceeds 32 bits. We need a deterministic, collision-resistant projection from
-arbitrary canonical bytes to a ring element.
+modular ring. AgentLevy content (task specs, derivation certs, LLM outputs)
+is arbitrary-sized structured data. We need a deterministic, collision-
+resistant projection from arbitrary canonical bytes to a ring element.
+
+Quantum-31 alignment with UOR
+-----------------------------
+
+AgentLevy uses ``Q(31)`` (32-byte width = 256 bits), matching the canonical
+UOR address width verified against published cert examples
+(``mcp/example-module-certificate.json``: ``store:uorAddress.u:length: 32``).
+
+Because this width matches SHA-256's digest size exactly, the fingerprint
+function's "low N bytes" reduces to "the whole digest" at ``quantum=31`` —
+no information is lost from the SHA-256, and collision resistance is the
+full ~128-bit cryptographic strength of SHA-256.
 
 Pattern
 -------
@@ -16,35 +23,29 @@ Pattern
     canonical_bytes (any length, produced by canonical.py)
         |
         v
-    sha256() -> 32-byte digest                 # collision-resistant
+    sha256() -> 32-byte digest                  # collision-resistant
         |
         v
-    take low N bytes (N = quantum + 1)         # explicit truncation
-        |
+    take low N bytes (N = quantum + 1)          # explicit truncation
+        | (at Q(31) this is the whole digest;
+        |  at lower quanta this is the trailing N bytes)
         v
     int.from_bytes(low_N_bytes, "big")          # ring element in [0, 2^(8N))
         |
         v
     engine.triad(ring_element) -> Triad         # PRISM coordinate
 
-Why explicit truncation
------------------------
+Why explicit truncation (still relevant at Q(31), even though no bytes
+are dropped)
+-----------------------------------------------------------------------
 
 ``engine.triad(int)`` automatically reduces an int mod the engine's cycle.
-Passing the full 256-bit SHA-256 integer to ``Q(3)`` would silently take the
-low 32 bits. We do the truncation ourselves so the operation is visible in
-the audit trail and so the same ``digest -> ring_element`` mapping is
-reproducible by anyone reading the code, not buried inside PRISM's
-``_normalize``.
-
-Collision resistance
---------------------
-
-For ``Q(3)`` (32-bit ring), birthday-bound collision probability is ~50%
-after ~65,536 distinct content items. For a hackathon demo with O(10) items
-this is fine. If the demo grows or production is on the table, switch to
-``Q(7)`` (64-bit, ~4 billion items before 50% birthday collision) by
-changing ``DEFAULT_QUANTUM`` in ``agentlevy/prism_layer/triad.py``.
+Doing the truncation ourselves makes the projection visible in the audit
+trail and reproducible by anyone reading our code, instead of relying on
+PRISM's ``_normalize`` to silently take the low N bytes for us. At ``Q(31)``
+N happens to equal the digest length so it's a passthrough — the discipline
+matters for forward compatibility if a smaller ``quantum`` is ever
+re-selected (e.g., for low-bandwidth display channels).
 
 See ``CANONICAL_FORM.md`` for the project-wide canonical form discipline.
 """

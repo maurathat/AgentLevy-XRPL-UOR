@@ -6,13 +6,23 @@ This document is the only authoritative reference for how content is canonicaliz
 
 ---
 
-## ★ Decision pending — quantum width alignment with UOR canonical format
+## ★ Quantum width: Q(31), with hybrid display layer (confirmed May 3 2026)
 
-**Discovered May 3 2026** via a real `cert:ModuleCertificate` example for the Hologram SDK project (saved at [`mcp/example-module-certificate.json`](mcp/example-module-certificate.json)). The UOR canonical address width is **32 bytes (256 bits)**, not the 4 bytes (`Q(3)`) AgentLevy currently uses. To make AgentLevy certs directly verifiable with the live UOR MCP's `uor.verify_passport` tool, AgentLevy should switch to `Q(31)` (32-byte engine = 256-bit address width = matches SHA-256 width directly).
+The protocol layer uses **`Q(31)` (32-byte / 256-bit width)**, matching the canonical UOR address width verified against a real `cert:ModuleCertificate` example ([`mcp/example-module-certificate.json`](mcp/example-module-certificate.json), `store:uorAddress.u:length: 32`).
 
-**Recommendation:** switch to `Q(31)` with a hybrid display layer (full 32-byte address internally, projected/glyph form for audit-trail printing). See [`mcp/README.md`](mcp/README.md#-architectural-decision-flag-for-agentlevy-phase-23) for the three options and the recommended hybrid approach. Single-line code changes; ~30-minute refactor pre-Phase-2.3.
+This means:
+- AgentLevy triads are byte-width-compatible with UOR Passport Envelopes
+- When wrapped in the `uor-v1.jsonld` `@context`, our certs can be verified directly with UOR MCP's `uor.verify_passport` tool — no width-conversion adapter needed
+- The fingerprint function passes the SHA-256 digest through with no truncation, preserving full ~128-bit cryptographic collision resistance
 
-**Status:** awaiting user confirmation before making the change.
+**Single source for triad computation:** [`agentlevy/prism_layer/triad.py`](agentlevy/prism_layer/triad.py). Exports `compute_triad(canonical_bytes) -> Triad` and `engine_info()`. Do not instantiate `Q(31)` elsewhere.
+
+**Hybrid display layer:** [`agentlevy/primitives/display.py`](agentlevy/primitives/display.py) provides three projections of a 32-byte datum so the audit trail stays readable on stage:
+- `glyph(datum)` → 32-character Braille string (`U+2800 + byte` per char). Matches UOR's `store:uorAddress.u:glyph` exactly.
+- `compact(datum, n=4)` → first n bytes hex + ellipsis (`a1b2c3d4...`). Default `n=4`.
+- `hex_full(datum)` → all 64 hex chars. Use for cross-system comparison and regulator audit.
+
+**Discipline:** display helpers are lossy projections. **Never use them as inputs to signing, hashing, or content addressing.** The protocol layer always operates on raw `Triad` objects.
 
 ---
 
@@ -20,7 +30,7 @@ This document is the only authoritative reference for how content is canonicaliz
 
 1. **PRISM does not canonicalize content.** It operates on integers in a finite modular ring. Canonicalizing JSON (or any other content type) into bytes is **entirely AgentLevy's responsibility**.
 2. **The integration pattern is:** `content → canonical bytes (us) → SHA-256 (us) → take low N bytes (us) → ring-element int → engine.triad(int)` (PRISM).
-3. **The engine is `Q(3)` (32-bit, 4.29 billion states)** — small enough to display human-readably in the demo audit trail, large enough that birthday-bound collisions for ~10 demo items are negligible.
+3. **The engine is `Q(31)` (256-bit, 32-byte width)** — matches the canonical UOR address width verified against published `cert:ModuleCertificate` examples. Triads are byte-compatible with UOR Passport Envelopes; collision resistance is the full SHA-256 strength. Audit-trail readability is recovered via the hybrid display layer in `agentlevy/primitives/display.py`.
 4. **PRISM is vendored** at `vendor/prism.py` (byte-identical to upstream commit `6cafdac`), imported as `from vendor.prism import Q, ...`. Not installed via pip, not symlinked.
 5. **One module — `agentlevy/primitives/canonical.py` — is the only place canonical bytes are produced.** No exceptions. PRISM consumers, signing, and the LLM cache layer all consume its output.
 
@@ -34,7 +44,7 @@ Verified by reading `vendor/prism.py`, `~/prism/docs/API.md`, and running `pytho
 - **Requires Python ≥ 3.10** (uses `int.bit_count()`).
 - **Public API entry points** (verified, do not assume):
   - `from vendor.prism import Q0, Q1, Q2, Q3, Q, Triad, Derivation` — engines and dataclasses
-  - `engine = Q(n)` — engine at `8 × (n + 1)` bits. **AgentLevy uses `Q(3)`** (32-bit, 4 bytes wide, 4,294,967,296 states).
+  - `engine = Q(n)` — engine at `8 × (n + 1)` bits. **AgentLevy uses `Q(31)`** (256-bit, 32 bytes wide, 2^256 states — matches UOR canonical width).
   - `engine.verify()` — runs algebraic coherence check; raises `CoherenceError` on failure.
   - `engine.triad(value)` → `Triad` (frozen dataclass with tuple fields, directly hashable). Has `.datum`, `.stratum`, `.spectrum`, `.total_stratum`, `.width`.
     - `value` may be an `int` (auto-reduced mod cycle) or a `tuple[int, ...]` of bytes (validated to engine width).
@@ -62,33 +72,39 @@ The example works because each input already fits inside the engine's quantum wi
 ## The integration pattern (verified end-to-end)
 
 ```python
+from agentlevy.prism_layer.triad import compute_triad
+# compute_triad is the only triad-producing entry point.
+# It uses Q(31) internally — see agentlevy/prism_layer/triad.py.
+
+triad = compute_triad(canonical_bytes)
+```
+
+Internally that resolves to:
+
+```python
 from agentlevy.primitives.fingerprint import content_to_ring_element
 from vendor.prism import Q
 
-ENGINE = Q(3)  # 32-bit; matches AgentLevy's chosen quantum
+ENGINE = Q(31)  # 32 bytes / 256 bits — UOR-canonical width
 
 def content_triad(canonical_bytes: bytes):
-    ring_element = content_to_ring_element(canonical_bytes, quantum=3)
+    ring_element = content_to_ring_element(canonical_bytes, quantum=31)
     return ENGINE.triad(ring_element)
 ```
 
 `content_to_ring_element` (in `agentlevy/primitives/fingerprint.py`) does:
 
 1. `digest = sha256(canonical_bytes)` — collision-resistant 32-byte digest
-2. `low_bytes = digest[-4:]` — explicit truncation to engine width (`quantum + 1`)
-3. `int.from_bytes(low_bytes, "big")` — ring element in `[0, 2^32)`
+2. `low_bytes = digest[-32:]` — explicit truncation to engine width (`quantum + 1`); at `Q(31)` this is the entire digest (passthrough)
+3. `int.from_bytes(low_bytes, "big")` — ring element in `[0, 2^256)`
 
-### Why we truncate explicitly
+### Why we still truncate explicitly (even at Q(31))
 
-`engine.triad(int)` will silently reduce any int mod the engine's cycle. Passing the full 256-bit SHA-256 integer to `Q(3)` would auto-truncate to the low 32 bits inside PRISM's `_normalize`. We do the truncation ourselves so:
-
-- The audit trail shows the 256-bit digest **and** the 32-bit ring element side by side
-- Anyone reading our code can reproduce the projection without reading PRISM's internals
-- If we change quantum later, the truncation logic moves with us, not buried in a third-party
+`engine.triad(int)` will silently reduce any int mod the engine's cycle. Doing the truncation in our code makes the projection visible in the audit trail and reproducible by anyone reading our code, instead of relying on PRISM's `_normalize` to silently take the low N bytes. At `Q(31)` the "truncation" is a passthrough — but the discipline matters for forward compatibility if we ever re-select a smaller `quantum` for a low-bandwidth display channel.
 
 ### Collision-resistance budget
 
-`Q(3)` has 2^32 ≈ 4.29 billion states. Birthday-bound 50% collision probability arrives at ~65,536 distinct content items. For an on-stage demo with ~10 items, this is overkill. If the demo grows, switch to `Q(7)` (64-bit, ~4 billion items before 50% birthday collision) — single-line change in `agentlevy/prism_layer/triad.py`.
+At `Q(31)` (256-bit ring), the ring element IS the SHA-256 digest. Collision resistance is the full SHA-256 strength (~128-bit by birthday bound) — effectively unlimited for any practical agent commerce volume. No need to consider switching widths until SHA-256 itself is broken.
 
 `scripts/test_prism.py` exercises this pattern against three content types (string, JSON, file) and confirms:
 
@@ -147,7 +163,7 @@ For raw bytes (file contents, opaque blobs), no canonicalization is needed — t
 2. **Pydantic models expose `to_canonical_bytes()`** that delegates to `canonical.to_canonical_bytes(self.model_dump())`. Models do not implement their own canonicalization.
 3. **Cache keys are `sha256(canonical_bytes)`.** Live and cached runs must produce identical triads — there will be a test for this in `tests/test_cache_invariant.py`.
 4. **No stringly-typed canonicalization.** No `json.dumps(..., sort_keys=True)` sprinkled around the codebase. If you find yourself reaching for it outside `canonical.py`, stop and fix the design.
-5. **PRISM quantum is `Q(3)` everywhere.** All triad computations go through the same engine instance in `agentlevy/prism_layer/triad.py`. Do not mix engine widths within a derivation chain. If you change quantum, change it there and rerun every test.
+5. **PRISM quantum is `Q(31)` everywhere.** All triad computations go through `compute_triad` in `agentlevy/prism_layer/triad.py`. Do not instantiate other engine widths anywhere in the project. The hybrid display layer (`agentlevy/primitives/display.py`) provides projections for audit-trail rendering — never use display strings as inputs to signing or hashing.
 6. **PRISM is consumed via `from vendor.prism import ...`** — never `from prism import ...` (which would resolve to a `~/prism/` clone and break for anyone else).
 
 ---

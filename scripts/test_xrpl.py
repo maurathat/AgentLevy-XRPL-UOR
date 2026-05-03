@@ -1,27 +1,41 @@
-"""Phase 0.4 verification - confirms XRPL wallets work end-to-end.
+"""Phase 0.4 / 0.8 verification - confirms XRPL wallets work end-to-end.
 
 Run from the repo root with the venv active:
 
-    python scripts/test_xrpl.py
+    python scripts/test_xrpl.py                  # default: testnet
+    python scripts/test_xrpl.py --network=wasm   # WASM Devnet (Phase 2.8)
 
 What this does:
-  1. Loads .env (XRPL_RPC_URL, XRPL_BUYER_SEED, XRPL_COMPLIANCE_SEED, XRPL_SANCTIONS_SEED).
+  1. Loads .env. Default network reads XRPL_RPC_URL + XRPL_*_SEED. The
+     --network=wasm option reads XRPL_WASM_RPC_URL + XRPL_WASM_*_SEED.
   2. Builds a Wallet from each seed and prints its classic address.
   3. Connects to the configured XRPL JSON-RPC endpoint.
   4. Looks up each wallet's balance.
-  5. If the buyer has > 1 XRP, sends 1 XRP from buyer -> compliance and waits
-     for the transaction to validate. Confirms signing and submission work
-     on xrpl-py 4.5.0 with the seeds in .env.
+  5. If the buyer has enough headroom over the network's base reserve,
+     sends 1 XRP buyer -> compliance and waits for validation. Confirms
+     signing and submission work on xrpl-py 4.5.0 against the chosen
+     network.
 
-If a wallet is unfunded (returns actNotFound), the script prints a one-line
-hint with the faucet URL and exits 1 without attempting the transfer.
+If a wallet is unfunded (actNotFound) or pinned to its base reserve, the
+script prints a one-line hint with the faucet URL and exits non-zero
+without attempting the transfer.
 
-Designed to run in 10-20 seconds against testnet. Idempotent enough for
-re-running: each run sends 1 XRP, so balances drift slightly.
+Designed to run in 10-20 seconds. Idempotent enough for re-running: each
+run sends 1 XRP, so balances drift slightly.
+
+Why the --network=wasm flag exists
+----------------------------------
+docs/NETWORK_CHOICE.md records the project's separation: regular Testnet
+hosts the agent-negotiation/signing demos (Phases 2.1-2.7); WASM Devnet
+hosts the XLS-100 SmartEscrow demo (Phase 2.8). The flag makes the
+network switch explicit in the script invocation, never implicit in env
+state, so we can never accidentally sign a Phase 2.8 escrow on the wrong
+network.
 """
 
 from __future__ import annotations
 
+import argparse
 import os
 import sys
 from pathlib import Path
@@ -32,41 +46,45 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from dotenv import load_dotenv  # noqa: E402
 
 from xrpl.clients import JsonRpcClient  # noqa: E402
-from xrpl.models.requests import AccountInfo  # noqa: E402
+from xrpl.models.requests import AccountInfo, ServerState  # noqa: E402
 from xrpl.models.transactions import Payment  # noqa: E402
 from xrpl.transaction import autofill_and_sign, submit_and_wait  # noqa: E402
 from xrpl.utils import drops_to_xrp, xrp_to_drops  # noqa: E402
 from xrpl.wallet import Wallet  # noqa: E402
 
 
-# Map env var name -> friendly role label
-WALLET_VARS = (
-    ("XRPL_BUYER_SEED", "buyer"),
-    ("XRPL_COMPLIANCE_SEED", "compliance"),
-    ("XRPL_SANCTIONS_SEED", "sanctions"),
-)
+# Network -> (rpc-url env var, seed env var prefix)
+NETWORKS = {
+    "testnet": ("XRPL_RPC_URL", "XRPL"),
+    "wasm":    ("XRPL_WASM_RPC_URL", "XRPL_WASM"),
+}
+
+ROLES = ("buyer", "compliance", "sanctions")
 
 # Faucet URLs by network host (substring match against rpc_url)
 FAUCET_HINTS = {
-    "altnet.rippletest.net": "https://faucet.altnet.rippletest.net/accounts (or https://xrpl.org/xrp-testnet-faucet.html)",
-    "devnet.rippletest.net": "https://faucet.devnet.rippletest.net/accounts",
-    "wasm.devnet.rippletest.net": "https://faucet.wasm.devnet.rippletest.net/accounts",
-    "lend.devnet.rippletest.net": "https://faucet.lend.devnet.rippletest.net/accounts",
+    "altnet.rippletest.net":      "https://xrpl.org/resources/dev-tools/xrp-faucets (Testnet)",
+    "wasm.devnet.rippletest.net": "https://xrpl.org/resources/dev-tools/xrp-faucets (select WASM Devnet)",
+    "devnet.rippletest.net":      "https://xrpl.org/resources/dev-tools/xrp-faucets (Devnet)",
+    "lend.devnet.rippletest.net": "https://xrpl.org/resources/dev-tools/xrp-faucets (Lending Devnet)",
 }
 
 
-def load_env() -> tuple[str, dict[str, str]]:
-    """Load .env, return (rpc_url, {role: seed})."""
+def load_env(network_key: str) -> tuple[str, dict[str, str]]:
+    """Load .env, return (rpc_url, {role: seed}) for the chosen network."""
     repo_root = Path(__file__).resolve().parent.parent
-    load_dotenv(repo_root / ".env")
+    # override=True so the .env file beats any shell-level empty defaults.
+    load_dotenv(repo_root / ".env", override=True)
 
-    rpc_url = os.environ.get("XRPL_RPC_URL", "").strip()
+    rpc_var, seed_prefix = NETWORKS[network_key]
+    rpc_url = os.environ.get(rpc_var, "").strip()
     if not rpc_url:
-        raise SystemExit("XRPL_RPC_URL is empty in .env")
+        raise SystemExit(f"{rpc_var} is empty in .env")
 
     seeds: dict[str, str] = {}
     missing: list[str] = []
-    for var, role in WALLET_VARS:
+    for role in ROLES:
+        var = f"{seed_prefix}_{role.upper()}_SEED"
         val = os.environ.get(var, "").strip()
         if not val:
             missing.append(var)
@@ -82,7 +100,13 @@ def faucet_hint(rpc_url: str) -> str:
     for host, url in FAUCET_HINTS.items():
         if host in rpc_url:
             return url
-    return "https://xrpl.org/xrp-testnet-faucet.html"
+    return "https://xrpl.org/resources/dev-tools/xrp-faucets"
+
+
+def reserve_drops(client: JsonRpcClient) -> int:
+    """Network's per-account base reserve in drops."""
+    resp = client.request(ServerState())
+    return int(resp.result["state"]["validated_ledger"]["reserve_base"])
 
 
 def get_balance_drops(client: JsonRpcClient, address: str) -> int | None:
@@ -98,8 +122,18 @@ def get_balance_drops(client: JsonRpcClient, address: str) -> int | None:
 
 
 def main() -> None:
-    rpc_url, seeds = load_env()
-    print(f"XRPL endpoint: {rpc_url}")
+    parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    parser.add_argument(
+        "--network",
+        choices=list(NETWORKS.keys()),
+        default="testnet",
+        help="Which network's seeds to use from .env (default: testnet).",
+    )
+    args = parser.parse_args()
+
+    rpc_url, seeds = load_env(args.network)
+    print(f"Network: {args.network}")
+    print(f"Endpoint: {rpc_url}")
     print()
 
     # Build wallets
@@ -116,6 +150,11 @@ def main() -> None:
     print()
 
     client = JsonRpcClient(rpc_url)
+
+    base_reserve = reserve_drops(client)
+    print(f"Base reserve: {drops_to_xrp(str(base_reserve))} XRP "
+          f"(account must keep at least this much)")
+    print()
 
     # Balances
     print("Balances")
@@ -136,24 +175,29 @@ def main() -> None:
         hint = faucet_hint(rpc_url)
         print("[FAIL] At least one wallet is unfunded.")
         print(f"       Fund wallets via: {hint}")
-        print("       For testnet, the faucet returns 1000 test XRP per request.")
-        print("       After funding, re-run this script.")
         raise SystemExit(1)
 
-    # Buyer -> compliance transfer
+    # Buyer -> compliance transfer (need headroom over base reserve)
     buyer_drops = balances["buyer"]
     assert buyer_drops is not None
-    buyer_xrp = drops_to_xrp(str(buyer_drops))
-    if buyer_xrp <= 2:
-        print(f"[FAIL] Buyer balance {buyer_xrp} XRP is too low to send 1 XRP and keep reserve.")
+    transfer_drops = int(xrp_to_drops(1))
+    fee_buffer_drops = 100_000  # 0.1 XRP buffer for fees and rounding
+    needed = base_reserve + transfer_drops + fee_buffer_drops
+    if buyer_drops < needed:
+        hint = faucet_hint(rpc_url)
+        print(
+            f"[FAIL] Buyer has {drops_to_xrp(str(buyer_drops))} XRP, needs "
+            f">= {drops_to_xrp(str(needed))} XRP "
+            f"(reserve {drops_to_xrp(str(base_reserve))} + 1 send + buffer)."
+        )
+        print(f"       Fund via: {hint}")
         raise SystemExit(1)
 
-    transfer_amount_drops = xrp_to_drops(1)
-    print(f"Sending 1 XRP: buyer -> compliance ({transfer_amount_drops} drops)")
+    print(f"Sending 1 XRP: buyer -> compliance ({transfer_drops:,} drops)")
     payment = Payment(
         account=wallets["buyer"].classic_address,
         destination=wallets["compliance"].classic_address,
-        amount=transfer_amount_drops,
+        amount=str(transfer_drops),
     )
     signed = autofill_and_sign(payment, client, wallets["buyer"])
     print(f"  signed tx hash: {signed.get_hash()}")

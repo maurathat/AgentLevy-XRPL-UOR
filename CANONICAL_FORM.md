@@ -6,6 +6,16 @@ This document is the only authoritative reference for how content is canonicaliz
 
 ---
 
+## ★ Decision pending — quantum width alignment with UOR canonical format
+
+**Discovered May 3 2026** via a real `cert:ModuleCertificate` example for the Hologram SDK project (saved at [`mcp/example-module-certificate.json`](mcp/example-module-certificate.json)). The UOR canonical address width is **32 bytes (256 bits)**, not the 4 bytes (`Q(3)`) AgentLevy currently uses. To make AgentLevy certs directly verifiable with the live UOR MCP's `uor.verify_passport` tool, AgentLevy should switch to `Q(31)` (32-byte engine = 256-bit address width = matches SHA-256 width directly).
+
+**Recommendation:** switch to `Q(31)` with a hybrid display layer (full 32-byte address internally, projected/glyph form for audit-trail printing). See [`mcp/README.md`](mcp/README.md#-architectural-decision-flag-for-agentlevy-phase-23) for the three options and the recommended hybrid approach. Single-line code changes; ~30-minute refactor pre-Phase-2.3.
+
+**Status:** awaiting user confirmation before making the change.
+
+---
+
 ## TL;DR
 
 1. **PRISM does not canonicalize content.** It operates on integers in a finite modular ring. Canonicalizing JSON (or any other content type) into bytes is **entirely AgentLevy's responsibility**.

@@ -88,3 +88,51 @@ Both are layered on top of AgentLevy, not replacements for the local PRISM. Keep
 ## Security note
 
 The server's public key (`oZJ32H/wro7SagCI17vMOM8BRhI72yGgAni+DbXlozk=`) is broadcast in the initialize handshake. To trust the server, an MCP client would pin this key. For dev/demo work the convenience of trust-on-first-use is fine. For production you'd want a published, signed key fingerprint somewhere on uor.foundation that clients can verify against.
+
+## Example UOR certificate (real)
+
+A live `cert:ModuleCertificate` for the Hologram SDK project is at [`example-module-certificate.json`](example-module-certificate.json). Verbatim shape:
+
+```json
+{
+  "@context": "https://uor.foundation/contexts/uor-v1.jsonld",
+  "@type": "cert:ModuleCertificate",
+  "cert:subject": "project:hologram-sdk",
+  "cert:cid": "baguqeerapqnkdb22c7y5cqrtzpifnqo4k7eapz4ft7jhhpilmwn4msi6rdrq",
+  "store:uorAddress": {
+    "u:glyph": "⡼⠚⢡⢇⡚⠗⣱⣑⡂⠳⣋⣐⡖⣁⣜⡗⣈⠇⣧⢅⢟⣒⡳⢽⠋⡥⢛⣆⡉⠞⢈⣣",
+    "u:length": 32
+  },
+  "cert:specification": "1.0.0"
+}
+```
+
+What this tells us about UOR's canonical address format:
+
+| Field | What it is | Decode |
+|---|---|---|
+| `@context` | UOR's published JSON-LD context, version 1 | `https://uor.foundation/contexts/uor-v1.jsonld` — **AgentLevy certs should reference this for protocol alignment** |
+| `@type` | Cert subtype — `cert:ModuleCertificate` for projects/modules | AgentLevy will likely need `cert:DerivationCertificate` (or similar) — same envelope, different subtype |
+| `cert:cid` | Base32-multibase content identifier (IPFS-style) | `baguqeera...` — one of UOR's address representations |
+| `store:uorAddress.u:glyph` | Braille-encoded 32-char string, each character `U+2800 + byte` | The 32-byte address rendered as a visible string. Verified hex: `7c1aa1875a17f1d14233cbd056c1dc57c807e7859fd273bd0b659bc6491e88e3` |
+| `store:uorAddress.u:length` | **32** (bytes) | **The canonical UOR address width is 32 bytes (256 bits)** |
+
+## ★ Architectural decision flag (for AgentLevy Phase 2.3)
+
+**AgentLevy is currently configured at `Q(3)` (32-bit, 4-byte datums) — UOR's canonical format is 32-byte (`Q(31)`).** That's a real width mismatch. Three ways to resolve it:
+
+| Option | Pros | Cons |
+|---|---|---|
+| **A. Stay at Q(3)** | Demo audit trail more readable (4-byte datums) | Our certs aren't directly UOR-Passport-verifiable without a width-conversion layer — weakens the "protocol-aligned" pitch |
+| **B. Switch to Q(31)** | Full UOR canonical-width alignment; certs verifiable with `uor.verify_passport` directly; effectively unlimited collision resistance | 32-byte datums look noisier in console output; need a display-layer to keep the demo readable |
+| **C. Hybrid — Q(31) internal, projected display** | Protocol-aligned AND demo-readable. Internal addresses are 32-byte; the audit-trail printer shows the Braille glyph (32 visible chars) or a 4-byte projection for compactness | Slight extra complexity in the display layer (one helper function) |
+
+**Recommendation: Option C (hybrid).** Concretely:
+- `agentlevy/prism_layer/triad.py` switches from `Q(3)` to `Q(31)` (single line change)
+- `agentlevy/primitives/fingerprint.py` already takes the engine width as a parameter — switching `quantum=3` to `quantum=31` is a single-line change
+- A new `agentlevy/primitives/display.py` provides `glyph(triad)` (32-char Braille) and `compact(triad, n=4)` (first n bytes hex) helpers for the audit trail printer
+- `CANONICAL_FORM.md` updates the quantum decision; `scripts/test_prism.py` updates the assertions
+
+This is a Day-1-morning, ~30-minute refactor. It's much cheaper to do before Phase 2.3 cements the Q(3) decision in agent code.
+
+**Pending user confirmation before making the change.**

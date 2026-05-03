@@ -11,9 +11,9 @@ A protocol-layer demo: two AI agents negotiate and execute a KYC compliance task
 - ✅ **Phase 0.7** — repository scaffolding (directory tree, deps, env template, doc placeholders)
 - ✅ **Phase 0.1** — venv on Python 3.13, all deps installed (`xrpl-py`, `pydantic`, `cryptography`, `httpx`, `click`, `anthropic`, `python-dotenv`)
 - ✅ **Phase 0.2** — PRISM vendored at `vendor/prism.py` (pinned `6cafdac`), API verified, [CANONICAL_FORM.md](CANONICAL_FORM.md) filled in, `agentlevy/primitives/fingerprint.py` placeholder, `scripts/test_prism.py` passes (Q(3), 6/6 assertions)
-- ⏳ **Phase 0.4** — XRPL testnet wallets (next)
+- ✅ **Phase 0.4** — XRPL testnet wallets funded (10 XRP each), `scripts/test_xrpl.py` confirms `Wallet.from_seed` / `submit_and_wait` round-trip works on xrpl-py 4.5.0
 - ⏳ **Phase 0.6** — LLM API connectivity test (next)
-- ⏳ **Phase 0.8** — XLS-100 / RLUSD activation status check
+- ⏳ **Phase 0.8** — XLS-100 activation check on WASM Devnet (Path A unlock)
 - ⏳ **Phase 0.9** — review existing AgentLevy code (`~/AgentLevy/`, `~/AgentLevy-origin-main/`)
 
 None of the application components below are implemented yet — only the layout.

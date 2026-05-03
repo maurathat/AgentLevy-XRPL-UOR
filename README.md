@@ -86,6 +86,12 @@ python scripts/test_llm.py      # not yet written (Phase 0.6)
 
 Read [CANONICAL_FORM.md](CANONICAL_FORM.md) **first**. The single most likely class of bug to lose this hackathon to is canonical-form drift between modules, which produces silent triad mismatches that take hours to diagnose. The discipline is: one module produces canonical bytes, everything else consumes its output.
 
+## Pitch & landscape reference
+
+- [`docs/LANDSCAPE.md`](docs/LANDSCAPE.md) — where AgentLevy sits in the agent-economy stack. Covers x402, AP2, Hedera AgentKit, MemWal, Kleros, Flare FDC, etc. Use as Q&A prep at Consensus.
+- [`docs/PHASE_2_DESIGN.md`](docs/PHASE_2_DESIGN.md) — design decisions for Phase 2 build, including determinism trade-offs and demo scenarios.
+- [`pitch/`](pitch/) — narrative material ported from old AgentLevy (VTEAI ERC draft, decks, demo scripts, architecture diagrams).
+
 ## References
 
 - PRISM: https://github.com/UOR-Foundation/prism

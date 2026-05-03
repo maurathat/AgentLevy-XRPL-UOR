@@ -5,38 +5,53 @@ Run from the repo root with the venv active:
     python scripts/test_prism.py
 
 This script tests three content types (plain string, JSON object, small file)
-through the canonical-bytes → SHA-256 → byte-tuple → triad pattern, and
-confirms:
-  * same input → same triad
-  * different inputs → different triads
+through the project's integration pattern:
+
+    canonical bytes
+        -> agentlevy.primitives.fingerprint.content_to_ring_element  (SHA-256, low N bytes)
+        -> ENGINE.triad(int)
+        -> Triad
+
+It confirms:
+
+  * same input -> same triad (deterministic)
+  * different inputs -> different triads (collision-resistant)
 
 It does NOT yet enforce the project's canonical form for JSON; that lives in
-agentlevy/primitives/canonical.py once Phase 2 starts. For Phase 0 we just want
-to prove PRISM works end-to-end.
+agentlevy/primitives/canonical.py once Phase 2 starts. For Phase 0 we use a
+JCS-adjacent stand-in (sort_keys + compact separators) just to prove the
+projection pipeline is deterministic given identical bytes.
 """
 
 from __future__ import annotations
 
-import hashlib
 import json
+import sys
 from pathlib import Path
 
-from prism import Q  # noqa: E402  (PRISM is on path via .venv/.../prism_repo.pth)
+# Make the repo root importable so `from agentlevy...` and `from vendor.prism...` work
+# regardless of where the script is invoked from.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from agentlevy.primitives.fingerprint import content_to_ring_element  # noqa: E402
+from vendor.prism import Q  # noqa: E402
 
 
-# 256-bit engine: matches SHA-256 digest width exactly.
-ENGINE = Q(31)  # width=32 bytes, bits=256
+# AgentLevy's chosen quantum. Documented in CANONICAL_FORM.md.
+QUANTUM = 3
+ENGINE = Q(QUANTUM)
 
 
 def triad_of(canonical_bytes: bytes):
-    """The integration pattern: canonical bytes → SHA-256 → byte tuple → triad."""
-    digest = hashlib.sha256(canonical_bytes).digest()
-    return ENGINE.triad(tuple(digest))
+    """The integration pattern: canonical bytes -> ring element -> triad."""
+    ring_element = content_to_ring_element(canonical_bytes, QUANTUM)
+    return ENGINE.triad(ring_element)
 
 
 def triad_summary(t):
     return {
-        "datum_first8": t.datum[:8],
+        "datum": t.datum,
+        "stratum": t.stratum,
         "total_stratum": t.total_stratum,
         "width": t.width,
     }
@@ -60,7 +75,7 @@ def assert_neq(name, a, b):
 
 
 def main() -> None:
-    print("PRISM engine:", f"Q(31) width={ENGINE.width} bits={ENGINE.bits}")
+    print(f"PRISM engine: Q({QUANTUM}) width={ENGINE.width} bits={ENGINE.bits} cycle={ENGINE.cycle:,}")
     ENGINE.verify()
     print("Q0 algebra verified (PRISM bootstraps Q0 verification on first use).")
     print()
@@ -74,15 +89,15 @@ def main() -> None:
     t2 = triad_of(s2.encode("utf-8"))
     t3 = triad_of(s3.encode("utf-8"))
     print(f"      triad(s1) = {triad_summary(t1)}")
-    assert_eq("identical strings → identical triads", t1.datum, t2.datum)
-    assert_neq("different strings → different triads", t1.datum, t3.datum)
+    assert_eq("identical strings -> identical triads", t1.datum, t2.datum)
+    assert_neq("different strings -> different triads", t1.datum, t3.datum)
     print()
 
     # --- Content type 2: JSON object ---
     # NOTE: This uses sort_keys/separators as a STAND-IN for canonical form.
     # The real project canonical form is defined in CANONICAL_FORM.md and
     # implemented in agentlevy/primitives/canonical.py. For Phase 0 we only
-    # need to confirm PRISM is deterministic given identical bytes.
+    # need to confirm the projection is deterministic given identical bytes.
     print("[2/3] JSON object (sort_keys+compact as placeholder canonical form)")
     j1 = {"task_id": "abc", "price": 100, "buyer": "alice"}
     j2 = {"price": 100, "buyer": "alice", "task_id": "abc"}  # same content, different key order
@@ -92,8 +107,8 @@ def main() -> None:
     b3 = json.dumps(j3, sort_keys=True, separators=(",", ":")).encode("utf-8")
     t1, t2, t3 = triad_of(b1), triad_of(b2), triad_of(b3)
     print(f"      triad(j1) = {triad_summary(t1)}")
-    assert_eq("same content / different key order → same triad", t1.datum, t2.datum)
-    assert_neq("one field differs → different triad", t1.datum, t3.datum)
+    assert_eq("same content / different key order -> same triad", t1.datum, t2.datum)
+    assert_neq("one field differs -> different triad", t1.datum, t3.datum)
     print()
 
     # --- Content type 3: small file ---
@@ -109,8 +124,8 @@ def main() -> None:
     t3 = triad_of(b2)
     print(f"      triad(test_prism.py) = {triad_summary(t1)}")
     print(f"      triad(README.md)     = {triad_summary(t3)}")
-    assert_eq("file read twice → same triad", t1.datum, t2.datum)
-    assert_neq("different files → different triads", t1.datum, t3.datum)
+    assert_eq("file read twice -> same triad", t1.datum, t2.datum)
+    assert_neq("different files -> different triads", t1.datum, t3.datum)
     print()
 
     print("ALL CHECKS PASSED")

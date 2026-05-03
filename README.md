@@ -8,27 +8,32 @@ A protocol-layer demo: two AI agents negotiate and execute a KYC compliance task
 
 ## What's here right now
 
-- ✅ **Phase 0.5** — directory tree, deps, env template, doc placeholders
-- ✅ **Phase 0.1** — venv on Python 3.13, all deps installed
-- ✅ **Phase 0.2** — PRISM cloned, API verified, [CANONICAL_FORM.md](CANONICAL_FORM.md) filled in, `scripts/test_prism.py` passes
-- ⏳ **Phase 0.3** — XRPL testnet wallets (next)
-- ⏳ **Phase 0.7** — LLM API connectivity test (next)
+- ✅ **Phase 0.7** — repository scaffolding (directory tree, deps, env template, doc placeholders)
+- ✅ **Phase 0.1** — venv on Python 3.13, all deps installed (`xrpl-py`, `pydantic`, `cryptography`, `httpx`, `click`, `anthropic`, `python-dotenv`)
+- ✅ **Phase 0.2** — PRISM vendored at `vendor/prism.py` (pinned `6cafdac`), API verified, [CANONICAL_FORM.md](CANONICAL_FORM.md) filled in, `agentlevy/primitives/fingerprint.py` placeholder, `scripts/test_prism.py` passes (Q(3), 6/6 assertions)
+- ⏳ **Phase 0.4** — XRPL testnet wallets (next)
+- ⏳ **Phase 0.6** — LLM API connectivity test (next)
+- ⏳ **Phase 0.8** — XLS-100 / RLUSD activation status check
+- ⏳ **Phase 0.9** — review existing AgentLevy code (`~/AgentLevy/`, `~/AgentLevy-origin-main/`)
 
 None of the application components below are implemented yet — only the layout.
 
 ```
 AgentLevy-XRPL-UOR/
 ├── README.md               # this file
-├── CANONICAL_FORM.md       # single source of truth for canonicalization (PLACEHOLDER)
-├── requirements.txt        # pinned core deps
+├── CANONICAL_FORM.md       # single source of truth for canonicalization
+├── requirements.txt        # pinned core deps (incl. click for PRISM CLI)
 ├── .env.example            # template for API keys + XRPL seeds
 ├── .gitignore
+├── vendor/                 # third-party code, vendored
+│   ├── prism.py            #   from UOR-Foundation/prism @ 6cafdac (MIT)
+│   └── LICENSE-prism
 ├── agentlevy/
-│   ├── primitives/         # canonical bytes, task spec, derivation cert, signing
+│   ├── primitives/         # canonical bytes, fingerprint, task spec, cert, signing
 │   ├── llm/                # LLM client, prompts, schemas, cache
 │   ├── agents/             # buyer, compliance, sanctions
-│   ├── xrpl/               # XRPL integration, escrow logic
-│   ├── prism/              # PRISM wrapper
+│   ├── xrpl_layer/         # XRPL integration, escrow logic
+│   ├── prism_layer/        # AgentLevy's PRISM wrapper (Q(3) engine)
 │   └── protocol/           # bounded-turn negotiation
 ├── scripts/                # test_prism.py, test_xrpl.py, test_llm.py
 ├── fixtures/               # cached LLM responses (deterministic demo)
@@ -53,28 +58,29 @@ Python is typically 3.9 — use a python.org install or `pyenv`/`asdf`.
 /Library/Frameworks/Python.framework/Versions/3.13/bin/python3 -m venv .venv
 source .venv/bin/activate
 pip install --upgrade pip
-pip install -r requirements.txt click   # click is for PRISM's CLI
+pip install -r requirements.txt
 
 # 2. Environment
 cp .env.example .env
 # Fill in ANTHROPIC_API_KEY and the three XRPL_*_SEED values.
 
-# 3. PRISM (single-file module — clone, then add to PYTHONPATH via .pth)
-cd .. && git clone https://github.com/UOR-Foundation/prism.git
-echo "$(pwd)/prism" > AgentLevy-XRPL-UOR/.venv/lib/python3.13/site-packages/prism_repo.pth
-cd AgentLevy-XRPL-UOR
+# 3. PRISM is already vendored at vendor/prism.py — no separate install.
+#    Pinned to commit 6cafdac (Feb 16, 2026); see vendor/__init__.py.
 
 # 4. Verify
-python scripts/test_prism.py    # ✓ Phase 0.2 — runs now
+python scripts/test_prism.py    # ✓ Phase 0.2 — passes (Q(3), all 6 assertions)
 python scripts/test_xrpl.py     # not yet written (Phase 0.3)
-python scripts/test_llm.py      # not yet written (Phase 0.7)
+python scripts/test_llm.py      # not yet written (Phase 0.6)
 ```
 
-> **Why a `.pth` file instead of `pip install -e .`?** PRISM is distributed as a
-> single `prism.py` file with no `setup.py` or `pyproject.toml`. The standard
-> Python pattern for adding such a directory to a venv is a `.pth` file in
-> `site-packages/`, which adds the path on Python startup. See [CANONICAL_FORM.md](CANONICAL_FORM.md)
-> for the full integration pattern.
+> **Why vendor instead of `pip install -e .`?** PRISM is distributed as a
+> single `prism.py` file with no `setup.py` or `pyproject.toml`. Vendoring the
+> file (verified byte-identical to the pinned upstream commit) gives us a
+> self-contained repo with no path coupling — anyone cloning AgentLevy gets a
+> working `from vendor.prism import Q, ...` immediately, no `~/prism` setup
+> required. See [CANONICAL_FORM.md](CANONICAL_FORM.md) for the full integration
+> pattern, including the SHA-256 fingerprint that bridges canonical bytes to
+> PRISM ring elements at quantum `Q(3)` (32-bit).
 
 ## Critical reading before touching code
 

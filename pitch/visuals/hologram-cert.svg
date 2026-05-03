@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <rect width="1920" height="1080" fill="#0F1117"/>
+
+  <!-- Subtitle -->
+  <text x="960" y="180" text-anchor="middle"
+        font-family="system-ui, -apple-system, sans-serif"
+        font-size="36" font-weight="300" fill="#9ca3af">
+    A real UOR Module Certificate
+  </text>
+
+  <!-- Subject -->
+  <text x="960" y="270" text-anchor="middle"
+        font-family="Menlo, Monaco, monospace"
+        font-size="36" font-weight="500" fill="#fb923c">
+    project:hologram-sdk
+  </text>
+
+  <!-- Big Braille -->
+  <text x="960" y="540" text-anchor="middle"
+        font-family="Menlo, Monaco, 'Courier New', monospace"
+        font-size="100" font-weight="400" fill="#7DD3FC"
+        letter-spacing="-2">
+    ⡼⠚⢡⢇⡚⠗⣱⣑⡂⠳⣋⣐⡖⣁⣜⡗⣈⠇⣧⢅⢟⣒⡳⢽⠋⡥⢛⣆⡉⠞⢈⣣
+  </text>
+
+  <!-- CID below -->
+  <text x="960" y="700" text-anchor="middle"
+        font-family="Menlo, Monaco, monospace"
+        font-size="22" font-weight="400" fill="#6B7280">
+    baguqeerapqnkdb22c7y5cqrtzpifnqo4k7eapz4ft7jhhpilmwn4msi6rdrq
+  </text>
+
+  <!-- Footer -->
+  <text x="960" y="900" text-anchor="middle"
+        font-family="system-ui, -apple-system, sans-serif"
+        font-size="32" font-style="italic" fill="#9ca3af">
+    every UOR-certified object has the same shape
+  </text>
+  <text x="960" y="950" text-anchor="middle"
+        font-family="system-ui, -apple-system, sans-serif"
+        font-size="28" fill="#6B7280">
+    Kessai certs follow the same format, byte-for-byte
+  </text>
+</svg>

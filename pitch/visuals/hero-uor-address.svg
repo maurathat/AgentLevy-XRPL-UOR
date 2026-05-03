@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <rect width="1920" height="1080" fill="#0F1117"/>
+
+  <!-- Headline -->
+  <text x="960" y="200" text-anchor="middle"
+        font-family="system-ui, -apple-system, Helvetica, Arial, sans-serif"
+        font-size="48" font-weight="300" fill="#9ca3af">
+    one UOR address, four representations
+  </text>
+
+  <!-- Big Braille -->
+  <text x="960" y="540" text-anchor="middle"
+        font-family="Menlo, Monaco, 'Courier New', monospace"
+        font-size="120" font-weight="400" fill="#7DD3FC"
+        letter-spacing="-2">
+    ⡌⣁⣢⣼⠭⡠⣁⣠⢫⡿⡩⡧⢥⢞⠣⢭⠄⠉⡌⣓⣀⠓⡑⢗⠛⢌⢵⢪⠦⠁⠾⡧
+  </text>
+
+  <!-- Small label -->
+  <text x="960" y="640" text-anchor="middle"
+        font-family="system-ui, -apple-system, sans-serif"
+        font-size="32" font-weight="400" fill="#6B7280">
+    store:uorAddress.u:glyph
+  </text>
+
+  <!-- Hex below -->
+  <text x="960" y="800" text-anchor="middle"
+        font-family="Menlo, Monaco, 'Courier New', monospace"
+        font-size="32" font-weight="400" fill="#9ca3af">
+    sha256:4cc1e2fc2d60c1e0ab7f6967a59e23ad04094cd3c01351971b8cb5aa26013e67
+  </text>
+
+  <!-- Footer -->
+  <text x="960" y="980" text-anchor="middle"
+        font-family="system-ui, -apple-system, sans-serif"
+        font-size="28" font-style="italic" fill="#6B7280">
+    verified byte-identical to UOR Foundation's canonical reference
+  </text>
+</svg>

@@ -1,40 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
-  <rect width="1920" height="1080" fill="#0F1117"/>
+  <rect width="1920" height="1080" fill="#283A8C"/>
 
-  <!-- Headline -->
-  <text x="960" y="200" text-anchor="middle"
-        font-family="system-ui, -apple-system, Helvetica, Arial, sans-serif"
-        font-size="48" font-weight="300" fill="#9ca3af">
-    one UOR address, four representations
+  <!-- Top hairline (Cream-on-Ruri) -->
+  <line x1="130" y1="120" x2="1790" y2="120"
+        stroke="#F4EFE4" stroke-width="1" opacity="0.32"/>
+
+  <!-- Eyebrow / kicker -->
+  <text x="130" y="180" text-anchor="start"
+        font-family="'DM Sans', 'Helvetica Neue', sans-serif" font-size="22" font-weight="500"
+        letter-spacing="3" fill="#F4EFE4" opacity="0.7">
+    UOR · CONTENT ADDRESS
   </text>
 
-  <!-- Big Braille -->
-  <text x="960" y="540" text-anchor="middle"
-        font-family="Menlo, Monaco, 'Courier New', monospace"
-        font-size="120" font-weight="400" fill="#7DD3FC"
-        letter-spacing="-2">
+  <!-- Headline (Fraunces, Cream) -->
+  <text x="960" y="320" text-anchor="middle"
+        font-family="'Fraunces', 'Times New Roman', serif" font-size="64" font-weight="600"
+        fill="#F4EFE4">
+    One address. Four representations.
+  </text>
+
+  <!-- Big Braille glyph (Karakurenai on Ruri ground) -->
+  <text x="960" y="580" text-anchor="middle"
+        font-family="'IBM Plex Mono', Menlo, monospace" font-size="92" font-weight="500"
+        fill="#B0223A">
     ⡌⣁⣢⣼⠭⡠⣁⣠⢫⡿⡩⡧⢥⢞⠣⢭⠄⠉⡌⣓⣀⠓⡑⢗⠛⢌⢵⢪⠦⠁⠾⡧
   </text>
 
-  <!-- Small label -->
-  <text x="960" y="640" text-anchor="middle"
-        font-family="system-ui, -apple-system, sans-serif"
-        font-size="32" font-weight="400" fill="#6B7280">
+  <!-- Hex below (IBM Plex Mono, Cream) -->
+  <text x="960" y="800" text-anchor="middle"
+        font-family="'IBM Plex Mono', Menlo, monospace" font-size="28" font-weight="500"
+        fill="#F4EFE4">
+    sha256:4cc1e2fc2d60c1e0ab7f6967a59e23ad04094cd3c01351971b8cb5aa26013e67
+  </text>
+  <text x="960" y="848" text-anchor="middle"
+        font-family="'DM Sans', 'Helvetica Neue', sans-serif" font-size="22" font-weight="500"
+        letter-spacing="2" fill="#F4EFE4" opacity="0.6">
     store:uorAddress.u:glyph
   </text>
 
-  <!-- Hex below -->
-  <text x="960" y="800" text-anchor="middle"
-        font-family="Menlo, Monaco, 'Courier New', monospace"
-        font-size="32" font-weight="400" fill="#9ca3af">
-    sha256:4cc1e2fc2d60c1e0ab7f6967a59e23ad04094cd3c01351971b8cb5aa26013e67
+  <!-- Footer line: brand voice + attribution -->
+  <text x="130" y="1010" text-anchor="start"
+        font-family="'Fraunces', 'Times New Roman', serif" font-size="26" font-weight="500"
+        font-style="italic" fill="#F4EFE4" opacity="0.85">
+    Verified byte-identical to UOR Foundation's canonical reference.
   </text>
-
-  <!-- Footer -->
-  <text x="960" y="980" text-anchor="middle"
-        font-family="system-ui, -apple-system, sans-serif"
-        font-size="28" font-style="italic" fill="#6B7280">
-    verified byte-identical to UOR Foundation's canonical reference
-  </text>
+  
+  <g opacity="0.55">
+    <text x="1790" y="1010" text-anchor="end"
+          font-family="'DM Sans', 'Helvetica Neue', sans-serif" font-size="20" font-weight="500"
+          letter-spacing="2" fill="#F4EFE4">KESSAI</text>
+    <text x="1804" y="1010" text-anchor="start"
+          font-family="'Noto Serif JP', 'Hiragino Mincho ProN', serif" font-size="20" font-weight="500"
+          fill="#F4EFE4">·  決済</text>
+  </g>
 </svg>

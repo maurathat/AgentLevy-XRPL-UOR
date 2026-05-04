@@ -1,45 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
-  <rect width="1920" height="1080" fill="#0F1117"/>
+  <rect width="1920" height="1080" fill="#283A8C"/>
 
-  <!-- Subtitle -->
-  <text x="960" y="180" text-anchor="middle"
-        font-family="system-ui, -apple-system, sans-serif"
-        font-size="36" font-weight="300" fill="#9ca3af">
-    A real UOR Module Certificate
+  <!-- Top hairline -->
+  <line x1="130" y1="120" x2="1790" y2="120"
+        stroke="#F4EFE4" stroke-width="1" opacity="0.32"/>
+
+  <!-- Eyebrow -->
+  <text x="130" y="180" text-anchor="start"
+        font-family="'DM Sans', 'Helvetica Neue', sans-serif" font-size="22" font-weight="500"
+        letter-spacing="3" fill="#F4EFE4" opacity="0.7">
+    UOR · MODULE CERTIFICATE
   </text>
 
-  <!-- Subject -->
-  <text x="960" y="270" text-anchor="middle"
-        font-family="Menlo, Monaco, monospace"
-        font-size="36" font-weight="500" fill="#fb923c">
+  <!-- Headline -->
+  <text x="960" y="290" text-anchor="middle"
+        font-family="'Fraunces', 'Times New Roman', serif" font-size="60" font-weight="600"
+        fill="#F4EFE4">
+    A real UOR cert in the wild.
+  </text>
+
+  <!-- Subject (mono, Cream) -->
+  <text x="960" y="385" text-anchor="middle"
+        font-family="'IBM Plex Mono', Menlo, monospace" font-size="30" font-weight="500"
+        fill="#F4EFE4" opacity="0.85">
     project:hologram-sdk
   </text>
 
-  <!-- Big Braille -->
-  <text x="960" y="540" text-anchor="middle"
-        font-family="Menlo, Monaco, 'Courier New', monospace"
-        font-size="100" font-weight="400" fill="#7DD3FC"
-        letter-spacing="-2">
+  <!-- Big Braille glyph (Karakurenai on Ruri ground) -->
+  <text x="960" y="600" text-anchor="middle"
+        font-family="'IBM Plex Mono', Menlo, monospace" font-size="86" font-weight="500"
+        fill="#B0223A">
     ⡼⠚⢡⢇⡚⠗⣱⣑⡂⠳⣋⣐⡖⣁⣜⡗⣈⠇⣧⢅⢟⣒⡳⢽⠋⡥⢛⣆⡉⠞⢈⣣
   </text>
 
   <!-- CID below -->
-  <text x="960" y="700" text-anchor="middle"
-        font-family="Menlo, Monaco, monospace"
-        font-size="22" font-weight="400" fill="#6B7280">
+  <text x="960" y="800" text-anchor="middle"
+        font-family="'IBM Plex Mono', Menlo, monospace" font-size="22" font-weight="400"
+        fill="#F4EFE4" opacity="0.7">
     baguqeerapqnkdb22c7y5cqrtzpifnqo4k7eapz4ft7jhhpilmwn4msi6rdrq
   </text>
 
-  <!-- Footer -->
-  <text x="960" y="900" text-anchor="middle"
-        font-family="system-ui, -apple-system, sans-serif"
-        font-size="32" font-style="italic" fill="#9ca3af">
-    every UOR-certified object has the same shape
+  <!-- Footer line: brand voice + attribution -->
+  <text x="130" y="1010" text-anchor="start"
+        font-family="'Fraunces', 'Times New Roman', serif" font-size="26" font-weight="500"
+        font-style="italic" fill="#F4EFE4" opacity="0.85">
+    Every UOR-certified object has the same shape. Kessai's, byte-for-byte.
   </text>
-  <text x="960" y="950" text-anchor="middle"
-        font-family="system-ui, -apple-system, sans-serif"
-        font-size="28" fill="#6B7280">
-    Kessai certs follow the same format, byte-for-byte
-  </text>
+  
+  <g opacity="0.55">
+    <text x="1790" y="1010" text-anchor="end"
+          font-family="'DM Sans', 'Helvetica Neue', sans-serif" font-size="20" font-weight="500"
+          letter-spacing="2" fill="#F4EFE4">KESSAI</text>
+    <text x="1804" y="1010" text-anchor="start"
+          font-family="'Noto Serif JP', 'Hiragino Mincho ProN', serif" font-size="20" font-weight="500"
+          fill="#F4EFE4">·  決済</text>
+  </g>
 </svg>

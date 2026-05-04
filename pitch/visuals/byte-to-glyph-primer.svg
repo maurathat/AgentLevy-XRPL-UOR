@@ -1,123 +1,148 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
-  <rect width="1920" height="1080" fill="#0F1117"/>
+  <rect width="1920" height="1080" fill="#F6F7FA"/>
 
-  <!-- Title -->
-  <text x="960" y="120" text-anchor="middle"
-        font-family="system-ui, -apple-system, sans-serif"
-        font-size="48" font-weight="300" fill="#e5e7eb">
-    Each byte becomes one Braille codepoint
+  <!-- Top hairline -->
+  <line x1="130" y1="120" x2="1790" y2="120"
+        stroke="#9BA0A0" stroke-width="1" opacity="0.4"/>
+
+  <!-- Eyebrow -->
+  <text x="130" y="180" text-anchor="start"
+        font-family="'DM Sans', 'Helvetica Neue', sans-serif" font-size="22" font-weight="500"
+        letter-spacing="3" fill="#283A8C">
+    UOR · ENCODING PRIMER
   </text>
-  <text x="960" y="180" text-anchor="middle"
-        font-family="system-ui, -apple-system, sans-serif"
-        font-size="28" fill="#9ca3af">
+
+  <!-- Title (Fraunces, Sumi) -->
+  <text x="960" y="280" text-anchor="middle"
+        font-family="'Fraunces', 'Times New Roman', serif" font-size="60" font-weight="600"
+        fill="#1A1714">
+    Each byte becomes one Braille codepoint.
+  </text>
+  <text x="960" y="340" text-anchor="middle"
+        font-family="'IBM Plex Mono', Menlo, monospace" font-size="26" font-weight="500"
+        fill="#283A8C">
     codepoint = U+2800 + byte_value
   </text>
 
-  <!-- Header row -->
-  <text x="350" y="320" text-anchor="middle"
-        font-family="system-ui, -apple-system, sans-serif"
-        font-size="24" fill="#6B7280">byte</text>
-  <text x="800" y="320" text-anchor="middle"
-        font-family="system-ui, -apple-system, sans-serif"
-        font-size="24" fill="#6B7280">codepoint</text>
-  <text x="1250" y="320" text-anchor="middle"
-        font-family="system-ui, -apple-system, sans-serif"
-        font-size="24" fill="#6B7280">glyph</text>
-  <text x="1700" y="320" text-anchor="middle"
-        font-family="system-ui, -apple-system, sans-serif"
-        font-size="24" fill="#6B7280">meaning</text>
+  <!-- Header row labels (DM Sans, Gin) -->
+  <text x="350" y="450" text-anchor="middle"
+        font-family="'DM Sans', 'Helvetica Neue', sans-serif" font-size="20" font-weight="500"
+        letter-spacing="2" fill="#9BA0A0">BYTE</text>
+  <text x="800" y="450" text-anchor="middle"
+        font-family="'DM Sans', 'Helvetica Neue', sans-serif" font-size="20" font-weight="500"
+        letter-spacing="2" fill="#9BA0A0">CODEPOINT</text>
+  <text x="1250" y="450" text-anchor="middle"
+        font-family="'DM Sans', 'Helvetica Neue', sans-serif" font-size="20" font-weight="500"
+        letter-spacing="2" fill="#9BA0A0">GLYPH</text>
+  <text x="1700" y="450" text-anchor="middle"
+        font-family="'DM Sans', 'Helvetica Neue', sans-serif" font-size="20" font-weight="500"
+        letter-spacing="2" fill="#9BA0A0">MEANING</text>
 
-  <line x1="200" y1="350" x2="1820" y2="350" stroke="#374151" stroke-width="1"/>
+  <line x1="200" y1="475" x2="1820" y2="475"
+        stroke="#9BA0A0" stroke-width="1" opacity="0.45"/>
 
-  <text x="350" y="440" text-anchor="middle"
-        font-family="Menlo, Monaco, monospace"
-        font-size="44" fill="#fb923c">
+  <text x="350" y="555" text-anchor="middle"
+        font-family="'IBM Plex Mono', Menlo, monospace" font-size="38" font-weight="600"
+        fill="#283A8C">
     0x00
   </text>
-  <text x="800" y="440" text-anchor="middle"
-        font-family="Menlo, Monaco, monospace"
-        font-size="36" fill="#9ca3af">
+  <text x="800" y="555" text-anchor="middle"
+        font-family="'IBM Plex Mono', Menlo, monospace" font-size="30" font-weight="500"
+        fill="#1A1714">
     U+2800
   </text>
-  <text x="1250" y="440" text-anchor="middle"
-        font-family="Menlo, Monaco, monospace"
-        font-size="100" fill="#7DD3FC">
+  <text x="1250" y="563" text-anchor="middle"
+        font-family="'IBM Plex Mono', Menlo, monospace" font-size="76" font-weight="500"
+        fill="#B0223A">
     ⠀
   </text>
-  <text x="1700" y="428" text-anchor="middle"
-        font-family="system-ui, -apple-system, sans-serif"
-        font-size="22" fill="#9ca3af">
+  <text x="1700" y="551" text-anchor="middle"
+        font-family="'DM Sans', 'Helvetica Neue', sans-serif" font-size="22" font-weight="500"
+        fill="#1A1714">
     empty (no bits set)
   </text>
 
-  <text x="350" y="600" text-anchor="middle"
-        font-family="Menlo, Monaco, monospace"
-        font-size="44" fill="#fb923c">
+  <text x="350" y="665" text-anchor="middle"
+        font-family="'IBM Plex Mono', Menlo, monospace" font-size="38" font-weight="600"
+        fill="#283A8C">
     0x42
   </text>
-  <text x="800" y="600" text-anchor="middle"
-        font-family="Menlo, Monaco, monospace"
-        font-size="36" fill="#9ca3af">
+  <text x="800" y="665" text-anchor="middle"
+        font-family="'IBM Plex Mono', Menlo, monospace" font-size="30" font-weight="500"
+        fill="#1A1714">
     U+2842
   </text>
-  <text x="1250" y="600" text-anchor="middle"
-        font-family="Menlo, Monaco, monospace"
-        font-size="100" fill="#7DD3FC">
+  <text x="1250" y="673" text-anchor="middle"
+        font-family="'IBM Plex Mono', Menlo, monospace" font-size="76" font-weight="500"
+        fill="#B0223A">
     ⡂
   </text>
-  <text x="1700" y="588" text-anchor="middle"
-        font-family="system-ui, -apple-system, sans-serif"
-        font-size="22" fill="#9ca3af">
+  <text x="1700" y="661" text-anchor="middle"
+        font-family="'DM Sans', 'Helvetica Neue', sans-serif" font-size="22" font-weight="500"
+        fill="#1A1714">
     the letter 'B' in ASCII
   </text>
 
-  <text x="350" y="760" text-anchor="middle"
-        font-family="Menlo, Monaco, monospace"
-        font-size="44" fill="#fb923c">
+  <text x="350" y="775" text-anchor="middle"
+        font-family="'IBM Plex Mono', Menlo, monospace" font-size="38" font-weight="600"
+        fill="#283A8C">
     0xFF
   </text>
-  <text x="800" y="760" text-anchor="middle"
-        font-family="Menlo, Monaco, monospace"
-        font-size="36" fill="#9ca3af">
+  <text x="800" y="775" text-anchor="middle"
+        font-family="'IBM Plex Mono', Menlo, monospace" font-size="30" font-weight="500"
+        fill="#1A1714">
     U+28FF
   </text>
-  <text x="1250" y="760" text-anchor="middle"
-        font-family="Menlo, Monaco, monospace"
-        font-size="100" fill="#7DD3FC">
+  <text x="1250" y="783" text-anchor="middle"
+        font-family="'IBM Plex Mono', Menlo, monospace" font-size="76" font-weight="500"
+        fill="#B0223A">
     ⣿
   </text>
-  <text x="1700" y="748" text-anchor="middle"
-        font-family="system-ui, -apple-system, sans-serif"
-        font-size="22" fill="#9ca3af">
+  <text x="1700" y="771" text-anchor="middle"
+        font-family="'DM Sans', 'Helvetica Neue', sans-serif" font-size="22" font-weight="500"
+        fill="#1A1714">
     all bits set
   </text>
 
-  <text x="350" y="920" text-anchor="middle"
-        font-family="Menlo, Monaco, monospace"
-        font-size="44" fill="#fb923c">
+  <text x="350" y="885" text-anchor="middle"
+        font-family="'IBM Plex Mono', Menlo, monospace" font-size="38" font-weight="600"
+        fill="#283A8C">
     0xA5
   </text>
-  <text x="800" y="920" text-anchor="middle"
-        font-family="Menlo, Monaco, monospace"
-        font-size="36" fill="#9ca3af">
+  <text x="800" y="885" text-anchor="middle"
+        font-family="'IBM Plex Mono', Menlo, monospace" font-size="30" font-weight="500"
+        fill="#1A1714">
     U+28A5
   </text>
-  <text x="1250" y="920" text-anchor="middle"
-        font-family="Menlo, Monaco, monospace"
-        font-size="100" fill="#7DD3FC">
+  <text x="1250" y="893" text-anchor="middle"
+        font-family="'IBM Plex Mono', Menlo, monospace" font-size="76" font-weight="500"
+        fill="#B0223A">
     ⢥
   </text>
-  <text x="1700" y="908" text-anchor="middle"
-        font-family="system-ui, -apple-system, sans-serif"
-        font-size="22" fill="#9ca3af">
+  <text x="1700" y="881" text-anchor="middle"
+        font-family="'DM Sans', 'Helvetica Neue', sans-serif" font-size="22" font-weight="500"
+        fill="#1A1714">
     alternating bits
   </text>
 
-  <!-- Footer -->
-  <text x="960" y="1020" text-anchor="middle"
-        font-family="system-ui, -apple-system, sans-serif"
-        font-size="28" font-style="italic" fill="#6B7280">
-    32 bytes -> 32 Braille codepoints. The address IS the byte sequence, visualized.
+  <!-- Bottom hairline -->
+  <line x1="130" y1="950" x2="1790" y2="950"
+        stroke="#9BA0A0" stroke-width="1" opacity="0.4"/>
+
+  <!-- Footer voice line + attribution -->
+  <text x="130" y="1010" text-anchor="start"
+        font-family="'Fraunces', 'Times New Roman', serif" font-size="24" font-weight="500"
+        font-style="italic" fill="#1A1714">
+    32 bytes → 32 Braille codepoints. The address IS the byte sequence, visualized.
   </text>
+  
+  <g opacity="0.55">
+    <text x="1790" y="1010" text-anchor="end"
+          font-family="'DM Sans', 'Helvetica Neue', sans-serif" font-size="20" font-weight="500"
+          letter-spacing="2" fill="#1A1714">KESSAI</text>
+    <text x="1804" y="1010" text-anchor="start"
+          font-family="'Noto Serif JP', 'Hiragino Mincho ProN', serif" font-size="20" font-weight="500"
+          fill="#1A1714">·  決済</text>
+  </g>
 </svg>

@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kessai — Brand System V1.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Serif+JP:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ruri:        #283A8C;
+    --ruri-deep:   #1B2864;
+    --karakurenai: #B0223A;
+    --karakurenai-deep: #8A1A2E;
+    --hakuji:      #F6F7FA;
+    --hakuji-deep: #ECEFF5;
+    --sumi:        #1A1714;
+    --washi:       #F4EFE4;
+    --gin:         #9BA0A0;
+    --hairline-light: rgba(26,23,20,0.16);
+    --hairline-dark:  rgba(244,239,228,0.22);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--hakuji);
+    color: var(--sumi);
+    font-family: 'DM Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 500;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: geometricPrecision;
+  }
+
+  .frame { max-width: 1180px; margin: 0 auto; padding: 0 64px; }
+  section { padding: 140px 0; border-top: 1px solid var(--hairline-light); }
+  section:first-of-type { border-top: 0; padding: 0; }
+
+  .section-head {
+    display: flex; align-items: baseline; gap: 28px; margin-bottom: 72px;
+  }
+  .section-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.18em; color: var(--sumi); opacity: 0.55;
+  }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-variation-settings: 'opsz' 144, 'SOFT' 40;
+    font-size: 42px; letter-spacing: -0.01em; color: var(--sumi);
+  }
+  .section-kanji {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 500; font-size: 18px;
+    color: var(--sumi); opacity: 0.45;
+    margin-left: auto; letter-spacing: 0.3em;
+  }
+
+  /* ═════ COVER (full dual system) ═════ */
+  .cover {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .cover-half {
+    padding: 64px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+  }
+  .cover-half.navy {
+    background: var(--ruri);
+    color: var(--washi);
+  }
+  .cover-half.white {
+    background: var(--hakuji);
+    color: var(--sumi);
+  }
+  .cover-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 500; letter-spacing: 0.24em;
+    text-transform: uppercase; opacity: 0.65;
+  }
+  .cover-mark { align-self: flex-start; }
+  .cover-mark svg { display: block; }
+  .cover-title-block { display: flex; flex-direction: column; gap: 6px; }
+  .cover-tagline {
+    font-family: 'Fraunces', serif;
+    font-style: italic; font-weight: 500;
+    font-size: 30px; letter-spacing: -0.01em;
+    line-height: 1.3; max-width: 380px;
+    margin-top: 18px;
+  }
+  .cover-foot {
+    display: flex; justify-content: space-between;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.24em;
+    text-transform: uppercase; opacity: 0.7;
+  }
+  .cover-treatment {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px; letter-spacing: 0.24em;
+    text-transform: uppercase;
+    opacity: 0.55;
+  }
+
+  /* Dot-matrix wordmark in HTML */
+  .dm-wordmark {
+    display: block;
+  }
+  .cover-wordmark-block {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .cover-kanji {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 500; font-size: 26px; letter-spacing: 0.4em;
+    opacity: 0.7;
+  }
+
+  /* ═════ ESSENCE ═════ */
+  .essence-grid {
+    display: grid; grid-template-columns: 1fr 1.4fr;
+    gap: 96px; align-items: start;
+  }
+  .essence-statement {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-variation-settings: 'opsz' 144, 'SOFT' 40;
+    font-size: 38px; line-height: 1.3;
+    letter-spacing: -0.015em; color: var(--sumi);
+  }
+  .essence-statement em {
+    font-style: italic; color: var(--karakurenai); font-weight: 600;
+  }
+  .essence-prose p {
+    font-size: 16px; font-weight: 400; line-height: 1.75;
+    color: var(--sumi); opacity: 0.85; margin-bottom: 22px;
+  }
+  .essence-prose p:last-child { margin-bottom: 0; }
+  .essence-prose strong { font-weight: 600; opacity: 1; }
+
+  .principles {
+    margin-top: 72px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    border-top: 1px solid var(--hairline-light);
+    border-bottom: 1px solid var(--hairline-light);
+  }
+  .principle {
+    padding: 36px 28px 36px 0;
+    border-right: 1px solid var(--hairline-light);
+  }
+  .principle:last-child { border-right: 0; padding-right: 0; }
+  .principle-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.2em;
+    color: var(--karakurenai); margin-bottom: 18px;
+  }
+  .principle-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 24px; margin-bottom: 10px; letter-spacing: -0.01em;
+  }
+  .principle-jp {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 500; font-size: 13px;
+    opacity: 0.5; margin-bottom: 16px; letter-spacing: 0.15em;
+  }
+  .principle-desc {
+    font-size: 13px; font-weight: 400; line-height: 1.65;
+    opacity: 0.78;
+  }
+
+  /* ═════ LOGO SYSTEM (DUAL) ═════ */
+  .logo-dual-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .logo-card {
+    border: 1px solid var(--hairline-light);
+    border-radius: 0;
+    aspect-ratio: 16/10;
+    display: flex; align-items: center; justify-content: center;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .logo-card.navy { background: var(--ruri); }
+  .logo-card.white { background: var(--hakuji); border: 1px solid var(--hairline-light); }
+  .logo-card-label {
+    position: absolute;
+    bottom: 16px; left: 18px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px; font-weight: 600; letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .logo-card.navy .logo-card-label { color: var(--washi); opacity: 0.75; }
+  .logo-card.white .logo-card-label { color: var(--sumi); opacity: 0.6; }
+
+  .logo-card-content {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 18px;
+  }
+
+  .logo-grid-3 {
+    margin-top: 24px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  }
+  .logo-card-sm {
+    border: 1px solid var(--hairline-light);
+    aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center;
+    padding: 36px;
+    position: relative;
+  }
+  .logo-card-sm.navy { background: var(--ruri); }
+  .logo-card-sm.white { background: var(--hakuji); }
+  .logo-card-sm.deep { background: var(--ruri-deep); }
+  .logo-card-sm svg { max-width: 100%; max-height: 100%; }
+
+  .clearspace-note {
+    margin-top: 36px; padding: 24px 0;
+    border-top: 1px solid var(--hairline-light);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.15em;
+    opacity: 0.65; text-transform: uppercase;
+    display: flex; justify-content: space-between;
+  }
+
+  /* ═════ GLYPHS ═════ */
+  .glyph-intro {
+    display: grid; grid-template-columns: 1fr 1.5fr;
+    gap: 96px; margin-bottom: 80px; align-items: start;
+  }
+  .glyph-statement {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 30px; line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+  .glyph-prose {
+    font-size: 15px; font-weight: 400; line-height: 1.8;
+    opacity: 0.85;
+  }
+  .glyph-prose p { margin-bottom: 20px; }
+  .glyph-prose strong { font-weight: 600; opacity: 1; }
+  .glyph-prose em { font-family: 'Fraunces', serif; font-style: italic; font-weight: 500; }
+
+  .glyph-grid {
+    display: grid; grid-template-columns: repeat(8, 1fr); gap: 0;
+    border: 1px solid var(--hairline-light);
+    background: var(--hakuji-deep);
+  }
+  .glyph-cell {
+    aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center;
+    border-right: 1px solid var(--hairline-light);
+    border-bottom: 1px solid var(--hairline-light);
+    position: relative; padding: 12px;
+  }
+  .glyph-cell:nth-child(8n) { border-right: 0; }
+  .glyph-cell:nth-last-child(-n+8) { border-bottom: 0; }
+  .glyph-cell.featured { background: var(--karakurenai); }
+  .glyph-cell-num {
+    position: absolute; top: 6px; left: 7px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 8px; font-weight: 600;
+    color: var(--sumi); opacity: 0.45;
+  }
+  .glyph-cell.featured .glyph-cell-num { color: var(--washi); opacity: 0.9; }
+
+  .glyph-callout {
+    margin-top: 56px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+  }
+  .callout-card {
+    border: 1px solid var(--hairline-light);
+    padding: 36px;
+    display: flex; flex-direction: column; align-items: center; gap: 18px;
+    background: var(--hakuji);
+  }
+  .callout-card svg { width: 56px; height: 56px; }
+  .callout-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.2em;
+    color: var(--karakurenai);
+  }
+  .callout-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 600; font-size: 22px;
+  }
+  .callout-jp {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 500; font-size: 12px;
+    opacity: 0.55; letter-spacing: 0.2em;
+  }
+  .callout-desc {
+    font-size: 12px; font-weight: 400; line-height: 1.65;
+    text-align: center; opacity: 0.78;
+  }
+
+  /* ═════ PALETTE (6 colors) ═════ */
+  .palette-grid {
+    display: grid;
+    grid-template-columns: 2fr 1.4fr 1fr 1fr 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--hairline-light);
+  }
+  .swatch {
+    padding: 36px 28px; height: 300px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    border-right: 1px solid rgba(0,0,0,0.06);
+  }
+  .swatch:last-child { border-right: 0; }
+  .swatch.ruri { background: var(--ruri); color: var(--washi); }
+  .swatch.karakurenai { background: var(--karakurenai); color: var(--washi); }
+  .swatch.hakuji { background: var(--hakuji-deep); color: var(--sumi); }
+  .swatch.sumi { background: var(--sumi); color: var(--washi); }
+  .swatch.washi { background: var(--washi); color: var(--sumi); }
+  .swatch.gin { background: var(--gin); color: var(--sumi); }
+
+  .swatch-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 600; font-size: 28px;
+    letter-spacing: -0.01em;
+  }
+  .swatch-jp {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 500; font-size: 14px;
+    opacity: 0.72; margin-top: 4px; letter-spacing: 0.18em;
+  }
+  .swatch-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.08em; line-height: 1.7; opacity: 0.88;
+  }
+  .swatch-role {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px; font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase; opacity: 0.72; margin-bottom: 16px;
+  }
+
+  /* ═════ TYPOGRAPHY ═════ */
+  .type-stack {
+    display: grid; grid-template-columns: 200px 1fr; gap: 0;
+    border-top: 1px solid var(--hairline-light);
+  }
+  .type-row { display: contents; }
+  .type-label {
+    padding: 40px 32px 40px 0;
+    border-bottom: 1px solid var(--hairline-light);
+  }
+  .type-label-name {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--karakurenai); margin-bottom: 8px;
+  }
+  .type-label-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 400;
+    color: var(--sumi); opacity: 0.7; line-height: 1.6;
+  }
+  .type-sample {
+    padding: 40px 0;
+    border-bottom: 1px solid var(--hairline-light);
+    color: var(--sumi);
+  }
+  .type-sample.display {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-variation-settings: 'opsz' 144, 'SOFT' 40;
+    font-size: 64px; line-height: 1.05; letter-spacing: -0.015em;
+  }
+  .type-sample.wordmark-row {
+    display: flex; align-items: center; gap: 24px;
+  }
+  .type-sample.kanji {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 500; font-size: 48px; letter-spacing: 0.25em;
+  }
+  .type-sample.body {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500; font-size: 18px; line-height: 1.6;
+    max-width: 520px;
+  }
+  .type-sample.mono {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500; font-size: 14px;
+    letter-spacing: 0.04em; color: var(--ruri); line-height: 1.7;
+  }
+
+  /* ═════ VOICE ═════ */
+  .voice-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 0;
+    border-top: 1px solid var(--hairline-light);
+    border-left: 1px solid var(--hairline-light);
+  }
+  .voice-cell {
+    border-right: 1px solid var(--hairline-light);
+    border-bottom: 1px solid var(--hairline-light);
+    padding: 40px 36px;
+  }
+  .voice-do { background: var(--hakuji); }
+  .voice-dont { background: var(--hakuji-deep); }
+  .voice-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.2em;
+    margin-bottom: 18px; text-transform: uppercase;
+  }
+  .voice-tag.do { color: var(--karakurenai); }
+  .voice-tag.dont { color: var(--sumi); opacity: 0.5; }
+  .voice-quote {
+    font-family: 'Fraunces', serif;
+    font-style: italic; font-weight: 500;
+    font-size: 22px; line-height: 1.45;
+    letter-spacing: -0.005em;
+  }
+  .voice-dont .voice-quote {
+    text-decoration: line-through;
+    text-decoration-thickness: 1.5px;
+    text-decoration-color: rgba(176,34,58,0.55);
+    opacity: 0.55; font-style: normal;
+  }
+
+  /* ═════ APPLICATIONS ═════ */
+  .app-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .app-card {
+    border: 1px solid var(--hairline-light);
+    aspect-ratio: 16/10;
+    position: relative; overflow: hidden;
+    background: var(--hakuji-deep);
+    padding: 20px;
+  }
+  .app-card-tag {
+    position: absolute; top: 16px; left: 22px; z-index: 2;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px; font-weight: 600; letter-spacing: 0.2em;
+    color: var(--sumi); opacity: 0.55; text-transform: uppercase;
+  }
+
+  .slide-mock {
+    background: var(--ruri);
+    height: 100%; width: 100%;
+    padding: 48px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    color: var(--washi);
+  }
+  .slide-mock-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px; font-weight: 600; letter-spacing: 0.22em;
+    color: var(--karakurenai); text-transform: uppercase;
+  }
+  .slide-mock-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 36px; line-height: 1.15;
+    max-width: 80%; margin-top: 16px;
+    letter-spacing: -0.015em;
+    color: var(--washi);
+  }
+  .slide-mock-foot {
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px; font-weight: 600; letter-spacing: 0.2em;
+    opacity: 0.7; text-transform: uppercase;
+  }
+
+  .card-mock {
+    background: var(--ruri);
+    height: 100%; width: 100%; padding: 36px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    color: var(--washi);
+  }
+  .card-mock-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 600; font-size: 22px;
+    letter-spacing: -0.005em;
+  }
+  .card-mock-role {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.2em;
+    opacity: 0.7; margin-top: 4px; text-transform: uppercase;
+  }
+  .card-mock-info {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 500;
+    line-height: 1.8; opacity: 0.78; letter-spacing: 0.06em;
+  }
+
+  .chip-mock {
+    background: var(--hakuji);
+    height: 100%; width: 100%; padding: 32px 36px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .chip-mock-header {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px; font-weight: 600; letter-spacing: 0.2em;
+    color: var(--ruri); text-transform: uppercase; margin-bottom: 6px;
+  }
+  .chip-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 16px;
+    border: 1px solid var(--hairline-light);
+    background: var(--hakuji);
+  }
+  .chip-row .glyph-mini { width: 18px; height: 18px; flex-shrink: 0; }
+  .chip-row.settled { border-left: 3px solid var(--karakurenai); }
+  .chip-row.escrow  { border-left: 3px solid var(--ruri); }
+  .chip-row.pending { border-left: 3px solid var(--gin); }
+  .chip-amount {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px; font-weight: 600;
+    color: var(--sumi); flex-grow: 1;
+  }
+  .chip-status {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px; font-weight: 600; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--sumi); opacity: 0.65;
+  }
+
+  .doc-mock {
+    background: var(--hakuji);
+    height: 100%; width: 100%; padding: 44px;
+    display: flex; align-items: center; gap: 36px;
+  }
+  .doc-text { flex: 1; }
+  .doc-text-line {
+    height: 6px;
+    background: rgba(26,23,20,0.32);
+    margin-bottom: 10px; border-radius: 1px;
+  }
+  .doc-text-line.short { width: 70%; }
+  .doc-text-line.medium { width: 90%; }
+  .doc-text-stamp {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px; font-weight: 600; letter-spacing: 0.2em;
+    color: var(--sumi); opacity: 0.7;
+    margin-top: 24px; text-transform: uppercase;
+  }
+
+  /* ═════ FOOTER ═════ */
+  .footer {
+    padding: 80px 0 64px;
+    border-top: 1px solid var(--hairline-light);
+    text-align: center;
+  }
+  .footer-mark { display: inline-block; }
+  .footer-mark svg { display: block; margin: 0 auto; }
+  .footer-meta {
+    margin-top: 36px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.22em;
+    text-transform: uppercase; opacity: 0.6;
+  }
+
+  @media (max-width: 900px) {
+    .frame { padding: 0 32px; }
+    .cover { grid-template-columns: 1fr; }
+    .essence-grid, .glyph-intro { grid-template-columns: 1fr; gap: 48px; }
+    .principles { grid-template-columns: repeat(2, 1fr); }
+    .principle:nth-child(2) { border-right: 0; }
+    .glyph-grid { grid-template-columns: repeat(4, 1fr); }
+    .glyph-cell:nth-child(8n) { border-right: 1px solid var(--hairline-light); }
+    .glyph-cell:nth-child(4n) { border-right: 0; }
+    .palette-grid { grid-template-columns: 1fr; }
+    .swatch { border-right: 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .type-stack { grid-template-columns: 1fr; }
+    .type-sample.display { font-size: 40px; }
+    .app-grid { grid-template-columns: 1fr; }
+    .logo-dual-row, .logo-grid-3 { grid-template-columns: 1fr 1fr; }
+    .voice-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════ COVER (DUAL) ════════════════════ -->
+<section class="cover">
+  <!-- LEFT: NAVY -->
+  <div class="cover-half navy">
+    <div>
+      <div class="cover-meta">Brand System  ·  V1.0  ·  May 2026</div>
+      <div class="cover-treatment" style="margin-top: 4px;">Hero · Stamp · Cover</div>
+    </div>
+
+    <div class="cover-mark">
+      <svg width="160" height="160" viewBox="0 0 240 240">
+        <rect width="240" height="240" rx="6" fill="#B0223A"/>
+        <rect x="14" y="14" width="212" height="212" rx="3" fill="none" stroke="#F4EFE4" stroke-width="3.5"/>
+        <g transform="translate(120,120)" stroke="#F4EFE4" stroke-width="7" stroke-linecap="square">
+          <line x1="-50" y1="-60" x2="50" y2="-60"/>
+          <line x1="-50" y1="-36" x2="-10" y2="-36"/><line x1="10" y1="-36" x2="50" y2="-36"/>
+          <line x1="-50" y1="-12" x2="50" y2="-12"/>
+          <line x1="-50" y1="12" x2="50" y2="12"/>
+          <line x1="-50" y1="36" x2="50" y2="36"/>
+          <line x1="-50" y1="60" x2="-10" y2="60"/><line x1="10" y1="60" x2="50" y2="60"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="cover-wordmark-block">
+      <svg style="display:block; width:100%; max-width:480px; height:auto;" class="dm-wordmark" data-dotmatrix data-fill="#F4EFE4" data-size="11"></svg>
+      <div class="cover-kanji">決 済</div>
+      <div class="cover-tagline">Trust, computed.</div>
+    </div>
+
+    <div class="cover-foot">
+      <span>Settled.</span>
+      <span>Verified.</span>
+      <span>Final.</span>
+    </div>
+  </div>
+
+  <!-- RIGHT: WHITE -->
+  <div class="cover-half white">
+    <div>
+      <div class="cover-meta">Document  ·  UI  ·  Receipt</div>
+      <div class="cover-treatment" style="margin-top: 4px;">Light Treatment</div>
+    </div>
+
+    <div class="cover-mark">
+      <svg width="160" height="160" viewBox="0 0 240 240">
+        <rect width="240" height="240" rx="6" fill="#B0223A"/>
+        <rect x="14" y="14" width="212" height="212" rx="3" fill="none" stroke="#F4EFE4" stroke-width="3.5"/>
+        <g transform="translate(120,120)" stroke="#F4EFE4" stroke-width="7" stroke-linecap="square">
+          <line x1="-50" y1="-60" x2="50" y2="-60"/>
+          <line x1="-50" y1="-36" x2="-10" y2="-36"/><line x1="10" y1="-36" x2="50" y2="-36"/>
+          <line x1="-50" y1="-12" x2="50" y2="-12"/>
+          <line x1="-50" y1="12" x2="50" y2="12"/>
+          <line x1="-50" y1="36" x2="50" y2="36"/>
+          <line x1="-50" y1="60" x2="-10" y2="60"/><line x1="10" y1="60" x2="50" y2="60"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="cover-wordmark-block">
+      <svg style="display:block; width:100%; max-width:480px; height:auto;" class="dm-wordmark" data-dotmatrix data-fill="#283A8C" data-size="11"></svg>
+      <div class="cover-kanji" style="color: var(--ruri);">決 済</div>
+      <div class="cover-tagline" style="color: var(--ruri);">Trust, computed.</div>
+    </div>
+
+    <div class="cover-foot" style="color: var(--sumi); opacity: 0.7;">
+      <span>Settled.</span>
+      <span>Verified.</span>
+      <span>Final.</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════ ESSENCE ════════════════════ -->
+<section>
+  <div class="frame">
+    <div class="section-head">
+      <div class="section-num">01 / ESSENCE</div>
+      <div class="section-title">What Kessai is</div>
+      
+    </div>
+
+    <div class="essence-grid">
+      <div class="essence-statement">
+        Every transaction is a question.<br>
+        <em>Every settlement is an answer.</em>
+      </div>
+
+      <div class="essence-prose">
+        <p><strong>Kessai is the settlement layer for the agentic economy.</strong> When two autonomous agents transact — one paying, one delivering — Kessai is what makes the moment of completion real. Payment escrowed. Work verified inside a TEE against a committed specification. Both released together, atomically, on-chain. No good-faith assumption. No after-the-fact dispute. A definite outcome, finalized.</p>
+
+        <p>The brand draws its identity from two parallel traditions of settlement. The Japanese <strong>hanko</strong> — the pressed seal that converts intent into legal finality. And the <strong>I Ching hexagram</strong> — sixty-four binary states, each a definite reading of an indeterminate situation. Both are technologies for collapsing ambiguity into a known position. Both are what Kessai does, in code.</p>
+
+        <p>The wordmark itself is a binary encoding — each letter a five-by-five grid of filled and empty cells, the same primitive as the hexagram glyphs. The brand <em>is</em> the system it represents.</p>
+      </div>
+    </div>
+
+    <div class="principles">
+      <div class="principle">
+        <div class="principle-num">P · 01</div>
+        <div class="principle-title">Settled</div>
+        
+        <div class="principle-desc">A transaction is either complete and verified, or it does not exist. There is no in-between, no pending reputation.</div>
+      </div>
+      <div class="principle">
+        <div class="principle-num">P · 02</div>
+        <div class="principle-title">Restrained</div>
+        
+        <div class="principle-desc">Infrastructure should not perform. The protocol does its work below the surface; the surface is only the seal.</div>
+      </div>
+      <div class="principle">
+        <div class="principle-num">P · 03</div>
+        <div class="principle-title">Verified</div>
+        
+        <div class="principle-desc">Trust is not assumed, claimed, or extended on faith. It is computed against a committed specification, every time.</div>
+      </div>
+      <div class="principle">
+        <div class="principle-num">P · 04</div>
+        <div class="principle-title">Final</div>
+        
+        <div class="principle-desc">Once pressed, a settlement does not reopen. The hanko is the contract. The hexagram is the state. Both are read, not negotiated.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════ LOGO SYSTEM ════════════════════ -->
+<section>
+  <div class="frame">
+    <div class="section-head">
+      <div class="section-num">02 / LOGO SYSTEM</div>
+      <div class="section-title">The dual lockup</div>
+      <div class="section-kanji">印 章</div>
+    </div>
+
+    <p style="font-size: 14px; line-height: 1.7; opacity: 0.78; max-width: 720px; margin-bottom: 48px;">
+      Kessai runs two lockups, not one. The <strong>navy lockup</strong> is for hero, cover, deck title, conference banner, lobby — moments where the brand makes a statement. The <strong>document lockup</strong> is for body documents, term sheets, partner one-pagers, dashboard chrome, footer marks — moments where readability and restraint matter. Same seal, same wordmark; different ground.
+    </p>
+
+    <div class="logo-dual-row">
+      <!-- NAVY LOCKUP -->
+      <div class="logo-card navy">
+        <div class="logo-card-content" style="flex-direction: row; gap: 28px;">
+          <svg width="100" height="100" viewBox="0 0 240 240" style="flex-shrink:0;">
+            <rect width="240" height="240" rx="6" fill="#B0223A"/>
+            <rect x="14" y="14" width="212" height="212" rx="3" fill="none" stroke="#F4EFE4" stroke-width="3.5"/>
+            <g transform="translate(120,120)" stroke="#F4EFE4" stroke-width="7" stroke-linecap="square">
+              <line x1="-50" y1="-60" x2="50" y2="-60"/>
+              <line x1="-50" y1="-36" x2="-10" y2="-36"/><line x1="10" y1="-36" x2="50" y2="-36"/>
+              <line x1="-50" y1="-12" x2="50" y2="-12"/>
+              <line x1="-50" y1="12" x2="50" y2="12"/>
+              <line x1="-50" y1="36" x2="50" y2="36"/>
+              <line x1="-50" y1="60" x2="-10" y2="60"/><line x1="10" y1="60" x2="50" y2="60"/>
+            </g>
+          </svg>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <svg style="display:block; width:320px; max-width:100%; height:auto;" class="dm-wordmark" data-dotmatrix data-fill="#F4EFE4" data-size="8"></svg>
+            <div style="font-family: 'Noto Serif JP', serif; font-size: 14px; font-weight: 500; letter-spacing: 5px; color: #F4EFE4; opacity: 0.7;">決 済</div>
+            <div style="height: 0.5px; background: #F4EFE4; opacity: 0.4; width: 36px; margin: 4px 0;"></div>
+            <div style="font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 2.8px; color: #F4EFE4; opacity: 0.85;">TRUST, COMPUTED.</div>
+          </div>
+        </div>
+        <div class="logo-card-label">Primary — Navy</div>
+      </div>
+
+      <!-- WHITE LOCKUP -->
+      <div class="logo-card white">
+        <div class="logo-card-content" style="flex-direction: row; gap: 28px;">
+          <svg width="100" height="100" viewBox="0 0 240 240" style="flex-shrink:0;">
+            <rect width="240" height="240" rx="6" fill="#B0223A"/>
+            <rect x="14" y="14" width="212" height="212" rx="3" fill="none" stroke="#F4EFE4" stroke-width="3.5"/>
+            <g transform="translate(120,120)" stroke="#F4EFE4" stroke-width="7" stroke-linecap="square">
+              <line x1="-50" y1="-60" x2="50" y2="-60"/>
+              <line x1="-50" y1="-36" x2="-10" y2="-36"/><line x1="10" y1="-36" x2="50" y2="-36"/>
+              <line x1="-50" y1="-12" x2="50" y2="-12"/>
+              <line x1="-50" y1="12" x2="50" y2="12"/>
+              <line x1="-50" y1="36" x2="50" y2="36"/>
+              <line x1="-50" y1="60" x2="-10" y2="60"/><line x1="10" y1="60" x2="50" y2="60"/>
+            </g>
+          </svg>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <svg style="display:block; width:320px; max-width:100%; height:auto;" class="dm-wordmark" data-dotmatrix data-fill="#283A8C" data-size="8"></svg>
+            <div style="font-family: 'Noto Serif JP', serif; font-size: 14px; font-weight: 500; letter-spacing: 5px; color: #283A8C; opacity: 0.7;">決 済</div>
+            <div style="height: 0.5px; background: #283A8C; opacity: 0.4; width: 36px; margin: 4px 0;"></div>
+            <div style="font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 2.8px; color: #283A8C; opacity: 0.85;">TRUST, COMPUTED.</div>
+          </div>
+        </div>
+        <div class="logo-card-label">Document — Cool White</div>
+      </div>
+    </div>
+
+    <div class="logo-grid-3">
+      <div class="logo-card-sm navy">
+        <svg viewBox="0 0 240 240" width="60%">
+          <rect width="240" height="240" rx="6" fill="#B0223A"/>
+          <rect x="14" y="14" width="212" height="212" rx="3" fill="none" stroke="#F4EFE4" stroke-width="3.5"/>
+          <g transform="translate(120,120)" stroke="#F4EFE4" stroke-width="7" stroke-linecap="square">
+            <line x1="-50" y1="-60" x2="50" y2="-60"/>
+            <line x1="-50" y1="-36" x2="-10" y2="-36"/><line x1="10" y1="-36" x2="50" y2="-36"/>
+            <line x1="-50" y1="-12" x2="50" y2="-12"/>
+            <line x1="-50" y1="12" x2="50" y2="12"/>
+            <line x1="-50" y1="36" x2="50" y2="36"/>
+            <line x1="-50" y1="60" x2="-10" y2="60"/><line x1="10" y1="60" x2="50" y2="60"/>
+          </g>
+        </svg>
+        <div class="logo-card-label" style="color: #F4EFE4; opacity: 0.75;">Seal — on Ruri</div>
+      </div>
+      <div class="logo-card-sm deep">
+        <svg viewBox="0 0 240 240" width="60%">
+          <rect width="240" height="240" rx="6" fill="#B0223A"/>
+          <rect x="14" y="14" width="212" height="212" rx="3" fill="none" stroke="#F4EFE4" stroke-width="3.5"/>
+          <g transform="translate(120,120)" stroke="#F4EFE4" stroke-width="7" stroke-linecap="square">
+            <line x1="-50" y1="-60" x2="50" y2="-60"/>
+            <line x1="-50" y1="-36" x2="-10" y2="-36"/><line x1="10" y1="-36" x2="50" y2="-36"/>
+            <line x1="-50" y1="-12" x2="50" y2="-12"/>
+            <line x1="-50" y1="12" x2="50" y2="12"/>
+            <line x1="-50" y1="36" x2="50" y2="36"/>
+            <line x1="-50" y1="60" x2="-10" y2="60"/><line x1="10" y1="60" x2="50" y2="60"/>
+          </g>
+        </svg>
+        <div class="logo-card-label" style="color: #F4EFE4; opacity: 0.75;">Seal — on Deep Ruri</div>
+      </div>
+      <div class="logo-card-sm white">
+        <svg viewBox="0 0 240 240" width="60%">
+          <rect width="240" height="240" rx="6" fill="#B0223A"/>
+          <rect x="14" y="14" width="212" height="212" rx="3" fill="none" stroke="#F4EFE4" stroke-width="3.5"/>
+          <g transform="translate(120,120)" stroke="#F4EFE4" stroke-width="7" stroke-linecap="square">
+            <line x1="-50" y1="-60" x2="50" y2="-60"/>
+            <line x1="-50" y1="-36" x2="-10" y2="-36"/><line x1="10" y1="-36" x2="50" y2="-36"/>
+            <line x1="-50" y1="-12" x2="50" y2="-12"/>
+            <line x1="-50" y1="12" x2="50" y2="12"/>
+            <line x1="-50" y1="36" x2="50" y2="36"/>
+            <line x1="-50" y1="60" x2="-10" y2="60"/><line x1="10" y1="60" x2="50" y2="60"/>
+          </g>
+        </svg>
+        <div class="logo-card-label" style="color: #1A1714; opacity: 0.6;">Seal — on Paper</div>
+      </div>
+    </div>
+
+    <div class="clearspace-note">
+      <span>Min. seal — 24 px / 6 mm</span>
+      <span>Wordmark always paired with seal</span>
+      <span>Never alter dot grid proportions</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════ GLYPHS ════════════════════ -->
+<section>
+  <div class="frame">
+    <div class="section-head">
+      <div class="section-num">03 / GLYPHS</div>
+      <div class="section-title">Sixty-four canonical states</div>
+      <div class="section-kanji">六 十 四 卦</div>
+    </div>
+
+    <div class="glyph-intro">
+      <div class="glyph-statement">
+        The UOR alphabet maps every byte to one of 64 orbit-canonical states under a Klein four-group of symmetries.
+      </div>
+      <div class="glyph-prose">
+        <p>Six binary lines per glyph. Sixty-four glyphs total — exactly matching the I Ching's hexagram canon, exactly matching a Braille cell's degrees of freedom, exactly matching the wordmark's per-letter encoding logic at a different resolution.</p>
+        <p>Three uses across the system. As <strong>identity marks</strong>, sealed inside the hanko at logo lockup. As <strong>state badges</strong>, indexing transaction status across product surfaces. And as <strong>texture</strong>, a quiet running pattern that says: <em>this is a system that knows where it is.</em></p>
+      </div>
+    </div>
+
+    <div class="glyph-grid" id="glyph-grid"></div>
+
+    <div class="glyph-callout">
+      <div class="callout-card">
+        <div class="callout-num">№ 00</div>
+        <svg viewBox="-40 -50 80 100" width="56" height="56">
+          <g stroke="#1A1714" stroke-width="3.5" stroke-linecap="square">
+            <line x1="-30" y1="-40" x2="-7" y2="-40"/><line x1="7" y1="-40" x2="30" y2="-40"/>
+            <line x1="-30" y1="-24" x2="-7" y2="-24"/><line x1="7" y1="-24" x2="30" y2="-24"/>
+            <line x1="-30" y1="-8" x2="-7" y2="-8"/><line x1="7" y1="-8" x2="30" y2="-8"/>
+            <line x1="-30" y1="8" x2="-7" y2="8"/><line x1="7" y1="8" x2="30" y2="8"/>
+            <line x1="-30" y1="24" x2="-7" y2="24"/><line x1="7" y1="24" x2="30" y2="24"/>
+            <line x1="-30" y1="40" x2="-7" y2="40"/><line x1="7" y1="40" x2="30" y2="40"/>
+          </g>
+        </svg>
+        <div class="callout-name">Origin</div>
+        
+        <div class="callout-desc">All yin. The unrealised state — escrow opened, no settlement yet pressed.</div>
+      </div>
+      <div class="callout-card">
+        <div class="callout-num">№ 29 — KESSAI</div>
+        <svg viewBox="-40 -50 80 100" width="56" height="56">
+          <g stroke="#B0223A" stroke-width="3.5" stroke-linecap="square">
+            <line x1="-30" y1="-40" x2="30" y2="-40"/>
+            <line x1="-30" y1="-24" x2="-7" y2="-24"/><line x1="7" y1="-24" x2="30" y2="-24"/>
+            <line x1="-30" y1="-8" x2="30" y2="-8"/>
+            <line x1="-30" y1="8" x2="30" y2="8"/>
+            <line x1="-30" y1="24" x2="30" y2="24"/>
+            <line x1="-30" y1="40" x2="-7" y2="40"/><line x1="7" y1="40" x2="30" y2="40"/>
+          </g>
+        </svg>
+        <div class="callout-name">The Settled</div>
+        <div class="callout-jp">決 済</div>
+        <div class="callout-desc">The brand glyph. Solid above and below, broken at the boundaries — verified, sealed, released.</div>
+      </div>
+      <div class="callout-card">
+        <div class="callout-num">№ 63</div>
+        <svg viewBox="-40 -50 80 100" width="56" height="56">
+          <g stroke="#1A1714" stroke-width="3.5" stroke-linecap="square">
+            <line x1="-30" y1="-40" x2="30" y2="-40"/>
+            <line x1="-30" y1="-24" x2="30" y2="-24"/>
+            <line x1="-30" y1="-8" x2="30" y2="-8"/>
+            <line x1="-30" y1="8" x2="30" y2="8"/>
+            <line x1="-30" y1="24" x2="30" y2="24"/>
+            <line x1="-30" y1="40" x2="30" y2="40"/>
+          </g>
+        </svg>
+        <div class="callout-name">Finality</div>
+        
+        <div class="callout-desc">All yang. Full closure. Used for archived, immutable settlement records.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════ PALETTE ════════════════════ -->
+<section>
+  <div class="frame">
+    <div class="section-head">
+      <div class="section-num">04 / PALETTE</div>
+      <div class="section-title">Indigo, crimson, paper</div>
+      
+    </div>
+
+    <div class="palette-grid">
+      <div class="swatch ruri">
+        <div>
+          <div class="swatch-role">Primary · Hero, brand voice</div>
+          <div class="swatch-name">Ruri</div>
+          <div class="swatch-jp">瑠 璃</div>
+        </div>
+        <div class="swatch-meta">
+          HEX  #283A8C<br>
+          RGB  40 · 58 · 140<br>
+          CMYK 92 · 80 · 0 · 21<br>
+          Pantone 2746 C
+        </div>
+      </div>
+      <div class="swatch karakurenai">
+        <div>
+          <div class="swatch-role">Accent · Seal, settled state</div>
+          <div class="swatch-name">Karakurenai</div>
+          <div class="swatch-jp">唐 紅</div>
+        </div>
+        <div class="swatch-meta">
+          #B0223A<br>176·34·58<br>16·100·73·14
+        </div>
+      </div>
+      <div class="swatch hakuji">
+        <div>
+          <div class="swatch-role">Document ground</div>
+          <div class="swatch-name">Paper</div>
+        </div>
+        <div class="swatch-meta">
+          #F6F7FA<br>246·247·250<br>2·1·0·0
+        </div>
+      </div>
+      <div class="swatch sumi">
+        <div>
+          <div class="swatch-role">Type · light grounds</div>
+          <div class="swatch-name">Ink</div>
+        </div>
+        <div class="swatch-meta">
+          #1A1714<br>26·23·20<br>0·12·23·90
+        </div>
+      </div>
+      <div class="swatch washi">
+        <div>
+          <div class="swatch-role">Type · indigo grounds</div>
+          <div class="swatch-name">Cream</div>
+        </div>
+        <div class="swatch-meta">
+          #F4EFE4<br>244·239·228<br>2·4·11·0
+        </div>
+      </div>
+      <div class="swatch gin">
+        <div>
+          <div class="swatch-role">Quiet UI, hairlines</div>
+          <div class="swatch-name">Silver</div>
+        </div>
+        <div class="swatch-meta">
+          #9BA0A0<br>155·160·160<br>40·30·30·15
+        </div>
+      </div>
+    </div>
+
+    <p style="font-size: 13px; line-height: 1.75; opacity: 0.75; max-width: 720px; margin-top: 48px;">
+      <strong>Pairing logic.</strong> Ruri and Karakurenai do not touch directly except inside the sealed hanko. Around them, Cream (on indigo) or Paper (on white) is the breathing surface. Sumi for body type on light. Gin for hairlines and tertiary. The palette has no gradient or transparency — every surface is one color, named.
+    </p>
+  </div>
+</section>
+
+
+<!-- ════════════════════ TYPOGRAPHY ════════════════════ -->
+<section>
+  <div class="frame">
+    <div class="section-head">
+      <div class="section-num">05 / TYPOGRAPHY</div>
+      <div class="section-title">Two voices</div>
+      
+    </div>
+
+    <p style="font-size: 14px; line-height: 1.7; opacity: 0.78; max-width: 720px; margin-bottom: 56px;">
+      Kessai uses two display voices that do not blend. The <strong>wordmark is encoded</strong> — a 5×5 binary grid per letter, machine-readable, the same primitive as a UOR canonical orbit. The <strong>headlines are literate</strong> — Fraunces, a contemporary serif with weight and character. Encoded for what the protocol does. Literate for what the brand says. They share a page; they do not share a register.
+    </p>
+
+    <div class="type-stack">
+      <div class="type-row">
+        <div class="type-label">
+          <div class="type-label-name">Wordmark</div>
+          <div class="type-label-meta">Custom dot-matrix<br>5×5 binary grid<br>Brand mark only — never body</div>
+        </div>
+        <div class="type-sample wordmark-row">
+          <svg style="display:block; width:480px; max-width:100%; height:auto;" class="dm-wordmark" data-dotmatrix data-fill="#1A1714" data-size="11"></svg>
+        </div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-label">
+          <div class="type-label-name">Display</div>
+          <div class="type-label-meta">Fraunces<br>SemiBold · Bold<br>Headlines, editorial</div>
+        </div>
+        <div class="type-sample display">Trust, computed.</div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-label">
+          <div class="type-label-name">Kanji</div>
+          <div class="type-label-meta">Noto Serif JP<br>Medium<br>Secondary mark, named states</div>
+        </div>
+        <div class="type-sample kanji">決 済 確 定</div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-label">
+          <div class="type-label-name">Body</div>
+          <div class="type-label-meta">DM Sans<br>Medium · SemiBold<br>Documentation, prose</div>
+        </div>
+        <div class="type-sample body">Kessai is the settlement layer for the agentic economy. Payment is escrowed; work is verified inside a TEE against a committed specification; both release together, atomically, on-chain.</div>
+      </div>
+
+      <div class="type-row">
+        <div class="type-label">
+          <div class="type-label-name">Mono</div>
+          <div class="type-label-meta">IBM Plex Mono<br>Medium · SemiBold<br>Hashes, addresses, system labels</div>
+        </div>
+        <div class="type-sample mono">SPEC_HASH 0x7e3a · 1f6c · b29d · 4a01<br>STATUS    SETTLED · BLOCK 4,829,113<br>LEVY      14 RLUSD → TREASURY</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════ VOICE ════════════════════ -->
+<section>
+  <div class="frame">
+    <div class="section-head">
+      <div class="section-num">06 / VOICE</div>
+      <div class="section-title">How Kessai speaks</div>
+      
+    </div>
+
+    <div class="voice-grid">
+      <div class="voice-cell voice-do">
+        <div class="voice-tag do">SAY THIS</div>
+        <div class="voice-quote">"Settled in 2.3 seconds against a committed spec."</div>
+      </div>
+      <div class="voice-cell voice-dont">
+        <div class="voice-tag dont">NOT THIS</div>
+        <div class="voice-quote">"Lightning-fast trust-as-a-service for the AI agent revolution!"</div>
+      </div>
+      <div class="voice-cell voice-do">
+        <div class="voice-tag do">SAY THIS</div>
+        <div class="voice-quote">"Trust is computed, not assumed."</div>
+      </div>
+      <div class="voice-cell voice-dont">
+        <div class="voice-tag dont">NOT THIS</div>
+        <div class="voice-quote">"Decentralized confidence for the next generation of agentic AI."</div>
+      </div>
+      <div class="voice-cell voice-do">
+        <div class="voice-tag do">SAY THIS</div>
+        <div class="voice-quote">"Every transaction resolves to a known state."</div>
+      </div>
+      <div class="voice-cell voice-dont">
+        <div class="voice-tag dont">NOT THIS</div>
+        <div class="voice-quote">"Unleash the power of seamless agent commerce!"</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════ APPLICATIONS ════════════════════ -->
+<section>
+  <div class="frame">
+    <div class="section-head">
+      <div class="section-num">07 / APPLICATIONS</div>
+      <div class="section-title">In the world</div>
+      
+    </div>
+
+    <div class="app-grid">
+      <!-- Deck slide -->
+      <div class="app-card">
+        <div class="app-card-tag" style="color: #F4EFE4; opacity: 0.7;">Deck Slide · 16:10</div>
+        <div class="slide-mock">
+          <div>
+            <div class="slide-mock-eyebrow">02 · The Problem</div>
+            <div class="slide-mock-title">Agent commerce assumes good faith.<br>Production cannot.</div>
+          </div>
+          <div class="slide-mock-foot">
+            <span>Kessai · 決済</span>
+            <span>02 / 14</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Business card -->
+      <div class="app-card">
+        <div class="app-card-tag" style="color: #F4EFE4; opacity: 0.7;">Card · 85×55</div>
+        <div class="card-mock">
+          <svg width="44" height="44" viewBox="0 0 240 240">
+            <rect width="240" height="240" rx="8" fill="#B0223A"/>
+            <rect x="14" y="14" width="212" height="212" rx="3" fill="none" stroke="#F4EFE4" stroke-width="3.5"/>
+            <g transform="translate(120,120)" stroke="#F4EFE4" stroke-width="7" stroke-linecap="square">
+              <line x1="-50" y1="-60" x2="50" y2="-60"/>
+              <line x1="-50" y1="-36" x2="-10" y2="-36"/><line x1="10" y1="-36" x2="50" y2="-36"/>
+              <line x1="-50" y1="-12" x2="50" y2="-12"/>
+              <line x1="-50" y1="12" x2="50" y2="12"/>
+              <line x1="-50" y1="36" x2="50" y2="36"/>
+              <line x1="-50" y1="60" x2="-10" y2="60"/><line x1="10" y1="60" x2="50" y2="60"/>
+            </g>
+          </svg>
+          <div>
+            <div class="card-mock-name">Maura Clark</div>
+            <div class="card-mock-role">Founder</div>
+            <div class="card-mock-info" style="margin-top: 18px;">
+              maura@kessai.io<br>
+              kessai.io
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ledger chips -->
+      <div class="app-card">
+        <div class="app-card-tag">Ledger · State Chips</div>
+        <div class="chip-mock">
+          <div class="chip-mock-header">Recent Settlements</div>
+          <div class="chip-row settled">
+            <svg class="glyph-mini" viewBox="-40 -50 80 100">
+              <g stroke="#1A1714" stroke-width="4.5" stroke-linecap="square">
+                <line x1="-30" y1="-40" x2="30" y2="-40"/>
+                <line x1="-30" y1="-24" x2="-7" y2="-24"/><line x1="7" y1="-24" x2="30" y2="-24"/>
+                <line x1="-30" y1="-8" x2="30" y2="-8"/>
+                <line x1="-30" y1="8" x2="30" y2="8"/>
+                <line x1="-30" y1="24" x2="30" y2="24"/>
+                <line x1="-30" y1="40" x2="-7" y2="40"/><line x1="7" y1="40" x2="30" y2="40"/>
+              </g>
+            </svg>
+            <span class="chip-amount">142.00 RLUSD</span>
+            <span class="chip-status" style="color: #B0223A;">Settled</span>
+          </div>
+          <div class="chip-row escrow">
+            <svg class="glyph-mini" viewBox="-40 -50 80 100">
+              <g stroke="#1A1714" stroke-width="4.5" stroke-linecap="square">
+                <line x1="-30" y1="-40" x2="-7" y2="-40"/><line x1="7" y1="-40" x2="30" y2="-40"/>
+                <line x1="-30" y1="-24" x2="30" y2="-24"/>
+                <line x1="-30" y1="-8" x2="-7" y2="-8"/><line x1="7" y1="-8" x2="30" y2="-8"/>
+                <line x1="-30" y1="8" x2="30" y2="8"/>
+                <line x1="-30" y1="24" x2="-7" y2="24"/><line x1="7" y1="24" x2="30" y2="24"/>
+                <line x1="-30" y1="40" x2="30" y2="40"/>
+              </g>
+            </svg>
+            <span class="chip-amount">88.50 RLUSD</span>
+            <span class="chip-status" style="color: #283A8C;">Escrowed</span>
+          </div>
+          <div class="chip-row pending">
+            <svg class="glyph-mini" viewBox="-40 -50 80 100">
+              <g stroke="#1A1714" stroke-width="4.5" stroke-linecap="square">
+                <line x1="-30" y1="-40" x2="-7" y2="-40"/><line x1="7" y1="-40" x2="30" y2="-40"/>
+                <line x1="-30" y1="-24" x2="-7" y2="-24"/><line x1="7" y1="-24" x2="30" y2="-24"/>
+                <line x1="-30" y1="-8" x2="-7" y2="-8"/><line x1="7" y1="-8" x2="30" y2="-8"/>
+                <line x1="-30" y1="8" x2="-7" y2="8"/><line x1="7" y1="8" x2="30" y2="8"/>
+                <line x1="-30" y1="24" x2="-7" y2="24"/><line x1="7" y1="24" x2="30" y2="24"/>
+                <line x1="-30" y1="40" x2="-7" y2="40"/><line x1="7" y1="40" x2="30" y2="40"/>
+              </g>
+            </svg>
+            <span class="chip-amount">36.00 RLUSD</span>
+            <span class="chip-status">Pending</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settlement receipt -->
+      <div class="app-card">
+        <div class="app-card-tag">Settlement Receipt</div>
+        <div class="doc-mock">
+          <div class="doc-text">
+            <div class="doc-text-line medium"></div>
+            <div class="doc-text-line medium"></div>
+            <div class="doc-text-line short"></div>
+            <div class="doc-text-line medium"></div>
+            <div class="doc-text-line short"></div>
+            <div class="doc-text-stamp" style="color: #283A8C; opacity: 0.85;">TX 0x7e3a · 1f6c · b29d · SETTLED</div>
+          </div>
+          <svg width="100" height="100" viewBox="0 0 240 240" style="transform: rotate(-6deg);">
+            <rect width="240" height="240" rx="6" fill="#B0223A" opacity="0.95"/>
+            <rect x="14" y="14" width="212" height="212" rx="3" fill="none" stroke="#F4EFE4" stroke-width="3.5"/>
+            <g transform="translate(120,120)" stroke="#F4EFE4" stroke-width="7" stroke-linecap="square">
+              <line x1="-50" y1="-60" x2="50" y2="-60"/>
+              <line x1="-50" y1="-36" x2="-10" y2="-36"/><line x1="10" y1="-36" x2="50" y2="-36"/>
+              <line x1="-50" y1="-12" x2="50" y2="-12"/>
+              <line x1="-50" y1="12" x2="50" y2="12"/>
+              <line x1="-50" y1="36" x2="50" y2="36"/>
+              <line x1="-50" y1="60" x2="-10" y2="60"/><line x1="10" y1="60" x2="50" y2="60"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════ ARCHITECTURE ════════════════════ -->
+<section>
+  <div class="frame">
+    <div class="section-head">
+      <div class="section-num">08 / ARCHITECTURE</div>
+      <div class="section-title">Master and products</div>
+    </div>
+
+    <p style="font-size: 14px; line-height: 1.7; opacity: 0.78; max-width: 720px; margin-bottom: 56px;">
+      Kessai is the company. <strong>AgentLevy</strong> and <strong>Witness</strong> are the first two products. Every product gets its own UOR glyph from the 64-state alphabet inside its hanko — same seal architecture, same palette, same typography, but a different canonical state. The brand family is held together by the system, not by repeated naming.
+    </p>
+
+    <!-- MASTER -->
+    <div style="background: var(--ruri); border-radius: 0; padding: 48px 44px; color: var(--washi); margin-bottom: 14px;">
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.22em; color: var(--karakurenai); margin-bottom: 12px; text-transform: uppercase;">Master · Company</div>
+      <div style="display: flex; align-items: center; gap: 28px;">
+        <svg width="96" height="96" viewBox="0 0 240 240" style="flex-shrink:0;">
+          <rect width="240" height="240" rx="6" fill="#B0223A"/>
+          <rect x="14" y="14" width="212" height="212" rx="3" fill="none" stroke="#F4EFE4" stroke-width="3.5"/>
+          <g transform="translate(120,120)" stroke="#F4EFE4" stroke-width="7" stroke-linecap="square">
+            <line x1="-50" y1="-60" x2="50" y2="-60"/>
+            <line x1="-50" y1="-36" x2="-10" y2="-36"/><line x1="10" y1="-36" x2="50" y2="-36"/>
+            <line x1="-50" y1="-12" x2="50" y2="-12"/>
+            <line x1="-50" y1="12" x2="50" y2="12"/>
+            <line x1="-50" y1="36" x2="50" y2="36"/>
+            <line x1="-50" y1="60" x2="-10" y2="60"/><line x1="10" y1="60" x2="50" y2="60"/>
+          </g>
+        </svg>
+        <div>
+          <div style="font-family: 'Fraunces', serif; font-weight: 600; font-size: 36px; letter-spacing: -0.01em; line-height: 1;">Kessai</div>
+          <div style="font-family: 'Noto Serif JP', serif; font-size: 14px; opacity: 0.7; letter-spacing: 0.3em; margin-top: 6px;">決 済</div>
+          <div style="font-size: 13px; opacity: 0.85; margin-top: 12px; max-width: 460px; line-height: 1.6;">The settlement company. The protocol layer that makes a transaction final between two autonomous agents.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCTS GRID -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+
+      <!-- AgentLevy -->
+      <div style="background: var(--hakuji); border: 1px solid var(--hairline-light); padding: 36px 32px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.22em; color: var(--karakurenai); margin-bottom: 16px; text-transform: uppercase;">Product · Protocol</div>
+        <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 18px;">
+          <svg width="68" height="68" viewBox="0 0 240 240" style="flex-shrink:0;">
+            <rect width="240" height="240" rx="6" fill="#B0223A"/>
+            <rect x="14" y="14" width="212" height="212" rx="3" fill="none" stroke="#F4EFE4" stroke-width="6"/>
+            <g transform="translate(120,120)" stroke="#F4EFE4" stroke-width="11" stroke-linecap="square">
+              <!-- Glyph #56: yang yang yang yin yin yin -->
+              <line x1="-50" y1="-60" x2="50" y2="-60"/>
+              <line x1="-50" y1="-36" x2="50" y2="-36"/>
+              <line x1="-50" y1="-12" x2="50" y2="-12"/>
+              <line x1="-50" y1="12" x2="-10" y2="12"/><line x1="10" y1="12" x2="50" y2="12"/>
+              <line x1="-50" y1="36" x2="-10" y2="36"/><line x1="10" y1="36" x2="50" y2="36"/>
+              <line x1="-50" y1="60" x2="-10" y2="60"/><line x1="10" y1="60" x2="50" y2="60"/>
+            </g>
+          </svg>
+          <div>
+            <div style="font-family: 'Fraunces', serif; font-weight: 600; font-size: 24px; color: var(--sumi); letter-spacing: -0.005em;">AgentLevy</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 500; color: var(--ruri); margin-top: 4px; letter-spacing: 0.1em;">Glyph № 56</div>
+          </div>
+        </div>
+        <div style="font-size: 13px; line-height: 1.65; color: var(--sumi); opacity: 0.82;">The settlement protocol. x402 facilitator with TEE-verified task completion. Levy treasury for retraining funds. Built on Flare and XRPL.</div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.18em; color: var(--ruri); padding-top: 14px; margin-top: 16px; border-top: 0.5px solid var(--hairline-light); text-transform: uppercase;">A Kessai protocol</div>
+      </div>
+
+      <!-- Witness -->
+      <div style="background: var(--hakuji); border: 1px solid var(--hairline-light); padding: 36px 32px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.22em; color: var(--karakurenai); margin-bottom: 16px; text-transform: uppercase;">Product · Tool</div>
+        <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 18px;">
+          <svg width="68" height="68" viewBox="0 0 240 240" style="flex-shrink:0;">
+            <rect width="240" height="240" rx="6" fill="#B0223A"/>
+            <rect x="14" y="14" width="212" height="212" rx="3" fill="none" stroke="#F4EFE4" stroke-width="6"/>
+            <g transform="translate(120,120)" stroke="#F4EFE4" stroke-width="11" stroke-linecap="square">
+              <!-- Glyph #21: yin yang yin yang yin yang (alternating — transitions visible) -->
+              <line x1="-50" y1="-60" x2="-10" y2="-60"/><line x1="10" y1="-60" x2="50" y2="-60"/>
+              <line x1="-50" y1="-36" x2="50" y2="-36"/>
+              <line x1="-50" y1="-12" x2="-10" y2="-12"/><line x1="10" y1="-12" x2="50" y2="-12"/>
+              <line x1="-50" y1="12" x2="50" y2="12"/>
+              <line x1="-50" y1="36" x2="-10" y2="36"/><line x1="10" y1="36" x2="50" y2="36"/>
+              <line x1="-50" y1="60" x2="50" y2="60"/>
+            </g>
+          </svg>
+          <div>
+            <div style="font-family: 'Fraunces', serif; font-weight: 600; font-size: 24px; color: var(--sumi); letter-spacing: -0.005em;">Witness</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 500; color: var(--ruri); margin-top: 4px; letter-spacing: 0.1em;">Glyph № 21</div>
+          </div>
+        </div>
+        <div style="font-size: 13px; line-height: 1.65; color: var(--sumi); opacity: 0.82;">The escrow visualizer. Watch transactions move through escrow → attest → settle. Every state change made visible, every settlement traceable.</div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.18em; color: var(--ruri); padding-top: 14px; margin-top: 16px; border-top: 0.5px solid var(--hairline-light); text-transform: uppercase;">A Kessai tool</div>
+      </div>
+
+    </div>
+
+    <!-- NAMING RULES -->
+    <div style="margin-top: 64px; display: grid; grid-template-columns: 200px 1fr; gap: 0; border-top: 1px solid var(--hairline-light);">
+      <div style="padding: 32px 32px 32px 0; border-bottom: 1px solid var(--hairline-light);">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--karakurenai);">Master</div>
+      </div>
+      <div style="padding: 32px 0; border-bottom: 1px solid var(--hairline-light); font-size: 14px; line-height: 1.7; opacity: 0.85;">
+        <strong>Kessai</strong> is the company. The brand carries the Japanese cultural reference — the name (settlement), the kanji 決済, the hanko seal architecture, the I Ching glyph alphabet. It is the conceptual ground.
+      </div>
+
+      <div style="padding: 32px 32px 32px 0; border-bottom: 1px solid var(--hairline-light);">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--karakurenai);">Products</div>
+      </div>
+      <div style="padding: 32px 0; border-bottom: 1px solid var(--hairline-light); font-size: 14px; line-height: 1.7; opacity: 0.85;">
+        Product names are <strong>English and functional</strong> — AgentLevy, Witness. They live under Kessai's visual system but do not carry Japanese names. Each product gets one UOR glyph as its identifier; that's where the family resemblance lives.
+      </div>
+
+      <div style="padding: 32px 32px 32px 0; border-bottom: 1px solid var(--hairline-light);">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--karakurenai);">Attribution</div>
+      </div>
+      <div style="padding: 32px 0; border-bottom: 1px solid var(--hairline-light); font-size: 14px; line-height: 1.7; opacity: 0.85;">
+        Products carry "<strong>A Kessai protocol</strong>" or "<strong>A Kessai tool</strong>" attribution where context demands it — press releases, footers, legal copy. In conversational copy and product surfaces, the product name stands alone.
+      </div>
+
+      <div style="padding: 32px 32px 32px 0;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--karakurenai);">Glyph reservation</div>
+      </div>
+      <div style="padding: 32px 0; font-size: 14px; line-height: 1.7; opacity: 0.85;">
+        Master Kessai holds Glyph № 29 (The Settled). AgentLevy: № 56. Witness: № 21. Future products draw from the remaining 61 canonical states. The glyph is permanent and product-specific; once assigned, it does not change.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════ FOOTER ════════════════════ -->
+<footer class="footer">
+  <div class="frame">
+    <div class="footer-mark">
+      <svg width="64" height="64" viewBox="0 0 240 240">
+        <rect width="240" height="240" rx="6" fill="#B0223A"/>
+        <rect x="14" y="14" width="212" height="212" rx="3" fill="none" stroke="#F4EFE4" stroke-width="3.5"/>
+        <g transform="translate(120,120)" stroke="#F4EFE4" stroke-width="7" stroke-linecap="square">
+          <line x1="-50" y1="-60" x2="50" y2="-60"/>
+          <line x1="-50" y1="-36" x2="-10" y2="-36"/><line x1="10" y1="-36" x2="50" y2="-36"/>
+          <line x1="-50" y1="-12" x2="50" y2="-12"/>
+          <line x1="-50" y1="12" x2="50" y2="12"/>
+          <line x1="-50" y1="36" x2="50" y2="36"/>
+          <line x1="-50" y1="60" x2="-10" y2="60"/><line x1="10" y1="60" x2="50" y2="60"/>
+        </g>
+      </svg>
+    </div>
+    <div class="footer-meta">Kessai  ·  決済  ·  Trust, computed.  ·  V1.0  ·  © 2026</div>
+  </div>
+</footer>
+
+
+<script>
+  // ─── Dot-matrix wordmark renderer ───
+  const LETTERS = {
+    K: [[1,0,0,0,1],[1,0,0,1,0],[1,1,1,0,0],[1,0,0,1,0],[1,0,0,0,1]],
+    E: [[1,1,1,1,1],[1,0,0,0,0],[1,1,1,1,0],[1,0,0,0,0],[1,1,1,1,1]],
+    S: [[0,1,1,1,1],[1,0,0,0,0],[0,1,1,1,0],[0,0,0,0,1],[1,1,1,1,0]],
+    A: [[0,0,1,0,0],[0,1,0,1,0],[1,1,1,1,1],[1,0,0,0,1],[1,0,0,0,1]],
+    I: [[1,1,1,1,1],[0,0,1,0,0],[0,0,1,0,0],[0,0,1,0,0],[1,1,1,1,1]]
+  };
+
+  function renderDotMatrix(svg) {
+    const fill = svg.getAttribute('data-fill') || '#1A1714';
+    const dotSize = parseFloat(svg.getAttribute('data-size')) || 10;
+    const gap = Math.max(2, dotSize * 0.3);
+    const letterGap = Math.max(8, dotSize * 1.4);
+    const cell = dotSize + gap;
+    const letterW = 5 * dotSize + 4 * gap;
+    const totalW = 6 * letterW + 5 * letterGap;
+    const totalH = 5 * dotSize + 4 * gap;
+    const padding = dotSize * 0.5;
+
+    // Auto-size viewBox to fit content with breathing room
+    const vbW = totalW + padding * 2;
+    const vbH = totalH + padding * 2;
+    svg.setAttribute('viewBox', `0 0 ${vbW} ${vbH}`);
+    svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const word = 'KESSAI';
+    let xCursor = padding;
+    for (const ch of word) {
+      const grid = LETTERS[ch];
+      for (let r = 0; r < 5; r++) {
+        for (let c = 0; c < 5; c++) {
+          if (grid[r][c]) {
+            const rect = document.createElementNS(svgNS, 'rect');
+            rect.setAttribute('x', xCursor + c * cell);
+            rect.setAttribute('y', padding + r * cell);
+            rect.setAttribute('width', dotSize);
+            rect.setAttribute('height', dotSize);
+            rect.setAttribute('rx', Math.max(0.8, dotSize * 0.15));
+            rect.setAttribute('fill', fill);
+            svg.appendChild(rect);
+          }
+        }
+      }
+      xCursor += letterW + letterGap;
+    }
+  }
+
+  document.querySelectorAll('svg[data-dotmatrix]').forEach(renderDotMatrix);
+
+  // ─── 64-glyph alphabet ───
+  (function buildGlyphs() {
+    const grid = document.getElementById('glyph-grid');
+    const KESSAI_INDEX = 29;
+    const svgNS = 'http://www.w3.org/2000/svg';
+    for (let i = 0; i < 64; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'glyph-cell';
+      if (i === KESSAI_INDEX) cell.classList.add('featured');
+
+      const num = document.createElement('div');
+      num.className = 'glyph-cell-num';
+      num.textContent = String(i).padStart(2, '0');
+      cell.appendChild(num);
+
+      const svg = document.createElementNS(svgNS, 'svg');
+      svg.setAttribute('viewBox', '-40 -50 80 100');
+      svg.setAttribute('width', '32');
+      svg.setAttribute('height', '32');
+
+      const g = document.createElementNS(svgNS, 'g');
+      g.setAttribute('stroke', i === KESSAI_INDEX ? '#F4EFE4' : '#1A1714');
+      g.setAttribute('stroke-width', '4');
+      g.setAttribute('stroke-linecap', 'square');
+
+      const ys = [-40, -24, -8, 8, 24, 40];
+      for (let row = 0; row < 6; row++) {
+        const bit = (i >> (5 - row)) & 1;
+        if (bit === 1) {
+          const ln = document.createElementNS(svgNS, 'line');
+          ln.setAttribute('x1', '-30');
+          ln.setAttribute('y1', ys[row]);
+          ln.setAttribute('x2', '30');
+          ln.setAttribute('y2', ys[row]);
+          g.appendChild(ln);
+        } else {
+          const l1 = document.createElementNS(svgNS, 'line');
+          l1.setAttribute('x1', '-30'); l1.setAttribute('y1', ys[row]);
+          l1.setAttribute('x2', '-7');  l1.setAttribute('y2', ys[row]);
+          const l2 = document.createElementNS(svgNS, 'line');
+          l2.setAttribute('x1', '7');   l2.setAttribute('y1', ys[row]);
+          l2.setAttribute('x2', '30');  l2.setAttribute('y2', ys[row]);
+          g.appendChild(l1); g.appendChild(l2);
+        }
+      }
+      svg.appendChild(g);
+      cell.appendChild(svg);
+      grid.appendChild(cell);
+    }
+  })();
+</script>
+
+</body>
+</html>

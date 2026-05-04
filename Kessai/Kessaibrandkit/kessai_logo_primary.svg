@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 320">
+  <rect width="800" height="320" fill="#283A8C"/>
+  <g>
+    <rect x="40" y="40" width="240" height="240" rx="6" fill="#B0223A"/>
+    <rect x="54" y="54" width="212" height="212" rx="3" fill="none" stroke="#F4EFE4" stroke-width="3.5"/>
+    <g transform="translate(160,160)" stroke="#F4EFE4" stroke-width="7" stroke-linecap="square">
+      <line x1="-50" y1="-60" x2="50" y2="-60"/>
+      <line x1="-50" y1="-36" x2="-10" y2="-36"/>
+      <line x1="10" y1="-36" x2="50" y2="-36"/>
+      <line x1="-50" y1="-12" x2="50" y2="-12"/>
+      <line x1="-50" y1="12" x2="50" y2="12"/>
+      <line x1="-50" y1="36" x2="50" y2="36"/>
+      <line x1="-50" y1="60" x2="-10" y2="60"/>
+      <line x1="10" y1="60" x2="50" y2="60"/>
+    </g>
+  </g>
+  <rect x="320" y="110" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="372" y="110" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="320" y="123" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="359" y="123" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="320" y="136" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="333" y="136" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="346" y="136" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="320" y="149" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="359" y="149" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="320" y="162" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="372" y="162" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="396" y="110" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="409" y="110" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="422" y="110" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="435" y="110" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="448" y="110" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="396" y="123" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="396" y="136" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="409" y="136" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="422" y="136" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="435" y="136" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="396" y="149" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="396" y="162" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="409" y="162" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="422" y="162" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="435" y="162" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="448" y="162" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="485" y="110" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="498" y="110" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="511" y="110" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="524" y="110" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="472" y="123" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="485" y="136" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="498" y="136" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="511" y="136" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="524" y="149" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="472" y="162" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="485" y="162" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="498" y="162" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="511" y="162" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="561" y="110" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="574" y="110" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="587" y="110" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="600" y="110" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="548" y="123" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="561" y="136" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="574" y="136" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="587" y="136" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="600" y="149" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="548" y="162" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="561" y="162" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="574" y="162" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="587" y="162" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="650" y="110" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="637" y="123" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="663" y="123" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="624" y="136" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="637" y="136" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="650" y="136" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="663" y="136" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="676" y="136" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="624" y="149" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="676" y="149" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="624" y="162" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="676" y="162" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="700" y="110" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="713" y="110" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="726" y="110" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="739" y="110" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="752" y="110" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="726" y="123" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="726" y="136" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="726" y="149" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="700" y="162" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="713" y="162" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="726" y="162" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="739" y="162" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+      <rect x="752" y="162" width="10" height="10" rx="1.5" fill="#F4EFE4"/>
+  <text x="322" y="218" font-family="'Noto Serif JP','Yu Mincho','Hiragino Mincho Pro',serif" font-size="22" font-weight="500" letter-spacing="6" fill="#F4EFE4" opacity="0.7">決 済</text>
+  <line x1="322" y1="245" x2="380" y2="245" stroke="#F4EFE4" stroke-width="1" opacity="0.5"/>
+  <text x="322" y="270" font-family="'DM Sans','Helvetica Neue',sans-serif" font-size="13" font-weight="600" letter-spacing="3.5" fill="#F4EFE4" opacity="0.85">TRUST, COMPUTED.</text>
+</svg>

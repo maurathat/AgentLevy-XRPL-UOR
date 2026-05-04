@@ -4,26 +4,35 @@ Each UOR address is a 32-byte sequence; rendered as Braille each byte
 becomes one Unicode codepoint U+2800 + byte. The result is a visually
 distinctive 32-character string that's also a valid cryptographic identity.
 
-Outputs three SVGs to pitch/visuals/:
+Outputs three visuals to ``pitch/visuals/`` — each as both SVG (vector,
+editable in any tool) and PNG (1920x1080, ready to drag into Gamma /
+Keynote / PowerPoint):
 
-  hero-uor-address.svg       Large hero shot of a single UOR address as Braille,
-                              with the equivalent hex shown small underneath.
+  hero-uor-address.{svg,png}      Large hero shot of a single UOR address
+                                   as Braille, with hex underneath.
 
-  hologram-cert.svg          The real cert:ModuleCertificate from
-                              mcp/example-module-certificate.json — anchors the
-                              "we're protocol-aligned" pitch.
+  hologram-cert.{svg,png}         The real cert:ModuleCertificate from
+                                   mcp/example-module-certificate.json —
+                                   anchors the "we're protocol-aligned" pitch.
 
-  byte-to-glyph-primer.svg   Educational visual showing how 4 example bytes
-                              map to Braille glyphs. Use on the slide that
-                              explains the encoding.
+  byte-to-glyph-primer.{svg,png}  Educational visual showing how 4 example
+                                   bytes map to Braille glyphs. Use on the
+                                   slide that explains the encoding.
 
-These are SVG (text-based) so they scale to any resolution and edit in any
-vector tool. Upload to Gamma directly, or convert to PNG with rsvg-convert.
+PNG rendering uses ``rsvg-convert`` (``brew install librsvg``). If it's
+missing, the script still writes the SVGs and prints an install hint
+instead of failing.
+
+Run with ``--no-png`` to skip PNG rendering even if rsvg-convert is
+available.
 """
 
 from __future__ import annotations
 
+import argparse
 import json
+import shutil
+import subprocess
 from pathlib import Path
 
 
@@ -256,21 +265,63 @@ def make_primer():
     return svg
 
 
+def render_png(svg_path: Path, width: int = 1920, height: int = 1080) -> Path | None:
+    """Render an SVG to PNG via rsvg-convert. Returns the PNG path on success.
+
+    Returns None (without raising) if ``rsvg-convert`` isn't installed —
+    callers should print an install hint instead of crashing the SVG-only
+    fast path.
+    """
+    if shutil.which("rsvg-convert") is None:
+        return None
+    png_path = svg_path.with_suffix(".png")
+    subprocess.run(
+        ["rsvg-convert", "-w", str(width), "-h", str(height),
+         "-o", str(png_path), str(svg_path)],
+        check=True,
+    )
+    return png_path
+
+
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--no-png", action="store_true",
+                        help="Skip PNG rendering even if rsvg-convert is installed.")
+    args = parser.parse_args()
+
+    repo_root = Path(__file__).resolve().parent.parent
     out_files = {
         "hero-uor-address.svg": make_hero_address(),
         "hologram-cert.svg": make_hologram_cert(),
         "byte-to-glyph-primer.svg": make_primer(),
     }
+
+    svg_paths: list[Path] = []
     for name, svg in out_files.items():
         path = OUT / name
         path.write_text(svg, encoding="utf-8")
-        print(f"  wrote {path.relative_to(Path(__file__).resolve().parent.parent)} ({path.stat().st_size:,} bytes)")
+        svg_paths.append(path)
+        print(f"  wrote {path.relative_to(repo_root)} ({path.stat().st_size:,} bytes)")
+
+    if args.no_png:
+        print("\n(--no-png set; PNG rendering skipped.)")
+    elif shutil.which("rsvg-convert") is None:
+        print(
+            "\nrsvg-convert not found — SVGs only. To get PNG output:\n"
+            "  brew install librsvg\n"
+            "then re-run this script."
+        )
+    else:
+        print()
+        for svg_path in svg_paths:
+            png_path = render_png(svg_path)
+            print(f"  wrote {png_path.relative_to(repo_root)} ({png_path.stat().st_size:,} bytes)")
+
     print()
-    print("Upload these to Gamma:")
-    print("  - hero-uor-address.svg     -> headline slide for 'verified byte-identical' moment")
-    print("  - hologram-cert.svg        -> 'real UOR cert example' slide")
-    print("  - byte-to-glyph-primer.svg -> 'how the encoding works' explainer slide")
+    print("Upload these to Gamma (PNG drags in cleanly; SVG also works):")
+    print("  - hero-uor-address     -> headline slide for 'verified byte-identical' moment")
+    print("  - hologram-cert        -> 'real UOR cert example' slide")
+    print("  - byte-to-glyph-primer -> 'how the encoding works' explainer slide")
 
 
 if __name__ == "__main__":

@@ -102,4 +102,4 @@ Read [CANONICAL_FORM.md](CANONICAL_FORM.md) **first**. The single most likely cl
 
 ## License
 
-Private repo, no license selected. Add Apache-2.0 or MIT before flipping public for hackathon submission.
+Apache License 2.0 — see [LICENSE](LICENSE). Vendored PRISM (`vendor/prism.py`) retains its upstream MIT license; see [vendor/LICENSE-prism](vendor/LICENSE-prism).

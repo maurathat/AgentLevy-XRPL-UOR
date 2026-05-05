@@ -76,6 +76,14 @@ KYC_BENEFICIAL_OWNERSHIP = "kyc.beneficial_ownership_verify"
 KYC_SANCTIONS_SCREEN = "kyc.sanctions_screen"
 ALLOWED_TASK_TYPES = frozenset({KYC_BENEFICIAL_OWNERSHIP, KYC_SANCTIONS_SCREEN})
 
+#: Allowed settlement-currency values. RLUSD is the project default per the
+#: Phase 2.8 decision (see project memory: stronger pitch for an enterprise
+#: KYC-compliance demo than crypto-native XRP). XRP remains permitted as a
+#: fallback for environments where RLUSD trustline isn't established.
+CURRENCY_RLUSD = "RLUSD"
+CURRENCY_XRP = "XRP"
+ALLOWED_CURRENCIES = frozenset({CURRENCY_RLUSD, CURRENCY_XRP})
+
 
 # ---------------------------------------------------------------------------
 # Sub-model: input reference
@@ -125,8 +133,18 @@ class TaskSpec(BaseModel):
     )
 
     # --- Settlement ---
-    price_drops: int = Field(..., ge=1, description="XRP drops to be escrowed.")
+    price_drops: int = Field(
+        ...,
+        ge=1,
+        description="Amount in the chain's smallest unit (XRP drops for "
+                    "XRPL-native; equivalent for RLUSD trustline amounts).",
+    )
     chain: str = Field(default="xrpl", description="Settlement chain identifier.")
+    currency: str = Field(
+        default=CURRENCY_RLUSD,
+        description="Settlement currency. Defaults to RLUSD per Phase 2.8 "
+                    "decision; XRP also permitted. See ALLOWED_CURRENCIES.",
+    )
 
     # --- Parties ---
     buyer_pubkey: str = Field(
@@ -165,6 +183,14 @@ class TaskSpec(BaseModel):
         if v not in ALLOWED_TASK_TYPES:
             allowed = ", ".join(sorted(ALLOWED_TASK_TYPES))
             raise ValueError(f"task_type must be one of [{allowed}], got {v!r}")
+        return v
+
+    @field_validator("currency")
+    @classmethod
+    def _valid_currency(cls, v: str) -> str:
+        if v not in ALLOWED_CURRENCIES:
+            allowed = ", ".join(sorted(ALLOWED_CURRENCIES))
+            raise ValueError(f"currency must be one of [{allowed}], got {v!r}")
         return v
 
     @field_validator("deadline")

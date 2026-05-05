@@ -24,6 +24,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from agentlevy.primitives.signing import Keypair, public_key_hex  # noqa: E402
 from agentlevy.primitives.task_spec import (  # noqa: E402
+    CURRENCY_RLUSD,
+    CURRENCY_XRP,
     KYC_BENEFICIAL_OWNERSHIP,
     KYC_SANCTIONS_SCREEN,
     InputRef,
@@ -117,6 +119,55 @@ def test_malformed_pubkey_rejected():
         _build_spec(buyer, seller, buyer_pubkey="not-hex")
     with pytest.raises(ValueError):
         _build_spec(buyer, seller, buyer_pubkey="ab" * 31)  # wrong length
+
+
+def test_currency_defaults_to_rlusd():
+    """Per Phase 2.8 decision: RLUSD is the default settlement currency."""
+    buyer = Keypair.from_seed(TEST_SEED_BUYER)
+    seller = Keypair.from_seed(TEST_SEED_SELLER)
+    spec = _build_spec(buyer, seller)
+    assert spec.currency == CURRENCY_RLUSD
+
+
+def test_xrp_currency_accepted():
+    buyer = Keypair.from_seed(TEST_SEED_BUYER)
+    seller = Keypair.from_seed(TEST_SEED_SELLER)
+    spec = _build_spec(buyer, seller, currency=CURRENCY_XRP)
+    assert spec.currency == CURRENCY_XRP
+
+
+def test_invalid_currency_rejected():
+    buyer = Keypair.from_seed(TEST_SEED_BUYER)
+    seller = Keypair.from_seed(TEST_SEED_SELLER)
+    with pytest.raises(ValueError, match="currency"):
+        _build_spec(buyer, seller, currency="USD")
+    with pytest.raises(ValueError, match="currency"):
+        _build_spec(buyer, seller, currency="ETH")
+
+
+def test_currency_is_in_canonical_bytes():
+    """Currency is part of the signed bytes — change in currency should
+    change the canonical representation (and thus invalidate signatures)."""
+    buyer = Keypair.from_seed(TEST_SEED_BUYER)
+    seller = Keypair.from_seed(TEST_SEED_SELLER)
+    spec = _build_spec(buyer, seller)
+    canonical = spec.to_canonical_bytes()
+    assert b"currency" in canonical
+    assert b"RLUSD" in canonical
+
+
+def test_tampering_with_currency_invalidates_signatures():
+    """If anyone modifies the currency after signing, both signatures fail."""
+    buyer = Keypair.from_seed(TEST_SEED_BUYER)
+    seller = Keypair.from_seed(TEST_SEED_SELLER)
+    spec = _build_spec(buyer, seller)
+    spec.sign_buyer(buyer)
+    spec.sign_seller(seller)
+    assert spec.is_fully_signed()
+
+    spec.currency = CURRENCY_XRP
+    assert spec.verify_buyer_signature() is False
+    assert spec.verify_seller_signature() is False
 
 
 def test_input_ref_requires_valid_address():

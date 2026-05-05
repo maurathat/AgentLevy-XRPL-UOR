@@ -149,6 +149,27 @@ The anchor is **detached** from the cert's canonical bytes. Anchoring happens *a
 
 This is the structural property: **two independent ledgers, two independent governance models, two independent verification paths.** The audit story doesn't depend on either chain alone.
 
+### 2.4 Future: dNFT + SmartEscrow integration pattern (XRPL-specific, Phase 3)
+
+XRPL natively supports two primitives that, when composed with AgentLevy's cert chain, unlock a class of use cases no other chain can offer as cleanly today:
+
+- **XLS-20 dynamic NFTs (dNFTs)** — NFTs whose metadata can be updated post-mint by the issuer.
+- **XLS-100 SmartEscrow** — conditional-release escrow whose `FinishFunction` can reference NFT state.
+
+Together with AgentLevy's `DerivationCert` chain, you get **three composable layers** governing one workflow:
+
+| Layer | Role | Question it answers |
+|---|---|---|
+| **AgentLevy cert chain** | The verifiable history | *Prove how we got here.* |
+| **XLS-20 dNFT** | A single canonical onchain reference to evolving state | *What is the current state?* |
+| **XLS-100 SmartEscrow** | Conditional fund release tied to that state | *Automate the consequence.* |
+
+The cert chain underpins the dNFT (the dNFT's state transitions are backed by signed certs); the dNFT expresses state as a single onchain reference (regulators get one object to read); SmartEscrow releases funds when the state hits a target (programmable, automated). **Best of both worlds: a single regulator-friendly object plus a fully verifiable history.**
+
+This pattern is feasible-but-expensive on Ethereum (1000+ LoC of custom Solidity contracts + audits), feasible on Solana / Sui / Base (similar custom-contract burden), and **uniquely cheap on XRPL** because dNFTs and SmartEscrow are native primitives — AgentLevy layers the cert chain on top without writing or auditing thousands of lines of contract code.
+
+Phase 3 productizes this pattern. The markets it unlocks are catalogued in §6.11; the most economically novel of these is **AI model pay-per-inference with cryptographic enforcement** (§6.11.1).
+
 ---
 
 ## 3. UOR Alignment: Why This Protocol Doesn't Define Its Own Addressing
@@ -410,6 +431,63 @@ This is the territory where AgentLevy stops being a KYC-specific protocol and be
 
 **AgentLevy fit:** Same protocol; new operation types (`insurance.claim_adjudication`, `insurance.payout_calculation`).
 
+### 6.11 dNFT-enabled markets (Phase 3 expansion, XRPL-specific)
+
+The use cases above (§6.1–6.10) all run on AgentLevy's core cert chain + two-ledger settlement. Layering XRPL's dNFT + SmartEscrow primitives on top (architecture pattern in §2.4) unlocks a distinct class of markets where the workflow's *state* — not just its history — needs to live onchain in a way that automates economic consequences.
+
+The flagship of this class is AI model pay-per-inference with cryptographic enforcement.
+
+#### 6.11.1 AI model pay-per-inference with cryptographic enforcement
+
+**The market gap:** AI model providers today face two unsolved problems simultaneously:
+
+1. **Usage tracking with provenance.** Customers want to verify they're paying for what they actually consumed, including knowing *which model version* served each call. Providers want to prevent unauthorized usage. Today this is solved with API keys + vendor-trusted billing systems.
+2. **Royalty enforcement when models are licensed downstream.** When a foundation-model maker licenses their model to a downstream provider (e.g., an enterprise software vendor embeds Claude or Llama into their product), royalty calculation depends on the vendor's self-reported usage — vendor-trusted, frequently disputed, slow to settle.
+
+Neither problem has a satisfying solution. Both are blocked by the same gap: **no cryptographic proof of "this model produced this output for this customer at this time."**
+
+**The AgentLevy + dNFT + SmartEscrow solution:**
+
+- **Model licensed as an XLS-20 dNFT.** The dNFT represents the license; metadata fields track usage counters, royalty rates, license-tier permissions.
+- **Each inference produces a `DerivationCert`.** The cert binds: model identifier + version + prompt content address + input content addresses + output content address + agent (model deployment) public key + timestamp. Anchored on Hedera HCS.
+- **Cert submission updates the dNFT's usage counter** via the issuer's update authority. The on-chain counter is a real-time, cryptographically-backed record of consumption.
+- **SmartEscrow releases per-inference payment automatically** as the counter increments. Royalty splits to model creators happen at the same transaction; no monthly reconciliation, no disputes, no intermediary.
+
+**What this enables that doesn't exist today:**
+
+- **True pay-per-inference at machine speed.** Settlement happens in the same transaction window as the inference itself; not "true up at month-end."
+- **Cryptographic audit of every inference, forever.** Customer asks "what model produced this output?" — recompute the cert hash, query Hedera Mirror Node, get the consensus timestamp. No vendor logs needed.
+- **Royalty enforcement without trust.** Model creators see exactly how many inferences ran on their model, in real time, on a public ledger. Payment is automatic. Disputes don't exist because there's nothing to dispute — the math is the source of truth.
+- **Model versioning provenance.** Every cert binds the *exact model version* that ran. When a model gets updated, the dNFT's `current_version` field updates; old certs remain valid against the version they were signed under. Solves the "we silently changed the model and your evals broke" problem.
+- **Transferable / sub-licensable model rights.** The dNFT is transferable; sub-licensing becomes a dNFT split or a child-dNFT mint. Cleaner than today's contract-based licensing.
+
+**Markets this opens:**
+
+| Market segment | What changes |
+|---|---|
+| **Foundation model providers** (OpenAI, Anthropic, Google, Meta, Mistral, etc.) | Direct cryptographic billing to enterprises; royalty enforcement when models are embedded downstream |
+| **AI model marketplaces** (Hugging Face, Replicate, Together AI, etc.) | Per-inference settlement at the marketplace layer; auditable provenance for every model run |
+| **Enterprise AI integrators** (vendors embedding LLMs into their software) | Cryptographic licensing terms; model-creator royalties auto-paid; no monthly reconciliation labor |
+| **Regulatory sandboxes for AI** (EU AI Act, BIS supervision, NIST AI RMF) | "Show me cryptographically what model produced this output" becomes a 1-line query; regulator doesn't need to trust the operator's logs |
+| **Open-source model commercialization** | Open-weight model creators can monetize commercial deployments via on-chain royalties without giving up open licensing |
+| **Model-routing services** (compound AI systems that pick which model to call) | Cert chain proves which underlying model served each subroutine; routing decisions become auditable |
+
+**Defensibility:** the combination requires (a) a cert protocol that produces standards-aligned content addresses, (b) a chain with native dNFT update + SmartEscrow primitives, and (c) a verifiable audit anchor across an independent ledger. AgentLevy provides (a); XRPL provides (b); Hedera HCS provides (c). **Coinbase x402 + Virtuals ACP + traditional API key billing each have one of these; none have all three.**
+
+This use case alone could justify Phase 3 prioritization. The total addressable market is the full size of the AI inference economy — projected at hundreds of billions of dollars by the late 2020s, currently mostly billed via vendor-trusted systems with weak provenance.
+
+#### 6.11.2 Other dNFT-enabled use cases
+
+- **Portable KYC attestations** — a verified KYC as a dNFT travels with the customer across institutions; new bank verifies the cert chain once.
+- **Tranched M&A escrow** — each due-diligence milestone is a dNFT state transition; SmartEscrow releases tranches automatically as state advances.
+- **Title NFTs** — property title as a dNFT; each conveyance updates state; Smart Escrow holds closing funds conditional on `NEW_OWNER` transition. National title insurers' chain-of-title automation budgets fit here.
+- **Patient consent NFTs** — patient mints consent dNFT for a specific PHI use; provider's escrow holds payment until consent_used + work_completed; revocable. HIPAA-friendly because the NFT is consent metadata, not PHI.
+- **Carbon credit verification** — each verified offset as a dNFT; cert chain provides audit; Smart Escrow holds purchase funds conditional on `VERIFIED` state. Solves voluntary carbon market's double-counting problem.
+- **SLA-enforced subscriptions** — subscription as a dNFT; performance metrics update state; Smart Escrow releases monthly payment if `COMPLIANT`; auto-refunds on breach.
+- **Supply chain provenance** — each handoff as a dNFT state transition; certs document each leg; payment to each supply-chain party releases as their stage completes.
+
+All of these share the same architectural pattern (§2.4) and benefit from the same XRPL-specific cost advantage versus implementing on Ethereum / Solana / Sui / Base.
+
 ---
 
 ## 7. Risk Model
@@ -481,7 +559,15 @@ The cert chain we ship for KYC is the same primitive used for **verifiable agent
 
 This is the territory where AgentLevy stops being KYC-specific and becomes the substrate for **all** verifiable agent work — the wedge becomes the platform.
 
-### 8.4 Enterprise pilots (the wedge)
+### 8.4 Phase 3: dNFT + SmartEscrow integration (XRPL-specific)
+
+Layering XRPL's native XLS-20 dNFTs and XLS-100 SmartEscrow on top of AgentLevy's cert chain — see architecture pattern in §2.4 and market catalog in §6.11. Phase 3 productizes this combination, with **AI model pay-per-inference with cryptographic enforcement** (§6.11.1) as the flagship use case.
+
+The TAM for AI model licensing alone is the full size of the AI inference economy — projected at hundreds of billions of dollars by the late 2020s, currently mostly billed via vendor-trusted systems with weak provenance. AgentLevy + dNFT + SmartEscrow is the first protocol stack that solves usage tracking, royalty enforcement, and provenance simultaneously, with no trusted intermediary.
+
+Adjacent markets the same pattern unlocks: portable KYC attestations, tranched M&A escrow, title NFTs, patient-controlled consent NFTs, carbon credit verification, SLA-enforced subscriptions, supply chain provenance.
+
+### 8.5 Enterprise pilots (the wedge)
 
 - Mid-market regional banks (KYC + AML)
 - KYC compliance vendors (channel/whitelabel)
@@ -489,7 +575,7 @@ This is the territory where AgentLevy stops being KYC-specific and becomes the s
 - M&A escrow + transaction support (Year 2)
 - AI governance + inference provenance (Year 3+)
 
-### 8.5 Productization → Kessai
+### 8.6 Productization → Kessai
 
 The open-source reference protocol is AgentLevy. The commercial layer is **Kessai** — visualizer UI for cert chains, enterprise SDKs (Python + TypeScript), regulatory-evidence packs, channel licensing for compliance vendors.
 

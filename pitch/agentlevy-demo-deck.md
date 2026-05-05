@@ -279,6 +279,14 @@ The cert chain we ship for KYC is the same primitive used for **verifiable agent
 - **Memoization with audit** — when an agent re-uses a prior result instead of recomputing, the prior cert IS the citation. Cache hits become cryptographically auditable.
 - **Cross-agent memory sharing** — an agent referencing another agent's prior work cites by content address, not by API. The reference resolves whether the original agent still exists or not. Composes naturally with MemWal-style memory protocols.
 
+### Phase 3: dNFT + SmartEscrow integration (XRPL-specific)
+
+Layering XRPL's native **XLS-20 dynamic NFTs** + **XLS-100 SmartEscrow** on top of the AgentLevy cert chain produces three composable layers governing one workflow: cert chain (verifiable history) + dNFT (current state) + SmartEscrow (automated consequence). **The combination is uniquely cheap on XRPL** — the dNFT and SmartEscrow primitives are native, so AgentLevy layers on top without thousands of lines of custom contract code.
+
+**Flagship use case: AI model pay-per-inference with cryptographic enforcement.** Model licensed as a dNFT; each inference produces a `DerivationCert`; cert submission updates the dNFT's usage counter; SmartEscrow releases per-inference payment + royalties to model creators automatically. Solves usage tracking, royalty enforcement, and inference provenance *simultaneously* — none of Coinbase x402, Virtuals ACP, or traditional API-key billing solve all three. **TAM: the full AI inference economy** (projected hundreds of billions by late 2020s, currently vendor-trusted billing with weak provenance).
+
+Other dNFT-enabled markets the same pattern unlocks: **portable KYC attestations** (verified KYC travels with the customer across institutions), **tranched M&A escrow** (programmable milestone-based release), **title NFTs** (each conveyance is a state transition; closing escrow auto-releases on `NEW_OWNER`), **patient consent NFTs** (HIPAA-friendly; revocable), **carbon credit verification** (solves voluntary carbon market's double-counting), **SLA-enforced subscriptions** (auto-refunds on breach), **supply chain provenance**.
+
 ### Productization → Kessai (next slide)
 
 The open-source reference protocol is AgentLevy. The commercial layer is Kessai — visualizer UI, enterprise SDKs, regulatory-evidence packs, channel licensing. **Same protocol, productized.**

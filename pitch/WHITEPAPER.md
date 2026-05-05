@@ -333,17 +333,70 @@ The wedge market is **KYC compliance** (the demo target). The protocol generaliz
 
 **Year-2 wedge.** Higher-value than KYC; longer sales cycle.
 
-### 6.4 International compliance teams
+### 6.4 Title companies + property closings
+
+**Pain:** Title insurance has the longest audit horizon of any commercial use case — title claims can pay out 30+ years after a closing, on policies issued before today's vendors and registries even existed. Pain points compound:
+
+- **Title chain integrity** — the proof that the property has clean ownership history (every prior conveyance, every lien, every encumbrance). Currently reconstructed by humans reading recorder-of-deeds records county-by-county.
+- **Closing escrow** — funds locked until conditions met (very similar mechanics to M&A escrow). Currently held by the title company in trust.
+- **Multi-party verification** — buyer, seller, lender, title insurer, county recorder, sometimes state regulator. Each currently maintains its own copy with no shared verifiable record.
+- **Cross-state friction** — every county has its own recorder system, often paper-or-PDF-based. National title insurers spend enormous resources reconciling.
+
+**AgentLevy fit (especially strong):**
+
+- **Title chain naturally maps to cert chain.** Each conveyance is a signed cert referencing the prior owner's cert by content address. The "proof of clean title" becomes hash-chain verification — same primitive as the cert chain we ship for KYC.
+- **30-year audit horizon → two-ledger anchoring is essential.** Single-chain bets feel risky; two-ledger redundancy across XRPL + Hedera (different governance models, different consensus mechanisms) is exactly the property title insurers need.
+- **Smart escrow for closing funds.** XLS-100 SmartEscrow's hashlock pattern fits "release funds when title transfer is recorded" naturally — the cert hash IS the recording.
+- **Cross-state verification without per-county integration.** A cryptographically-verifiable title chain bypasses the need to integrate with each county recorder's database. The chain itself IS the proof; the recorder becomes one anchor among several.
+
+**Willingness to pay:** title insurance premiums are 0.5–1.0% of property value; on a $500K home, $2,500–$5,000 per closing. National title insurers (First American, Fidelity National, Stewart) have billions in annual revenue and active R&D budgets for chain-of-title automation. **Year-2/3 pilot target alongside M&A.**
+
+### 6.5 Healthcare records (EHR audit + clinical AI inference)
+
+**Pain:** US healthcare runs on a handful of dominant EHR platforms — Epic (~40%+ of US patient records), Cerner (now Oracle Health), Allscripts, athenahealth. HIPAA mandates audit trails for record access, but the audit is vendor-trusted: "Epic's logs say Dr. Smith viewed this chart at 2pm." Cross-institution sharing requires building trust hierarchies between vendors, which is fragile and slow. The 21st Century Cures Act's interoperability mandate makes this worse — more cross-vendor data flows, same vendor-trusted audit model.
+
+Layer on top: clinical AI agents (decision support, prior authorization, claims processing, scan analysis, documentation drafting). Hospitals increasingly need to answer "what AI agent did what to this patient's record, on which inputs, when?" — and the answer needs to satisfy regulators, plaintiffs' attorneys, and joint commission auditors.
+
+**AgentLevy fit (HIPAA-compliant by construction):**
+
+- **PHI never goes onchain.** Only the **content address** of the access event (hash of canonical metadata) + the agent's signature + the consensus timestamp anchor on chain. The PHI itself stays inside the EHR's compliant infrastructure. The cert is a verifiable claim *about* the access, not the PHI.
+- **Cross-EHR audit trails without trust between vendors.** Epic and Cerner can independently verify each other's cert chains via Hedera Mirror Node + XRPL JSON-RPC. No bilateral trust agreement needed.
+- **Clinical AI inference provenance.** When an agent flags a scan, suggests a diagnosis, or auto-completes a clinical note, the `DerivationCert` records what model + version + inputs + output. Court-admissible cryptographic provenance for AI-driven clinical decisions.
+- **Patient-controlled access.** Patient pubkey can be required as a co-signer on certain cert types (e.g., third-party data exports), giving patients verifiable control over their record's downstream uses. Aligns with Cures Act intent.
+
+**Procurement reality:** Epic doesn't pilot with startups easily; the wedge is **smaller hospital systems and digital-health vendors** that integrate with Epic via APIs and need an audit story for their AI features. Once those wedge customers prove the pattern, larger systems and Epic itself become reachable.
+
+### 6.6 Legal documents + e-discovery (NetDocuments, iManage, Relativity, etc.)
+
+**Pain:** Law firms run on document management systems (DMS) — NetDocuments, iManage Work, Relativity (litigation), Clio (smaller firms). Critical needs:
+
+- **Chain-of-custody for litigation hold.** When opposing counsel produces a document, the producing firm needs to prove it hasn't been tampered with since collection. Current model: vendor-trusted DMS + sworn affidavit.
+- **E-discovery defensibility.** Forensically-sound audit trails for every document operation (read, edit, share, redact, export). Must survive challenges from opposing counsel and judicial scrutiny.
+- **Privilege determination + conflict checks.** Multi-party signing, privileged communications, ethical-wall enforcement.
+- **Cross-firm document exchange.** Counsel-to-counsel, counsel-to-court, counsel-to-regulator. Each transition currently requires trust in the sender or a trusted intermediary (e.g., e-discovery vendor).
+- **AI in legal practice.** Contract review, due diligence, legal research, brief drafting — all increasingly AI-driven. Same provenance question as healthcare AI: what AI agent did what, to which document, when, with what inputs.
+
+**AgentLevy fit:**
+
+- **Cert chain IS the chain of custody.** Every document operation produces a signed `DerivationCert`. Tampering breaks the chain at the address-resolution step, not the signature step — the chain break is mathematically detectable, not testimonially asserted.
+- **Court-admissible cryptographic evidence.** Federal Rules of Evidence 901 + 902(13) (the "self-authenticating digital records" amendment) explicitly contemplate hash-based authenticity proofs. AgentLevy's two-ledger anchoring exceeds the FRE bar.
+- **Cross-firm verification without trusted intermediary.** Opposing counsel can verify document authenticity directly against the cert chain — no e-discovery vendor in the middle, no chain-of-custody affidavits.
+- **Multi-party signing maps directly to TaskSpec dual-signature pattern.** Existing legal workflows port without re-engineering.
+- **AI provenance for legal AI.** Same `DerivationCert` shape as healthcare AI; new operation types (`legal.contract_review`, `legal.due_diligence`, `legal.brief_draft`).
+
+**Channel partners:** the existing DMS vendors (NetDocuments, iManage) are natural channel partners — same whitelabel/backend pattern as KYC compliance vendors. They get to sell "cryptographically-verifiable audit trail" to their existing law-firm customers without building it themselves.
+
+### 6.7 International compliance teams
 
 **Pain:** EU eIDAS, Singapore MAS, and several other regulatory regimes already accept cryptographic-evidence formats. Compliance teams operating cross-border are looking for vendor-neutral attestation formats they can submit to multiple regulators without per-jurisdiction translation.
 
 **AgentLevy fit:** Standards-aligned (VTEAI + UOR-ADDR-1 are deliberately chain-neutral and jurisdiction-neutral), token-free, open-source. A compliance team can submit the cert chain + a verification script to any regulator that accepts cryptographic evidence.
 
-### 6.5 Crypto-native escrow (Year 1+)
+### 6.8 Crypto-native escrow (Year 1+)
 
 Crypto-escrow players already use single-chain escrow primitives. Two-ledger anchoring is an upgrade story — better audit, no new trust assumptions on top of what they already accept.
 
-### 6.6 AI governance + inference provenance (Year 3+)
+### 6.9 AI governance + inference provenance (Year 3+)
 
 **Pain:** Enterprise AI deployments increasingly need to answer "show me, cryptographically, what model + version + prompt + inputs produced this output." Current logging stacks don't provide cryptographic guarantees; they're vendor-trusted.
 
@@ -351,7 +404,7 @@ Crypto-escrow players already use single-chain escrow primitives. Two-ledger anc
 
 This is the territory where AgentLevy stops being a KYC-specific protocol and becomes the substrate for **all** verifiable AI work — the wedge becomes the platform.
 
-### 6.7 Insurance + claims adjudication
+### 6.10 Insurance + claims adjudication
 
 **Pain:** Insurance claims and adjudication often involve multi-party signed documents passed between insurer, adjuster, claimant, and regulator. Cryptographic audit-trail is a natural fit.
 

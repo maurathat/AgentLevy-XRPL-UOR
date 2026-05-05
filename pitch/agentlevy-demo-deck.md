@@ -252,11 +252,19 @@ Standards consolidate fast once a category coalesces. Today's specs are publishe
 - **Hedera ecosystem** — HCS expansion beyond the testnet anchor; Hashgraph Association compliance-focused initiatives.
 - **Anthropic + LLM-platform partnerships** — agent-SDK alignment; structured-output + tool-use patterns that fit cleanly into VTEAI's negotiation envelope.
 
-### Enterprise pilots (the wedge)
+### Enterprise pilots (the wedge → expansion)
 
+**Year 1 wedge:**
 - **Mid-market regional banks** ($X–X B AUM) — high KYC volume, autonomy to pilot without 24-month procurement cycles.
 - **KYC compliance vendors** — channel/whitelabel; let them sell *verifiable* audit to their existing customers.
 - **International compliance teams** — EU eIDAS, Singapore MAS, jurisdictions that already accept cryptographic-evidence formats.
+
+**Year 2–3 expansion (same protocol; new operation types):**
+- **M&A escrow + transaction support** — decade-long audit horizons; multi-party verification across counsel, regulators, both sides.
+- **Title companies + property closings** — 30-year audit horizon makes two-ledger anchoring *especially* compelling. Title chain naturally maps to cert chain. National title insurers ($B+ revenue, active R&D budgets).
+- **Healthcare records + clinical AI inference** — HIPAA-compliant by construction (PHI never goes onchain — only content addresses + signatures + timestamps). Audit story for clinical AI (Epic/Cerner integration via APIs; smaller hospital systems first, larger systems later).
+- **Legal documents + e-discovery** — court-admissible cryptographic evidence (FRE 901 + 902(13) compliant). Channel partners: NetDocuments, iManage, Relativity, Clio.
+- **Insurance + claims adjudication** — multi-party signed-document workflows; cert chain becomes audit trail.
 
 ### Multi-chain via UOR-ADDR-1 adapters
 

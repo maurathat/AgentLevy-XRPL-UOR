@@ -61,6 +61,7 @@ A settlement primitive for agent commerce needs to make the **work itself** cryp
 | **DID / KYC registries** (Civic, Worldcoin, Moca) | "Who is this agent" | "What did this agent actually do" — silent. |
 | **Agent-platform SDKs** (Anthropic, OpenAI, Hedera AgentKit, Fetch.ai, Olas) | Agent identity + discovery within their walled garden | Cross-vendor verification; long-horizon auditability. |
 | **Web3 oracles** (Chainlink, etc.) | Bridge external data onchain | Trusted-oracle model. AgentLevy needs no oracle — the cert chain IS the oracle. |
+| **Vendor-bound content addressing** (any KYC/compliance vendor with internal doc IDs) | "Trust our database" identifiers; format is proprietary | AgentLevy uses **UOR-Passport-format** addresses (`sha256:<64hex>`, JCS-RFC8785 + NFC canonical bytes), publicly resolvable by any UOR-aware tool with **no translation**. Verified live byte-identical against UOR Foundation's canonical reference (`mcp.uor.foundation/encode_address`). The address outlives the vendor. |
 
 **AgentLevy sits one layer below all of these.** They're each great at their own job. None of them give you "verifiable from public keys alone, across two independent ledgers, no trusted intermediary, byte-identical to a published reference standard." That's the gap we built into.
 
@@ -121,6 +122,16 @@ A settlement primitive for agent commerce needs to make the **work itself** cryp
 ```
 
 **Every arrow is a hash reference. Every cert is signed. Every cert is anchored. Tampering with any one breaks the chain at the address-resolution step — not the signature step — which is exactly the audit-trail invariant we want.**
+
+### Why UOR-Passport format specifically
+
+Every address in this chain is **publicly resolvable** by any UOR-aware tool — no translation, no vendor-specific format, no proprietary middleware. We don't define our own addressing scheme; we use UOR's:
+
+- **PRISM ring algebra** (Q(31), 256-bit, MIT-licensed) — the algebraic substrate that makes "one address, four representations" structurally true. Hex / Braille glyph / ring element / base32 are all algebraically the same address.
+- **JCS-RFC8785 + NFC canonicalization** — the cross-ecosystem standard for what bytes get hashed.
+- **Live cross-validated** byte-for-byte against UOR Foundation's canonical reference (`mcp.uor.foundation/encode_address`).
+
+The address outlives the vendor. It outlives the agent. It outlives any single chain. That's the property no proprietary content-addressing scheme can match.
 
 ---
 
@@ -195,15 +206,32 @@ LLMs are non-deterministic, prompt-injectable, and prone to over-spending tokens
 
 ![UOR Foundation](https://raw.githubusercontent.com/maurathat/kessai-pitch-assets/main/uor_foundation_logo.png)
 
-**AgentLevy is the first reference implementation of a two-standard stack we authored.**
+**Foundation-backed standard, not a startup spec.**
 
-- **VTEAI** — Verified Task Escrow + Attestation Interface. ERC draft, CC0, April 2026. The chain-neutral spec for verified-work settlement.
-- **UOR-ADDR-1** — Universal Object Reference Address. Community proposal, April 2026. Chain-agnostic content addressing for agent commerce.
-- **PRISM** — UOR Foundation's reference implementation of the algebraic content-addressed coordinate system. Vendored, MIT.
+The UOR Foundation is a 501(c)(3)-equivalent governance body with a Sandbox → Incubating → Graduated project lifecycle. AgentLevy isn't aligned to a vendor's whitepaper — it's aligned to a published, governed standard with multi-implementer adoption already underway.
 
-**Cross-validated:** AgentLevy's content addresses are byte-identical to UOR Foundation's canonical reference. We're not just "compatible" — we produce the same bytes, byte-for-byte. (See [docs/UOR_PASSPORT_VERIFIED.md](https://github.com/maurathat/AgentLevy-XRPL-UOR) in the repo.)
+**The two-standard stack we co-authored + the substrate we vendor:**
 
-**Why this matters for the demo:** the same primitives ship in PRISM, UOR Identity, UOR Certificate, UNS, and the Hologram SDK. AgentLevy is what those primitives look like applied to commerce.
+- **VTEAI** — *Verified Task Escrow + Attestation Interface.* ERC draft, CC0, April 2026. **We authored it.** The chain-neutral spec for verified-work settlement. AgentLevy is the first reference implementation; future competitors who want standards-alignment will implement a spec we shaped.
+- **UOR-ADDR-1** — *Universal Object Reference Address.* Community proposal, April 2026. **We co-contribute.** Chain-agnostic content addressing for agent commerce. The addressing layer underneath every cert, every input, every reference.
+- **PRISM** — UOR Foundation's reference implementation of the algebraic ring-coordinate system. **MIT-licensed, vendored.** What makes "one address, four representations" structurally true (hex, Braille glyph, ring element, base32 — all algebraically the same address).
+
+### Same primitives, many surfaces
+
+The whole point of UOR is that the same content-addressing primitives compose across domains. AgentLevy is what they look like applied to *commerce*; sibling UOR projects apply them elsewhere:
+
+| UOR project | Applies UOR primitives to | How AgentLevy composes with it |
+|---|---|---|
+| **UOR Identity** | Cryptographic identity for agents + entities | Agent pubkeys in our cert chain can resolve to UOR Identity profiles |
+| **UOR Certificate** | Generic signed-attestation envelopes | Our `DerivationCert` is a domain-specialized UOR Certificate |
+| **UNS** (Universal Naming Service) | Human-readable names → UOR addresses | Lets a regulator look up a cert by name without trusting any vendor |
+| **Hologram SDK** | Real-world UOR Module Certificates (in production today) | The deck visual on slide 4 is a real Hologram cert — same shape, byte-for-byte |
+
+### Why this is a moat (not just a citation)
+
+Standards consolidate fast once a category coalesces. Today's specs are published drafts; tomorrow's specs are de-facto requirements. **The protocol-author position means competitors who eventually want to be standards-aligned will have to implement specs we wrote.** The reference implementation is in our repo.
+
+**Cross-validated:** AgentLevy's content addresses are byte-identical to UOR Foundation's canonical reference. Not "interoperable" — *byte-identical*. Live cross-checked May 3, 2026 against `mcp.uor.foundation/encode_address`. See [`docs/UOR_PASSPORT_VERIFIED.md`](https://github.com/maurathat/AgentLevy-XRPL-UOR/blob/main/docs/UOR_PASSPORT_VERIFIED.md).
 
 ---
 
@@ -233,6 +261,15 @@ LLMs are non-deterministic, prompt-injectable, and prone to over-spending tokens
 ### Multi-chain via UOR-ADDR-1 adapters
 
 XRPL ships first because XLS-100 is ready. UOR-ADDR-1's chain-binding adapter pattern means **any chain that supports a hashlock-conditional release can be added without changing the protocol layer**: Hedera EVM, Solana, Sui, Base — each gets an adapter; agents stay chain-agnostic.
+
+### Verifiable agent memory + AI inference provenance
+
+The cert chain we ship for KYC is the same primitive used for **verifiable agent memory**. Every cert is a content-addressed, signed, anchored record of "this agent did this work on these inputs at this consensus-witnessed time." Stack many of these and you get an agent's complete, mathematically-verifiable history — the foundation for:
+
+- **Long-horizon agent reputation** — not vendor-trusted scores, but a public-key-verifiable track record. An agent's past certs are its résumé.
+- **AI inference provenance** — for enterprise AI governance: "show me, cryptographically, what model + version + prompt + inputs produced this output." Same `DerivationCert` shape; new operation types.
+- **Memoization with audit** — when an agent re-uses a prior result instead of recomputing, the prior cert IS the citation. Cache hits become cryptographically auditable.
+- **Cross-agent memory sharing** — an agent referencing another agent's prior work cites by content address, not by API. The reference resolves whether the original agent still exists or not. Composes naturally with MemWal-style memory protocols.
 
 ### Productization → Kessai (next slide)
 

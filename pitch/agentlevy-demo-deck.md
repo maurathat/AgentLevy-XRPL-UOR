@@ -1,4 +1,4 @@
-# AgentLevy — Demo Deck (Consensus EasyA · 10 slides)
+# AgentLevy — Demo Deck (Consensus EasyA · 12 slides)
 
 > **For: Consensus EasyA hackathon judges + booth visitors + builder audience.** Distinct from the Kessai investor deck (`pitch/kessai-funding-deck.md`) which leads with the company. This deck leads with the **protocol and the live demo** — what you're about to see and why each piece matters.
 >
@@ -36,19 +36,39 @@
 
 > *"Agent commerce assumes good faith. Production cannot."*
 
-Two AI agents transact today by exchanging API calls and trusting each other's logs. That's fine when both belong to the same vendor. It breaks the moment they don't.
+Today's stack tells you **who** you're transacting with — same-vendor logs, DID registries, agent-platform credentials. **None of it tells you what was actually done.**
 
-What's missing is a **settlement primitive** for agent commerce — one that:
+The audit collapses the moment:
+- The vendor goes away (or just can't reproduce the original API call)
+- The registry de-lists the agent
+- The counterparty disputes the log contents
 
-- Doesn't require agents to trust each other
-- Doesn't require either side to still exist for the audit to verify
-- Resolves to a **definite outcome** that any third party can re-check from public keys alone
+**Identity ≠ work-integrity.** A registered, KYC'd agent can still lie about what it computed — and you have no way to re-check.
 
-That's what AgentLevy demonstrates.
+A settlement primitive for agent commerce needs to make the **work itself** cryptographically verifiable, with no trusted third party at the verify step.
 
 ---
 
-## SLIDE 3 — What we built
+## SLIDE 3 — Why we built it (vs what exists)
+
+**Yes, things exist in this space. None of them solve the work-integrity problem.**
+
+| Player | What they solve | What they don't |
+|---|---|---|
+| **Coinbase x402** | HTTP-layer payment rail (HTTP 402 reactivation; per-request USDC on Base) | Payment ≠ verification. x402 says *the money moved*; AgentLevy says *the work matched the spec, here's the math*. **Composable, not competitive** — x402 could call AgentLevy as its verifier. |
+| **Coinbase Commerce escrow** | Crypto escrow for traditional commerce | **Custodial.** Coinbase IS the trust anchor. The whole point of AgentLevy is removing the trust anchor. |
+| **Virtuals Protocol (ACP)** | Agent commerce on Base; tokenized agents; TEE attestation | Platform-bound to Base + Virtuals tokens. Agent-token economics are a *marketplace* primitive, not a *settlement* primitive. AgentLevy is chain-neutral, token-free, audit-first. |
+| **DID / KYC registries** (Civic, Worldcoin, Moca) | "Who is this agent" | "What did this agent actually do" — silent. |
+| **Agent-platform SDKs** (Anthropic, OpenAI, Hedera AgentKit, Fetch.ai, Olas) | Agent identity + discovery within their walled garden | Cross-vendor verification; long-horizon auditability. |
+| **Web3 oracles** (Chainlink, etc.) | Bridge external data onchain | Trusted-oracle model. AgentLevy needs no oracle — the cert chain IS the oracle. |
+
+**AgentLevy sits one layer below all of these.** They're each great at their own job. None of them give you "verifiable from public keys alone, across two independent ledgers, no trusted intermediary, byte-identical to a published reference standard." That's the gap we built into.
+
+**The pitch line we earn:** *"They tell you who. We tell you what — verifiably, forever."*
+
+---
+
+## SLIDE 4 — What we built
 
 **AgentLevy is a protocol-layer demo where two AI agents negotiate and execute a KYC compliance task, sign each step with content-addressed derivation certificates, and settle on XRPL — producing an audit trail verifiable from public keys alone, across two independent ledgers.**
 
@@ -65,7 +85,7 @@ That's what AgentLevy demonstrates.
 
 ---
 
-## SLIDE 4 — The KYC demo
+## SLIDE 5 — The KYC demo
 
 ![A real UOR Module Certificate in the wild — Kessai certs follow the same shape, byte-for-byte](https://raw.githubusercontent.com/maurathat/kessai-pitch-assets/main/hologram-cert.png)
 
@@ -81,7 +101,7 @@ That's what AgentLevy demonstrates.
 
 ---
 
-## SLIDE 5 — The cert chain anatomy
+## SLIDE 6 — The cert chain anatomy
 
 ![One UOR address, four representations — verified byte-identical to UOR Foundation's canonical reference](https://raw.githubusercontent.com/maurathat/kessai-pitch-assets/main/hero-uor-address.png)
 
@@ -104,7 +124,7 @@ That's what AgentLevy demonstrates.
 
 ---
 
-## SLIDE 6 — Two-ledger settlement
+## SLIDE 7 — Two-ledger settlement
 
 **XRPL settles. Hedera anchors. Two independent witnesses.**
 
@@ -122,7 +142,7 @@ That's what AgentLevy demonstrates.
 
 ---
 
-## SLIDE 7 — The verification math
+## SLIDE 8 — The verification math
 
 ![Each byte becomes one Braille codepoint — codepoint = U+2800 + byte_value](https://raw.githubusercontent.com/maurathat/kessai-pitch-assets/main/byte-to-glyph-primer.png)
 
@@ -138,7 +158,40 @@ That's what AgentLevy demonstrates.
 
 ---
 
-## SLIDE 8 — Standards-aligned, by design
+## SLIDE 9 — Risk mitigations (smart contracts + LLMs)
+
+**The two scariest failure modes in agent-driven onchain commerce are exactly the two we engineered away from.**
+
+### 1. Smart-contract risk → minimal verifier surface
+
+Most onchain escrow contracts run thousands of lines of Solidity, with arbitrary call patterns and re-entrancy attack surface. AgentLevy uses **XLS-100 SmartEscrow** with a deliberately minimal `FinishFunction`:
+
+- ~10 lines of WASM logic: *compute hash of submitted cert, compare to hashlock committed at escrow creation, release iff match*
+- **Deterministic by construction** — no oracles, no time-dependent branches, no external calls
+- **Auditable in a single afternoon** — not a week of formal verification
+- **Hashlock pre-commitment** — the buyer locks in the expected output at escrow funding; the seller cannot retroactively renegotiate
+
+XRPL Smart Escrow is also natively currency-aware (RLUSD, XRP) without a custom token contract — one less surface to audit.
+
+### 2. LLM negotiation risk → bounded, schema-locked, cache-replayable
+
+LLMs are non-deterministic, prompt-injectable, and prone to over-spending tokens on unbounded back-and-forths. We constrain every layer:
+
+- **4-turn hard cap** on buyer↔compliance negotiation. Beyond turn 4, the protocol exits gracefully with a signed "negotiation failed" cert (itself a valid audit artifact). No infinite loops, no runaway token bills.
+- **Schema-validated outputs only** — every LLM call returns a Pydantic-validated `BeneficialOwnershipExtraction` or `SanctionsScreenResult` via Anthropic tool use. Free-form text isn't accepted into the cert chain.
+- **Temperature = 0** by default. Determinism wins for KYC; the cache layer assumes reproducibility.
+- **Fixture cache for stage demos** — `LLM_CACHE_MODE=cache` replays recorded responses byte-identically. The demo cannot fail because the API hiccupped.
+- **Wrong-keypair rejection at sign time** — `cert.sign(keypair)` raises if the keypair's public key doesn't match the `seller_pubkey` on the cert. Prevents an LLM-driven mistake from cross-signing as the wrong party.
+- **Tamper detection on every field** — modifying the cert post-sign invalidates the signature; modifying a referenced cert breaks the chain at the address-resolution step. Test coverage proves this for every model field (87 tests across primitives + 17 for HCS anchor + 19 for LLM stack).
+
+### Honest acknowledgments
+
+- LLMs can still fabricate data *within the schema*. The cert chain proves the work happened, not that the inputs were correctly interpreted.
+- WASM `FinishFunction` is new (XLS-100 activated Feb 2026); no production-scale audit history yet. Pilots go through a top-tier security firm before mainnet.
+
+---
+
+## SLIDE 10 — Standards-aligned, by design
 
 ![UOR Foundation](https://raw.githubusercontent.com/maurathat/kessai-pitch-assets/main/uor_foundation_logo.png)
 
@@ -154,25 +207,40 @@ That's what AgentLevy demonstrates.
 
 ---
 
-## SLIDE 9 — What you're seeing live (and what's still scaffolded)
+## SLIDE 11 — Roadmap
 
-**Today the foundations are real and tested. The demo's user-facing flow lands tomorrow.**
+**The protocol ships with the demo. The bigger build is partnerships, standards ratification, and the productization path.**
 
-| Layer | Status today (May 4) | Demo-day (May 7) |
-|---|---|---|
-| Cert primitives (canonical, signing, TaskSpec, DerivationCert) | ✓ 87 tests passing | ✓ |
-| Hedera HCS anchor (mock + live) | ✓ Module + 17 tests; live topic created | ✓ live submit |
-| LLM stack (client + cache + schemas + prompts) | ✓ Scaffold + 19 tests | ✓ live agents |
-| 3 agents (buyer + compliance + sanctions) | ⏳ Phase 2.5 (Day 1) | ✓ live |
-| Bounded-turn negotiation | ⏳ Phase 2.6 (Day 1) | ✓ live |
-| End-to-end local demo | ⏳ Phase 2.7 (Day 1) | ✓ recorded backup |
-| XRPL escrow (Path A WASM + RLUSD) | ⏳ Phase 2.8 (Day 2) | ✓ live |
+### Standards (the moat we're authoring)
 
-**Honest acknowledgment:** the deck is shipping ahead of the demo. The protocol-and-primitive layers are done; the agent + chain wiring is the next 48 hours.
+- **VTEAI ERC** — currently a published draft (CC0, April 2026). Path to formal ratification with broader implementer adoption — engaging with the Ethereum standards community + cross-chain working groups.
+- **UOR-ADDR-1** — currently a community proposal under the UOR Foundation. AgentLevy is its first reference implementation; we're contributing to maturation toward formal acceptance.
+- **UOR Foundation Sandbox → Incubating** — track-graduating AgentLevy within the Foundation's project lifecycle. Brings governance + interop guarantees.
+
+### Ecosystem partnerships
+
+- **UOR Foundation alignment** — composability with sibling projects: UOR Identity, UOR Certificate, UNS, Hologram SDK. Same primitives, different surfaces.
+- **XRPL ecosystem** — XLS-100 SmartEscrow community, RLUSD adoption pathways, XRPL Foundation grants/integrations.
+- **Hedera ecosystem** — HCS expansion beyond the testnet anchor; Hashgraph Association compliance-focused initiatives.
+- **Anthropic + LLM-platform partnerships** — agent-SDK alignment; structured-output + tool-use patterns that fit cleanly into VTEAI's negotiation envelope.
+
+### Enterprise pilots (the wedge)
+
+- **Mid-market regional banks** ($X–X B AUM) — high KYC volume, autonomy to pilot without 24-month procurement cycles.
+- **KYC compliance vendors** — channel/whitelabel; let them sell *verifiable* audit to their existing customers.
+- **International compliance teams** — EU eIDAS, Singapore MAS, jurisdictions that already accept cryptographic-evidence formats.
+
+### Multi-chain via UOR-ADDR-1 adapters
+
+XRPL ships first because XLS-100 is ready. UOR-ADDR-1's chain-binding adapter pattern means **any chain that supports a hashlock-conditional release can be added without changing the protocol layer**: Hedera EVM, Solana, Sui, Base — each gets an adapter; agents stay chain-agnostic.
+
+### Productization → Kessai (next slide)
+
+The open-source reference protocol is AgentLevy. The commercial layer is Kessai — visualizer UI, enterprise SDKs, regulatory-evidence packs, channel licensing. **Same protocol, productized.**
 
 ---
 
-## SLIDE 10 — What this becomes
+## SLIDE 12 — What this becomes
 
 ![Kessai logo](https://raw.githubusercontent.com/maurathat/kessai-pitch-assets/main/kessai_logo_primary.png)
 

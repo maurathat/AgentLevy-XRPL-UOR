@@ -245,6 +245,8 @@ The offchain transport layer may vary across ecosystems. Some implementations ma
 
 Task specifications and verification manifests may be large, versioned, or stored in content-addressed systems. A hash commitment preserves immutability while allowing offchain systems to resolve the full definition.
 
+This ERC is intentionally **content-addressing-method-neutral**: any deterministic hash of canonicalized spec bytes is acceptable so long as implementations agree on a single derivation method per deployment. See the *Recommended Companion Standards* section below for one widely-aligned option.
+
 ### Why permit either push settlement or queued withdrawal?
 
 Different implementations may prefer direct transfer or pull-based withdrawals. The standard therefore focuses on the settlement outcome rather than enforcing a single payout delivery model.
@@ -252,6 +254,26 @@ Different implementations may prefer direct transfer or pull-based withdrawals. 
 ### Why not standardize TEE or attestation format directly?
 
 Verifier trust models will evolve. Some deployments may use a deterministic server verifier, while others may use TEE-backed confidential compute, decentralized verifiers, or attestation frameworks such as FDC. This ERC standardizes the settlement interface and leaves the verifier trust model to implementation-specific documentation.
+
+## Recommended Companion Standards
+
+This section is **non-normative**. Implementations are free to use any deterministic content-addressing scheme for the `taskSpecHash` and any attestation envelope for the verifier output. The references below identify standards that compose cleanly with this ERC and are recommended where compatibility with the broader UOR Foundation ecosystem is desired.
+
+### Content addressing — UOR-ADDR-1
+
+Implementers MAY use [UOR-ADDR-1](https://uor.foundation) (Universal Object Reference Address, community proposal, April 2026) as the derivation method for `taskSpecHash` and for the content addresses of inputs, outputs, and any nested attestation references. UOR-ADDR-1 specifies:
+
+- Canonicalization via JCS (RFC 8785) with prior NFC normalization (UAX #15)
+- Address envelope `sha256:<64 hex>` derived from the canonical bytes
+- Algebraic representation under the UOR PRISM ring algebra (Q(31), 256-bit, MIT-licensed reference implementation)
+
+Adopting UOR-ADDR-1 yields content addresses that are byte-identical to the UOR Foundation's canonical reference and resolvable by any UOR-aware tool without per-vendor translation. It is not required by this ERC.
+
+### Attestation chain envelope — DerivationCert (UOR Certificate)
+
+Implementers MAY use the UOR Foundation's `cert:` envelope family (e.g., `cert:DerivationCert`) for the structured attestation payload referenced by the verifier. This composes naturally with UOR-ADDR-1 and with sibling UOR projects such as UOR Identity, UOR Certificate, and UNS.
+
+These references are illustrative. This ERC is independently usable with any other content-addressing scheme (CIDv1, ad-hoc keccak256 of canonicalized JSON, etc.) so long as the chosen method is deterministic and consistent within a deployment.
 
 ## Backwards Compatibility
 

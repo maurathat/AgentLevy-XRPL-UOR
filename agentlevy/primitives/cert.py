@@ -61,6 +61,11 @@ from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
+from agentlevy.hedera_layer.anchor import (
+    HCSReceipt,
+    submit_anchor,
+    verify_anchor as _verify_hcs_anchor,
+)
 from agentlevy.primitives.canonical import to_canonical_bytes
 from agentlevy.primitives.signing import (
     Keypair,
@@ -157,6 +162,16 @@ class DerivationCert(BaseModel):
                     "rejected.",
     )
 
+    # --- Hedera HCS audit anchor (detached; populated post-signing) ---
+    hcs_receipt: Optional[HCSReceipt] = Field(
+        default=None,
+        description="HCS topic receipt produced by submitting this cert's "
+                    "content_address to the configured Hedera Consensus "
+                    "Service topic. Detached from canonical bytes — "
+                    "anchoring happens AFTER signing, same invariant as "
+                    "the signature field. None until anchor() is called.",
+    )
+
     # ------------------------------------------------------------------
     # Validators
     # ------------------------------------------------------------------
@@ -185,12 +200,15 @@ class DerivationCert(BaseModel):
     # ------------------------------------------------------------------
 
     def to_canonical_bytes(self) -> bytes:
-        """Canonical bytes excluding the signature.
+        """Canonical bytes excluding signature AND hcs_receipt.
 
-        Same invariant as TaskSpec: signatures are detached, so canonical
-        bytes are stable across the sign/verify cycle.
+        Same invariant as TaskSpec: detached fields stay detached so
+        canonical bytes are stable across the sign / anchor / verify
+        cycles. The HCS receipt is a post-signing fact about the cert
+        (when it was anchored on Hedera), not part of what the seller
+        signed.
         """
-        d = self.model_dump(mode="json", exclude={"signature"})
+        d = self.model_dump(mode="json", exclude={"signature", "hcs_receipt"})
         return to_canonical_bytes(d)
 
     def content_address(self) -> str:
@@ -228,3 +246,54 @@ class DerivationCert(BaseModel):
         if len(sig) != 64 or len(pub) != 32:
             return False
         return verify(self.to_canonical_bytes(), sig, pub)
+
+    # ------------------------------------------------------------------
+    # Hedera HCS audit anchor
+    # ------------------------------------------------------------------
+
+    def anchor(
+        self,
+        *,
+        topic_id: Optional[str] = None,
+        force_mock: Optional[bool] = None,
+    ) -> "DerivationCert":
+        """Submit this cert's content_address to Hedera HCS and store the receipt.
+
+        Anchoring happens AFTER signing — the HCS receipt is a sibling
+        fact about when the cert was witnessed by Hedera consensus, not
+        part of the signed bytes.
+
+        Mutates ``self.hcs_receipt`` in place. Idempotent in mock mode
+        (same content_address always produces the same mock receipt);
+        live anchoring submits a new transaction each call (so callers
+        should check ``hcs_receipt is None`` before re-anchoring).
+
+        Parameters
+        ----------
+        topic_id
+            Override the configured HCS topic. Defaults to env var
+            ``HEDERA_HCS_TOPIC_ID``.
+        force_mock
+            Force mock or live mode. Defaults to env var ``MOCK_HEDERA``.
+        """
+        receipt = submit_anchor(
+            self.content_address(),
+            topic_id=topic_id,
+            force_mock=force_mock,
+        )
+        self.hcs_receipt = receipt
+        return self
+
+    def verify_anchor(self, **kwargs) -> bool:
+        """Verify the cert's HCS anchor against the Mirror Node.
+
+        Returns ``False`` if no anchor has been recorded; otherwise
+        delegates to :func:`agentlevy.hedera_layer.anchor.verify_anchor`
+        which re-fetches the topic message via Mirror Node REST and
+        confirms it matches this cert's content_address.
+
+        Mock receipts always verify True (they're fixtures, not facts).
+        """
+        if self.hcs_receipt is None:
+            return False
+        return _verify_hcs_anchor(self.content_address(), self.hcs_receipt, **kwargs)

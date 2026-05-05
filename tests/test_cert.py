@@ -340,3 +340,92 @@ def test_model_dump_includes_signature():
     d = cert.model_dump(mode="json")
     assert "signature" in d
     assert d["signature"] is not None
+
+
+# ---------------------------------------------------------------------------
+# Hedera HCS audit anchor
+# ---------------------------------------------------------------------------
+
+def test_cert_starts_unanchored():
+    seller = Keypair.from_seed(TEST_SEED_SELLER)
+    cert = _build_cert(seller)
+    assert cert.hcs_receipt is None
+    assert cert.verify_anchor() is False  # nothing to verify yet
+
+
+def test_anchor_populates_receipt():
+    """anchor() in mock mode populates hcs_receipt with a deterministic receipt."""
+    seller = Keypair.from_seed(TEST_SEED_SELLER)
+    cert = _build_cert(seller)
+    cert.sign(seller)
+    cert.anchor(topic_id="0.0.8856047", force_mock=True)
+    assert cert.hcs_receipt is not None
+    assert cert.hcs_receipt.is_mock is True
+    assert cert.hcs_receipt.topic_id == "0.0.8856047"
+
+
+def test_anchor_does_not_change_canonical_bytes():
+    """Anchoring is detached — canonical bytes stay stable so the
+    signature remains valid after anchoring."""
+    seller = Keypair.from_seed(TEST_SEED_SELLER)
+    cert = _build_cert(seller)
+    cert.sign(seller)
+
+    pre_anchor_bytes = cert.to_canonical_bytes()
+    pre_anchor_addr = cert.content_address()
+    assert cert.verify_signature() is True
+
+    cert.anchor(topic_id="0.0.8856047", force_mock=True)
+
+    post_anchor_bytes = cert.to_canonical_bytes()
+    post_anchor_addr = cert.content_address()
+
+    assert pre_anchor_bytes == post_anchor_bytes
+    assert pre_anchor_addr == post_anchor_addr
+    assert cert.verify_signature() is True  # signature still valid
+
+
+def test_canonical_bytes_excludes_hcs_receipt():
+    seller = Keypair.from_seed(TEST_SEED_SELLER)
+    cert = _build_cert(seller)
+    cert.sign(seller)
+    cert.anchor(topic_id="0.0.8856047", force_mock=True)
+    canonical = cert.to_canonical_bytes()
+    assert b"hcs_receipt" not in canonical
+    assert b"MOCK_" not in canonical  # the mock transaction_id
+
+
+def test_verify_anchor_returns_true_for_mock_receipts():
+    seller = Keypair.from_seed(TEST_SEED_SELLER)
+    cert = _build_cert(seller)
+    cert.sign(seller)
+    cert.anchor(topic_id="0.0.8856047", force_mock=True)
+    assert cert.verify_anchor() is True
+
+
+def test_anchor_is_deterministic_in_mock_mode():
+    """Same cert content -> same mock receipt across anchor() calls."""
+    seller = Keypair.from_seed(TEST_SEED_SELLER)
+    fixed_id = "00000000-0000-0000-0000-000000000003"
+    fixed_ts = datetime(2026, 5, 4, 12, 0, tzinfo=timezone.utc)
+
+    c1 = _build_cert(seller, cert_id=fixed_id, timestamp=fixed_ts)
+    c1.anchor(topic_id="0.0.8856047", force_mock=True)
+
+    c2 = _build_cert(seller, cert_id=fixed_id, timestamp=fixed_ts)
+    c2.anchor(topic_id="0.0.8856047", force_mock=True)
+
+    assert c1.hcs_receipt.sequence_number == c2.hcs_receipt.sequence_number
+    assert c1.hcs_receipt.transaction_id == c2.hcs_receipt.transaction_id
+
+
+def test_model_dump_includes_hcs_receipt():
+    """The HCS receipt travels with the cert when serialized for transport."""
+    seller = Keypair.from_seed(TEST_SEED_SELLER)
+    cert = _build_cert(seller)
+    cert.sign(seller)
+    cert.anchor(topic_id="0.0.8856047", force_mock=True)
+    d = cert.model_dump(mode="json")
+    assert "hcs_receipt" in d
+    assert d["hcs_receipt"] is not None
+    assert d["hcs_receipt"]["topic_id"] == "0.0.8856047"

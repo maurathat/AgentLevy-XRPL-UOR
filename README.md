@@ -105,6 +105,12 @@ Read [CANONICAL_FORM.md](CANONICAL_FORM.md) **first**. The single most likely cl
 - [`docs/PHASE_2_DESIGN.md`](docs/PHASE_2_DESIGN.md) — design decisions for Phase 2 build, including determinism trade-offs and demo scenarios.
 - [`pitch/`](pitch/) — narrative material ported from old AgentLevy (VTEAI ERC draft, decks, demo scripts, architecture diagrams).
 
+## Standards
+
+AgentLevy's content addressing builds on **UOR-ADDR-1** — a chain-agnostic canonical content-addressing standard for verifiable agent-produced content, authored by Maura Clark and **contributed to the UOR Foundation in May 2026**. The standard specifies a deterministic SHA-256 over JCS-RFC8785 + Unicode NFC canonicalization pipeline producing a 71-byte content address (`sha256:<64hex>`) that is byte-identical across any compliant implementation. The reference Rust implementation, co-authored with Alex Flom, is hosted at [github.com/UOR-Foundation/uor-addr-1](https://github.com/UOR-Foundation/uor-addr-1) and published on crates.io as [`uor-addr-1`](https://crates.io/crates/uor-addr-1) v0.1.0 under Apache-2.0.
+
+AgentLevy is the first reference implementation of the two-standard stack: [VTEAI](pitch/VTEAI-DRAFT.md) (settlement) over UOR-ADDR-1 (addressing) over PRISM (primitive).
+
 ## References
 
 - PRISM: https://github.com/UOR-Foundation/prism

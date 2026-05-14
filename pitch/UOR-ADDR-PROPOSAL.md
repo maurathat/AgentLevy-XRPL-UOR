@@ -1,10 +1,10 @@
 # UOR-ADDR-1 — Universal Addressing Standard for Agent Content
 
-> **Source:** community proposal from "ODE to LOVE" channel, April 27, 2026 (5 days before Consensus). User (Maura Clark) is contributor.
+> **Source:** Authored by Maura Clark (originating as a community proposal in the "ODE to LOVE" channel, April 27, 2026) and **contributed to the UOR Foundation in May 2026**. The reference Rust implementation was co-authored with Alex Flom of the UOR Foundation.
 >
-> **Status:** v0.1 draft. Goal: advance to v1.0 with reference implementations and chain bindings. Rust crates published at https://crates.io/crates/uor-foundation.
+> **Status:** Reference implementation published as [`uor-addr-1` v0.1.0](https://crates.io/crates/uor-addr-1) on crates.io under Apache-2.0 (May 2026), hosted at [github.com/UOR-Foundation/uor-addr-1](https://github.com/UOR-Foundation/uor-addr-1). Carries a numbered conformance contract, Lean-mechanized proofs, and live byte-identity cross-validation against the UOR Foundation's canonical reference endpoint. Spec finalization (v0.1 → v1.0), additional language bindings (Solidity, TypeScript), and chain-specific bindings remain open for community contribution.
 >
-> **Pitch posture:** mention prominently at Consensus. Goal is to **recruit collaborators** for spec finalization, reference implementations, and chain-specific bindings.
+> **Pitch posture:** position as a UOR Foundation-hosted standard with a live reference implementation. Recruit collaborators for spec finalization, additional language bindings, and chain-specific integrations.
 
 ---
 
@@ -114,7 +114,7 @@ From the proposal, what's specifically open for contribution:
 | Component | Status | Who could help |
 |---|---|---|
 | **Spec finalization v0.1 → v1.0** | Draft exists; needs review/refinement | Standards-track contributors, protocol designers |
-| **Rust core implementation** | In progress (crates.io published) | Rust developers, library authors |
+| **Rust core implementation** | ✅ **Published** — [`uor-addr-1` v0.1.0](https://crates.io/crates/uor-addr-1) on crates.io, hosted at [UOR-Foundation/uor-addr-1](https://github.com/UOR-Foundation/uor-addr-1). Future versions / advanced features ongoing. | UOR Foundation core team |
 | **Solidity reference implementation** | Not started | EVM developers |
 | **TypeScript reference implementation** | Not started | Web3 frontend / SDK developers |
 | **Chain-specific bindings (EVM, XRPL, Solana, Cosmos, Flare)** | Not started | Chain implementers per ecosystem |
@@ -126,10 +126,12 @@ From the proposal, what's specifically open for contribution:
 
 ## Where to follow up post-Consensus
 
-- Crates.io: https://crates.io/crates/uor-foundation (Rust crates already live)
-- UOR Foundation org: https://github.com/UOR-Foundation
-- AgentLevy demo as proof-of-concept: this repo
-- Moca airkit (proposed framework): https://docs.moca.network/airkit
+- **UOR-ADDR-1 reference implementation:** [crates.io/crates/uor-addr-1](https://crates.io/crates/uor-addr-1) (v0.1.0, Apache-2.0)
+- **UOR-ADDR-1 repo:** [github.com/UOR-Foundation/uor-addr-1](https://github.com/UOR-Foundation/uor-addr-1)
+- **UOR Foundation org:** [github.com/UOR-Foundation](https://github.com/UOR-Foundation)
+- **Underlying foundation crates:** [`uor-foundation`](https://crates.io/crates/uor-foundation), [`uor-foundation-sdk`](https://crates.io/crates/uor-foundation-sdk)
+- **AgentLevy demo as proof-of-concept:** this repo
+- **Moca airkit (proposed framework):** [docs.moca.network/airkit](https://docs.moca.network/airkit)
 
 When meeting collaborators in person at Consensus, capture:
 - Name + handle + ecosystem
@@ -143,7 +145,7 @@ When meeting collaborators in person at Consensus, capture:
 
 These came up while reading the proposal and don't block the pitch — flag for follow-up:
 
-1. **Where does the v0.1 draft live?** Is there a public document we can link from the slide footer? If on a wiki / Notion / Discord — Consensus visibility justifies a public GitHub markdown/PDF mirror.
-2. **Is "UOR-ADDR-1" the canonical name** or is the community still settling? Consistent naming matters for adoption.
-3. **What's the relationship to UOR Foundation governance?** Is the proposal community-driven with Foundation acknowledgment, or Foundation-driven with community input? Affects how the pitch frames it ("contributing to" vs "co-authoring with").
+1. **Where does the v1.0 spec text live?** The reference implementation is published, but the normative specification text (v0.1 → v1.0) is still being finalized. A public GitHub markdown mirror under the UOR Foundation org is the natural destination.
+2. **Is "UOR-ADDR-1" the canonical name?** ✅ **Resolved (May 2026):** Confirmed as the canonical name. The crate `uor-addr-1` is published on crates.io and hosted at the UOR Foundation org under that designation.
+3. **What's the relationship to UOR Foundation governance?** ✅ **Resolved (May 2026):** Standard authored by Maura Clark and **contributed to the UOR Foundation**; reference implementation hosted at [UOR-Foundation/uor-addr-1](https://github.com/UOR-Foundation/uor-addr-1). Framing: "contributed to" the foundation. Maura is a UOR Foundation contributor; Alex Flom of the UOR Foundation co-authored the reference implementation.
 4. **Moca airkit specifically** — is there an existing conversation with Moca, or is this proposing a target without Moca's endorsement yet? Affects whether the pitch can name them or should be more abstract ("agent-identity frameworks").

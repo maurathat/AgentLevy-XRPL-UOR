@@ -6,7 +6,7 @@
 >
 > This whitepaper is the deep-dive companion to:
 > - **[VTEAI ERC draft](VTEAI-DRAFT.md)** — the settlement-state-machine standard
-> - **[UOR-ADDR-1 community proposal](UOR-ADDR-PROPOSAL.md)** — the chain-agnostic content-addressing standard
+> - **[UOR-ADDR-1](UOR-ADDR-PROPOSAL.md)** — the chain-agnostic content-addressing standard, authored by Maura Clark and contributed to the UOR Foundation in May 2026 ([reference implementation on crates.io](https://crates.io/crates/uor-addr-1))
 > - **[Source repository](https://github.com/maurathat/AgentLevy-XRPL-UOR)** — Apache 2.0 licensed
 > - **[Pitch decks](kessai-funding-deck.md)** ([demo deck](agentlevy-demo-deck.md), [funding deck](kessai-funding-deck.md), [one-pager](kessai-onepager.md))
 
@@ -27,7 +27,7 @@ AgentLevy closes that gap with a small set of primitives:
 
 A verifier holding `(buyer_pubkey, seller_pubkey, sanctions_pubkey, the cert chain)` can independently reconstruct: every signature, every content address, every cross-reference, every consensus timestamp, every settlement event — across two independent ledgers, with no trusted intermediary.
 
-The reference implementation is AgentLevy (Apache 2.0). The commercial productization is Kessai (enterprise SaaS). The standards underneath (VTEAI + UOR-ADDR-1) are open and we're co-authoring both.
+The reference implementation is AgentLevy (Apache 2.0). The commercial productization is Kessai (enterprise SaaS). The standards underneath are open: VTEAI is the settlement ERC draft authored by Maura Clark; UOR-ADDR-1 is the content-addressing standard authored by Maura Clark and contributed to the UOR Foundation in May 2026, with the reference Rust implementation co-authored with Alex Flom and published as [`uor-addr-1` v0.1.0](https://crates.io/crates/uor-addr-1).
 
 ---
 
@@ -187,7 +187,7 @@ UOR (Universal Object Reference) is a Foundation-backed content-addressing stand
 Together these define an address that is:
 
 1. **Algebraically structured** — the same content has *one* canonical address but *many* equivalent representations (hex, Braille glyph, ring element, base32). All algebraically the same address. Useful for visual rendering, for cross-tool composition, for sub-canonicalization within other schemes.
-2. **Standards-track** — UOR Foundation has a Sandbox → Incubating → Graduated lifecycle. UOR-ADDR-1 is the community proposal we're co-contributing to.
+2. **Standards-track** — UOR Foundation has a Sandbox → Incubating → Graduated lifecycle. UOR-ADDR-1 is the addressing standard Maura authored and contributed to the Foundation in May 2026; its reference implementation is published on crates.io.
 3. **Cross-domain composable** — the same primitive is used by UOR Identity (for entity identity), UOR Certificate (for generic signed attestations), UNS (for human-readable name resolution), Hologram SDK (for module certificates already in production), and AgentLevy (for work-integrity certs).
 
 ### 3.2 Why this matters for the pitch
@@ -196,7 +196,7 @@ Three pitch claims that are only credible *because of UOR alignment*:
 
 - **"Byte-identical to canonical reference."** Without UOR, this is just "compatible-ish." With UOR, it's empirical: we've live cross-checked our content addresses against `mcp.uor.foundation/encode_address` for the same canonical bytes. They produce the same SHA-256, byte-for-byte. (See [docs/UOR_PASSPORT_VERIFIED.md](../docs/UOR_PASSPORT_VERIFIED.md).)
 - **"Verifiable from public keys alone."** Only works if the addresses being verified resolve against an open, publicly-defined format. UOR is what makes "alone" true; without it, a verifier needs vendor cooperation to interpret addresses.
-- **"Protocol-author moat."** VTEAI is the settlement spec we authored; UOR-ADDR-1 is the addressing spec we co-contribute to. Future implementers will use specs we shaped.
+- **"Protocol-author moat."** VTEAI is the settlement spec Maura authored; UOR-ADDR-1 is the addressing standard Maura authored and contributed to the UOR Foundation. Future implementers will use specs we shaped.
 
 ### 3.3 vs every alternative
 
@@ -526,7 +526,7 @@ Today's stack uses Ed25519 (signing) + SHA-256 (addressing). Neither is post-qua
 
 ### 7.4 Standards-track risk
 
-VTEAI is a published draft; UOR-ADDR-1 is a community proposal. Neither is formally ratified yet. **Mitigation:** AgentLevy works regardless of formal ratification — the reference implementation is real, deployable today. Ratification is upside, not gating. Standards-author position remains a moat even pre-ratification because we're shaping the spec.
+VTEAI is a published draft; UOR-ADDR-1 has been contributed to the UOR Foundation with its reference implementation published on crates.io, but neither is formally ratified as a final standard yet. **Mitigation:** AgentLevy works regardless of formal ratification — the reference implementation is real, deployable today. Ratification is upside, not gating. Standards-author position remains a moat because Maura authored both specs.
 
 ### 7.5 Chain-bet risk
 
@@ -541,7 +541,7 @@ VTEAI is a published draft; UOR-ADDR-1 is a community proposal. Neither is forma
 ### 8.1 Standards (the moat we're authoring)
 
 - **VTEAI ERC** — currently a published draft (CC0, April 2026). Path to formal ratification with broader implementer adoption — engaging with the Ethereum standards community + cross-chain working groups.
-- **UOR-ADDR-1** — currently a community proposal under the UOR Foundation. AgentLevy is its first reference implementation; we're contributing to maturation.
+- **UOR-ADDR-1** — authored by Maura Clark, contributed to the UOR Foundation in May 2026; reference Rust implementation co-authored with Alex Flom and published as [`uor-addr-1` v0.1.0](https://crates.io/crates/uor-addr-1). AgentLevy is the first application-layer integration.
 - **UOR Foundation Sandbox → Incubating graduation** — track-graduating AgentLevy within the Foundation's project lifecycle. Brings governance + interop guarantees.
 
 ### 8.2 Multi-chain via UOR-ADDR-1 adapters
@@ -585,10 +585,10 @@ The protocol stays open. The standards stay free. The product is what makes veri
 
 ## 9. References
 
-### 9.1 Standards we author / co-author
+### 9.1 Standards we author / contribute to
 
-- [VTEAI ERC draft](VTEAI-DRAFT.md) — Verified Task Escrow + Attestation Interface (CC0, April 2026)
-- [UOR-ADDR-1 community proposal](UOR-ADDR-PROPOSAL.md) — Universal Object Reference Address (community track, April 2026)
+- [VTEAI ERC draft](VTEAI-DRAFT.md) — Verified Task Escrow + Attestation Interface (CC0, April 2026) — authored by Maura Clark
+- [UOR-ADDR-1](UOR-ADDR-PROPOSAL.md) — Universal Object Reference Address — authored by Maura Clark and contributed to the UOR Foundation, May 2026. Reference implementation: [`uor-addr-1` v0.1.0](https://crates.io/crates/uor-addr-1) (Apache-2.0)
 
 ### 9.2 UOR Foundation
 

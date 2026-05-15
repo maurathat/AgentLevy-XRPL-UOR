@@ -15,12 +15,12 @@ Enterprise compliance audit is broken. Banks, corporates, and regulators rely on
 
 **Kessai is an enterprise escrow platform with cryptographic audit baked in.** Every action — KYC checks, compliance attestations, multi-party agreements, M&A escrow — produces a content-addressed certificate signed with the agent or institution's public key. Anyone with the cert and the public key can verify the entire chain in milliseconds, **without contacting Kessai, without trusting any vendor, without permission.** The audit trail outlives Kessai, outlives the parties, outlives the chain it settled on.
 
-The protocol underneath is open, standards-track, and **byte-identical to UOR Foundation's canonical reference implementation** (verified live May 3 2026). We authored the [VTEAI ERC draft](https://github.com/maurathat/AgentLevy-XRPL-UOR/blob/main/pitch/VTEAI-DRAFT.md) for verified-task-escrow-and-attestation-interface. We contribute to the [UOR-ADDR-1](https://github.com/maurathat/AgentLevy-XRPL-UOR/blob/main/pitch/UOR-ADDR-PROPOSAL.md) community standard for chain-agnostic content addressing. **The protocol is open; Kessai is the first enterprise-grade implementation, with an escrow visualizer on top.**
+The protocol underneath is open, standards-track, and **byte-identical to UOR Foundation's canonical reference implementation** (verified live May 3 2026). We authored the [VTEAI ERC draft](https://github.com/maurathat/AgentLevy-XRPL-UOR/blob/main/pitch/VTEAI-DRAFT.md) for verified-task-escrow-and-attestation-interface. We authored the [UOR-ADDR-1](https://github.com/UOR-Foundation/uor-addr-1) chain-agnostic content-addressing standard, contributed it to the UOR Foundation (May 2026), and published the reference Rust implementation as [`uor-addr-1` v0.1.0](https://crates.io/crates/uor-addr-1). **The protocol is open; Kessai is the first enterprise-grade implementation, with an escrow visualizer on top.**
 
 ### Traction (May 2026)
 
 - ✅ **VTEAI ERC draft authored** (CC0, April 2026; standards-track for verified-work settlement)
-- ✅ **UOR-ADDR-1 community proposal** — co-contributing to chain-agnostic content addressing
+- ✅ **UOR-ADDR-1 authored and contributed to the UOR Foundation** (May 2026); reference Rust implementation [`uor-addr-1` v0.1.0](https://crates.io/crates/uor-addr-1) published on crates.io
 - ✅ **Live byte-identical verification** against UOR Foundation's canonical MCP server — our content addresses are mathematically identical to UOR Passports
 - ✅ **AgentLevy demo** — second iteration shipping at Consensus EasyA hackathon (May 5–7, 2026)
 - ✅ **First reference implementation** of the two-standard stack (VTEAI + UOR-ADDR-1) on XRPL with PRISM addressing
@@ -51,7 +51,7 @@ The wedge is KYC compliance. The expansion path goes through agent commerce and 
 
 ### Why us
 
-- **Maura Clark** — sole founder. Two iterations of AgentLevy shipped (Flare/Cannes, XRPL/Consensus). VTEAI ERC author. UOR-ADDR-1 contributor.
+- **Maura Clark** — sole founder. Two iterations of AgentLevy shipped (Flare/Cannes, XRPL/Consensus). VTEAI ERC author. UOR Foundation Contributor — author of UOR-ADDR-1 content-addressing standard (May 2026, reference impl on crates.io).
 - **Live cryptographic alignment** with the canonical UOR reference implementation is *not* a generic "we use crypto" claim; it's empirical proof of protocol membership.
 - **Standards track record before product** is the defensible moat. Kessai isn't just an enterprise escrow tool; it's the company shipping the standards that competitors will eventually have to implement to stay relevant.
 

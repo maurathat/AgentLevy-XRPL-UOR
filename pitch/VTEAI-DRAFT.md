@@ -261,13 +261,13 @@ This section is **non-normative**. Implementations are free to use any determini
 
 ### Content addressing — UOR-ADDR-1
 
-Implementers MAY use [UOR-ADDR-1](https://uor.foundation) (Universal Object Reference Address, community proposal, April 2026) as the derivation method for `taskSpecHash` and for the content addresses of inputs, outputs, and any nested attestation references. UOR-ADDR-1 specifies:
+Implementers MAY use [UOR-ADDR-1](https://github.com/UOR-Foundation/uor-addr-1) (Universal Object Reference Address, authored by Maura Clark and contributed to the UOR Foundation in May 2026) as the derivation method for `taskSpecHash` and for the content addresses of inputs, outputs, and any nested attestation references. UOR-ADDR-1 specifies:
 
 - Canonicalization via JCS (RFC 8785) with prior NFC normalization (UAX #15)
 - Address envelope `sha256:<64 hex>` derived from the canonical bytes
 - Algebraic representation under the UOR PRISM ring algebra (Q(31), 256-bit, MIT-licensed reference implementation)
 
-Adopting UOR-ADDR-1 yields content addresses that are byte-identical to the UOR Foundation's canonical reference and resolvable by any UOR-aware tool without per-vendor translation. It is not required by this ERC.
+A reference Rust implementation is published on crates.io as [`uor-addr-1`](https://crates.io/crates/uor-addr-1) v0.1.0 under Apache-2.0 and hosted at [UOR-Foundation/uor-addr-1](https://github.com/UOR-Foundation/uor-addr-1). Adopting UOR-ADDR-1 yields content addresses that are byte-identical to the UOR Foundation's canonical reference and resolvable by any UOR-aware tool without per-vendor translation. It is not required by this ERC.
 
 ### Attestation chain envelope — DerivationCert (UOR Certificate)
 

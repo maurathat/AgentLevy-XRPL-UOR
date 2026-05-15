@@ -74,7 +74,8 @@ This is the pitch line: AgentLevy is the **first reference implementation** of t
                           ▼
 ┌─────────────────────────────────────────────────────────┐
 │  UOR-ADDR-1 (Universal Addressing for Agent Content)   │   "addressing"
-│   — community proposal, April 27, 2026                 │
+│   — Maura Clark, April 2026; contributed to             │
+│     UOR Foundation, May 2026 (uor-addr-1 v0.1.0)        │
 └─────────────────────────────────────────────────────────┘
                           ▲
                           │ built on...

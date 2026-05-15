@@ -62,7 +62,7 @@ Three structural failures of the current architecture:
 | Standard | What it does | Status |
 |---|---|---|
 | **VTEAI** (Verified Task Escrow + Attestation Interface) — ERC draft, CC0, April 2026 | The settlement-state-machine standard | Authored, published draft |
-| **UOR-ADDR-1** (Universal Object Reference Address) — community proposal, April 2026 | Chain-agnostic content addressing for agent commerce | Co-contributing |
+| **UOR-ADDR-1** (Universal Object Reference Address) — May 2026 | Chain-agnostic content addressing for agent commerce | Authored by Maura Clark; **contributed to UOR Foundation**; reference impl [`uor-addr-1` v0.1.0](https://crates.io/crates/uor-addr-1) live on crates.io |
 | **PRISM** (UOR Foundation reference implementation) | Algebraic content-addressed coordinate system | Vendored, MIT |
 
 **Defensibility:** competitors who eventually want to be standards-aligned will have to implement specs *we wrote*. The protocol-author position is the moat.
@@ -124,7 +124,7 @@ Five convergence events in the last 12 months make this possible only now:
 **Maura Clark** — sole founder. Track record (in priority order):
 
 - **VTEAI ERC author** (April 2026, CC0). The chain-neutral standard for verified-work settlement.
-- **UOR-ADDR-1 community contributor** (April 2026). Standards-track participation in chain-agnostic content addressing.
+- **UOR Foundation Contributor** — author of **UOR-ADDR-1** content-addressing standard, contributed to the UOR Foundation in May 2026; reference Rust implementation [`uor-addr-1` v0.1.0](https://crates.io/crates/uor-addr-1) published on crates.io under Apache-2.0.
 - **AgentLevy v1** (Cannes hackathon, Flare). First production reference implementation of the spec.
 - **AgentLevy v2** (Consensus hackathon, XRPL+UOR). Second iteration. Live byte-identical verification with UOR Foundation.
 - **Cryptographic alignment** with the canonical UOR reference implementation is empirical proof, not aspiration.
@@ -214,7 +214,7 @@ Two reasons. (1) Kessai is a SaaS / B2B platform; the value capture is enterpris
 Honest list:
 
 1. **Solo founder.** Mitigated by funding-the-team-not-the-founder framing in the ask.
-2. **Standards ratification timing.** VTEAI is a draft; UOR-ADDR-1 is community-proposed. Mitigated by reference-implementation-first strategy: Kessai works regardless of formal ratification; ratification is upside, not gating.
+2. **Standards ratification timing.** VTEAI is an ERC draft; UOR-ADDR-1 has been contributed to the UOR Foundation with its reference implementation published on crates.io but is not yet formally ratified as a final standard. Mitigated by reference-implementation-first strategy: Kessai works regardless of formal ratification; ratification is upside, not gating.
 3. **XRPL bet.** XLS-100 is recently activated; ecosystem maturity is moderate. Mitigated by chain-agnostic protocol design (UOR-ADDR-1 adapters).
 4. **Enterprise-sales cycle length.** Mid-market regional banks have 6-9-month procurement. Mitigated by free-tier-PoC wedge and channel-licensing path.
 5. **Foundation governance dependency.** UOR Foundation maturity affects standards story. Mitigated by Sandbox-track participation; we're a community contributor, not subordinate.

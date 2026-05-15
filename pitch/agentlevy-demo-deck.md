@@ -210,10 +210,10 @@ LLMs are non-deterministic, prompt-injectable, and prone to over-spending tokens
 
 The UOR Foundation is a 501(c)(3)-equivalent governance body with a Sandbox → Incubating → Graduated project lifecycle. AgentLevy isn't aligned to a vendor's whitepaper — it's aligned to a published, governed standard with multi-implementer adoption already underway.
 
-**The two-standard stack we co-authored + the substrate we vendor:**
+**The two-standard stack Maura authored + the substrate we vendor:**
 
 - **VTEAI** — *Verified Task Escrow + Attestation Interface.* ERC draft, CC0, April 2026. **We authored it.** The chain-neutral spec for verified-work settlement. AgentLevy is the first reference implementation; future competitors who want standards-alignment will implement a spec we shaped.
-- **UOR-ADDR-1** — *Universal Object Reference Address.* Community proposal, April 2026. **We co-contribute.** Chain-agnostic content addressing for agent commerce. The addressing layer underneath every cert, every input, every reference.
+- **UOR-ADDR-1** — *Universal Object Reference Address.* **Authored by Maura Clark and contributed to the UOR Foundation in May 2026.** Reference Rust implementation co-authored with Alex Flom, published as [`uor-addr-1` v0.1.0](https://crates.io/crates/uor-addr-1) on crates.io under Apache-2.0. Chain-agnostic content addressing for agent commerce — the addressing layer underneath every cert, every input, every reference.
 - **PRISM** — UOR Foundation's reference implementation of the algebraic ring-coordinate system. **MIT-licensed, vendored.** What makes "one address, four representations" structurally true (hex, Braille glyph, ring element, base32 — all algebraically the same address).
 
 ### Same primitives, many surfaces
@@ -242,7 +242,7 @@ Standards consolidate fast once a category coalesces. Today's specs are publishe
 ### Standards (the moat we're authoring)
 
 - **VTEAI ERC** — currently a published draft (CC0, April 2026). Path to formal ratification with broader implementer adoption — engaging with the Ethereum standards community + cross-chain working groups.
-- **UOR-ADDR-1** — currently a community proposal under the UOR Foundation. AgentLevy is its first reference implementation; we're contributing to maturation toward formal acceptance.
+- **UOR-ADDR-1** — authored by Maura Clark, contributed to the UOR Foundation in May 2026; reference Rust implementation [`uor-addr-1` v0.1.0](https://crates.io/crates/uor-addr-1) published on crates.io (Apache-2.0). AgentLevy is the first application-layer integration; ongoing maturation toward formal v1.0 ratification.
 - **UOR Foundation Sandbox → Incubating** — track-graduating AgentLevy within the Foundation's project lifecycle. Brings governance + interop guarantees.
 
 ### Ecosystem partnerships
@@ -307,7 +307,7 @@ The open-source reference protocol is AgentLevy. The commercial layer is Kessai 
 **Try it · Read the code · Help shape the standards:**
 
 - 📦 GitHub: github.com/maurathat/AgentLevy-XRPL-UOR
-- 🌐 Standards: VTEAI ERC draft + UOR-ADDR-1 community proposal
+- 🌐 Standards: VTEAI ERC draft + UOR-ADDR-1 (authored by Maura Clark, contributed to UOR Foundation May 2026; reference impl on [crates.io/uor-addr-1](https://crates.io/crates/uor-addr-1))
 - 💬 Pitch on file: ask any judge or booth visitor; we love a hard question
 - 🤝 Hiring: 2 senior engineers (Python SDK + XRPL/Hedera settlement) — pre-seed open
 

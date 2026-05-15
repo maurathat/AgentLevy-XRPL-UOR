@@ -119,7 +119,7 @@ The Python and TypeScript SDKs are the **highest-value contributions to recruit*
 | **Credential model** | ZK-proven attributes ("user is over 21"), private by default | Content-addressed derivation certs, **public verification by default** |
 | **Crypto layers** | Zero-knowledge proofs | Ed25519 (cert layer) + Dilithium-3 (deep identity) + PRISM triadic addresses |
 | **Signing primitive** | Not stated | Ed25519 at the cert layer (UOR-MCP-compatible verified live), Dilithium-3 forward path for post-quantum |
-| **Standards underneath** | Implied / proprietary | **Open: VTEAI (ERC draft, CC0) + UOR-ADDR-1 (community proposal) + UOR-Framework (RDF/OWL ontology, Apache-2.0)** |
+| **Standards underneath** | Implied / proprietary | **Open: VTEAI (ERC draft, CC0) + UOR-ADDR-1 (authored by Maura Clark, contributed to UOR Foundation May 2026; reference impl on crates.io) + UOR-Framework (RDF/OWL ontology, Apache-2.0)** |
 | **Formal verification** | Not stated | PRISM + ATLAS Lean 4 formalizations (1,454 lines, 54 theorems, 0 sorrys in ATLAS) |
 | **Settlement integration** | Not built-in | First-class via VTEAI; XRPL Smart Escrow today, multi-chain via UOR-ADDR-1 bindings |
 | **Reputation model** | User-portable credentials | Agent-keypair-bound, transferable across platforms (a property no platform-locked rating system can match) |
@@ -222,5 +222,5 @@ The framework is much smaller in v0.2 than the v0.1 framing suggested — most o
 - [ATLAS embeddings (archived read-only Feb 2026, v0.1.1)](https://github.com/UOR-Foundation/atlas-embeddings)
 - [`uor-foundation` Rust crate](https://crates.io/crates/uor-foundation)
 - [VTEAI ERC draft (settlement standard)](VTEAI-DRAFT.md)
-- [UOR-ADDR-1 community proposal (addressing standard)](UOR-ADDR-PROPOSAL.md)
+- [UOR-ADDR-1 (addressing standard, authored by Maura Clark; contributed to UOR Foundation May 2026)](UOR-ADDR-PROPOSAL.md) · reference impl: [`uor-addr-1` v0.1.0](https://crates.io/crates/uor-addr-1)
 - [UOR MCP connection guide](../mcp/README.md)

@@ -372,6 +372,218 @@
 </section>
 
 <!-- ========================================================
+     SECTION 5.5 — Reference: dNFT schema
+     ======================================================== -->
+<section class="pitch-section pitch-section-reference pitch-section-dnft">
+  <div class="pitch-content">
+    <div class="eyebrow">Reference · dNFT schema</div>
+    <h2>The model NFT carries a typed schema, not a vibes-based JSON.</h2>
+    <p class="lede">
+      Eight dynamic fields, signed standards refs, and a snapshot of mutable state.
+      Any marketplace can render this. Live on Mainnet now.
+    </p>
+
+    <div class="ref-id-bar">
+      <div class="ref-id-cell">
+        <div class="ref-id-label">NFTokenID</div>
+        <div class="ref-id-value"><code>000800005C0D75FC05056348A634785AC427B30E2AAD1A60B2A688C20636D728</code></div>
+      </div>
+      <div class="ref-id-cell">
+        <div class="ref-id-label">Owner wallet</div>
+        <div class="ref-id-value"><code>r9PjHvj8kKwA61fTMx5ANpH6BrGmQdrQgf</code></div>
+      </div>
+    </div>
+
+    <div class="ref-id-actions">
+      <a href="https://bithomp.com/explorer/000800005C0D75FC05056348A634785AC427B30E2AAD1A60B2A688C20636D728" target="_blank" rel="noreferrer">View on Bithomp ↗</a>
+      <a href="https://raw.githubusercontent.com/maurathat/AgentLevy-XRPL-UOR/main/fixtures/model-card.json" target="_blank" rel="noreferrer">Raw metadata JSON ↗</a>
+      <a href="https://livenet.xrpl.org/nft/000800005C0D75FC05056348A634785AC427B30E2AAD1A60B2A688C20636D728" target="_blank" rel="noreferrer">XRPL Livenet ↗</a>
+    </div>
+
+    <div class="dnft-grid">
+      <div class="dnft-row">
+        <span class="dnft-key">royalty</span>
+        <span class="dnft-val">rate_bps · split (server / model_owner) · currency · settlement chain · owner wallet</span>
+      </div>
+      <div class="dnft-row">
+        <span class="dnft-key">usage_restrictions</span>
+        <span class="dnft-val">allowed modalities · disallowed use cases · geographic limits · rate limit per caller per day · max tokens per call</span>
+      </div>
+      <div class="dnft-row">
+        <span class="dnft-key">compliance_attestations</span>
+        <span class="dnft-val">array of {scheme, version, scope, uri} — current: Anthropic Constitutional AI + UOR Foundation byte-identity</span>
+      </div>
+      <div class="dnft-row">
+        <span class="dnft-key">parent_model_nft</span>
+        <span class="dnft-val">NFTokenID of the predecessor model (null for genesis mints) — enables versioned royalty inheritance</span>
+      </div>
+      <div class="dnft-row">
+        <span class="dnft-key">version_pointer</span>
+        <span class="dnft-val">provider-namespaced model version, e.g. <code>anthropic:claude-haiku-4-5@2026-04</code></span>
+      </div>
+      <div class="dnft-row">
+        <span class="dnft-key">license_terms_uri</span>
+        <span class="dnft-val">URL to the legal license governing royalty payouts and usage</span>
+      </div>
+      <div class="dnft-row">
+        <span class="dnft-key">audit_anchor</span>
+        <span class="dnft-val">Hedera HCS topic id where cert content-addresses are anchored (independent witness)</span>
+      </div>
+      <div class="dnft-row">
+        <span class="dnft-key">dynamic_state</span>
+        <span class="dnft-val">snapshot + endpoint for mutable counters (inferences_total, revenue_total_rlusd, royalties_paid_rlusd, cache_hit_rate, unique_callers)</span>
+      </div>
+    </div>
+
+    <p class="ref-note">
+      Schema version <code>royaltai-dnft/0.1</code>. v0.2 will use XLS-46d
+      <code>tfMutable</code> to push state-counter updates directly into the on-chain URI itself,
+      removing the off-chain dependency.
+    </p>
+  </div>
+</section>
+
+<!-- ========================================================
+     SECTION 5.6 — Reference: VTEAI settlement standard
+     ======================================================== -->
+<section class="pitch-section pitch-section-reference pitch-section-vteai">
+  <div class="pitch-content">
+    <div class="eyebrow">Reference · VTEAI</div>
+    <h2>Verified Task Escrow + Attestation Interface.</h2>
+    <p class="lede">
+      The ERC draft I authored in April. Defines the on-chain settlement interface
+      for agent commerce — escrow a payment, commit to a task hash, release on
+      verifier attestation. Chain-neutral. CC0-licensed. The standard underneath
+      both AgentLevy on Base and RoyaltAI on XRPL.
+    </p>
+
+    <div class="vteai-grid">
+
+      <div class="vteai-col">
+        <div class="vteai-col-label">What VTEAI standardizes</div>
+        <ul class="vteai-list">
+          <li>
+            <strong>TaskSpec hash</strong>
+            <span>content commitment to acceptance criteria, verification manifest</span>
+          </li>
+          <li>
+            <strong>Attestation hash</strong>
+            <span>verifier-signed proof that work matched the spec</span>
+          </li>
+          <li>
+            <strong>Settlement interface</strong>
+            <span>escrow → commit → release pattern; payout method-agnostic (push or pull)</span>
+          </li>
+          <li>
+            <strong>Composability</strong>
+            <span>verifier trust model is implementation-specific — deterministic server, TEE, decentralized verifier, FDC, all allowed</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="vteai-col">
+        <div class="vteai-col-label">Reference implementations</div>
+        <ul class="vteai-list">
+          <li>
+            <strong>AgentLevy on Base</strong>
+            <span>KYC compliance · HashlockEscrow Solidity contract · ~100 LOC · ✓ Deployed Sepolia</span>
+          </li>
+          <li>
+            <strong>RoyaltAI on XRPL ← you're watching this one</strong>
+            <span>Pay-per-call inference · Native XRPL escrow + RLUSD · ✓ Live on Mainnet today</span>
+          </li>
+          <li>
+            <strong>Marketplace layer (future)</strong>
+            <span>General-purpose agent jobs · ~5-day build on the existing substrate · scoped in <code>docs/PHASE_5</code></span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="vteai-status">
+      <div class="vteai-status-row">
+        <span class="vteai-status-key">UOR-ADDR-1 reference</span>
+        <span class="vteai-status-value"><strong>SHOULD</strong> (upgraded from MAY in May 2026 update — Foundation-adopted UOR-ADDR-1 is now the recommended canonicalization for cross-chain byte-identical task spec hashes)</span>
+      </div>
+      <div class="vteai-status-row">
+        <span class="vteai-status-key">Status</span>
+        <span class="vteai-status-value">ERC draft · author: Maura Clark · CC0 · April 2026</span>
+      </div>
+      <div class="vteai-status-row">
+        <span class="vteai-status-key">Spec</span>
+        <span class="vteai-status-value"><a href="https://github.com/maurathat/AgentLevy-XRPL-UOR/blob/main/pitch/VTEAI-DRAFT.md" target="_blank" rel="noreferrer">github.com/maurathat/AgentLevy-XRPL-UOR/blob/main/pitch/VTEAI-DRAFT.md</a></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     SECTION 5.7 — Reference: Audit chain anatomy
+     ======================================================== -->
+<section class="pitch-section pitch-section-reference pitch-section-auditchain">
+  <div class="pitch-content">
+    <div class="eyebrow">Reference · audit chain anatomy</div>
+    <h2>Three independent witnesses on every cert. Verifiable in 2046 from public keys alone.</h2>
+
+    <div class="audit-chain-diagram">
+
+      <div class="audit-node">
+        <div class="audit-node-label">Request</div>
+        <div class="audit-node-content">
+          <code>JCS(deep_NFC({ model, prompt, hour_bucket }))</code>
+          <div class="audit-node-meta">→ <code>sha256:&lt;64 hex&gt;</code> = request UOR address</div>
+        </div>
+      </div>
+
+      <div class="audit-arrow">↓ signed by inference server</div>
+
+      <div class="audit-node audit-node-primary">
+        <div class="audit-node-label">DerivationCert</div>
+        <div class="audit-node-content">
+          Ed25519 signature over <code>{ request_uor, model_nft, response_bytes, timestamp }</code>
+          <div class="audit-node-meta">→ <code>cert UOR address</code></div>
+        </div>
+      </div>
+
+      <div class="audit-arrow">↓ anchored to three independent witnesses</div>
+
+      <div class="audit-witnesses">
+        <div class="audit-witness">
+          <div class="audit-witness-label">XRPL Mainnet</div>
+          <div class="audit-witness-detail">Payment txid records UOR address in memo. Real-money settlement is the witness.</div>
+        </div>
+        <div class="audit-witness">
+          <div class="audit-witness-label">Hedera HCS</div>
+          <div class="audit-witness-detail">Cert UOR submitted to topic <code>0.0.8856047</code>. Consensus timestamp + sequence number = tamper-evident ordering on a chain independent of XRPL.</div>
+        </div>
+        <div class="audit-witness">
+          <div class="audit-witness-label">UOR Foundation MCP</div>
+          <div class="audit-witness-detail">Live byte-identity check: server's computed address verified byte-equal to canonical Rust reference. ed25519 receipt signed by Foundation.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="audit-verification">
+      <div class="audit-verification-label">What a regulator does in 2046 to verify a 2026 cert</div>
+      <ol class="audit-verification-steps">
+        <li>Re-canonicalize the request bytes with JCS + NFC + SHA-256 (UOR-ADDR-1, 5 lines of Python).</li>
+        <li>Ed25519-verify the cert signature with the inference server's public key.</li>
+        <li>Hash the response bytes; confirm match against cert's output content address.</li>
+        <li>Pull Hedera HCS message at the recorded sequence number; confirm cert UOR address matches.</li>
+        <li>Pull XRPL transaction by txid; confirm memo contains the UOR address.</li>
+      </ol>
+      <p class="audit-verification-note">
+        <strong>No vendor needs to be online.</strong>
+        Anthropic could be acquired, AgentLevy could shut down, this server could be offline —
+        the cert chain still verifies because the witnesses are independent public ledgers and a foundation-adopted standard.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
      SECTION 6 — Phase 4: Compliance Stack (the composition)
      ======================================================== -->
 <section class="pitch-section pitch-section-stack">

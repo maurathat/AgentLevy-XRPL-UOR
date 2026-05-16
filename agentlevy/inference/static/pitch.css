@@ -753,6 +753,388 @@ body.pitch-body {
 }
 
 /* -------------------------------------------------------------------------- */
+/* Reference sections — dNFT schema, VTEAI standard, audit chain anatomy      */
+/* These read as "reference material" (deeper detail you scroll to in Q&A)    */
+/* -------------------------------------------------------------------------- */
+
+.pitch-section-reference {
+  background: var(--pitch-paper);
+}
+
+.pitch-section-reference .eyebrow {
+  color: var(--pitch-ruri);
+}
+
+/* ---- shared: id-bar (NFTokenID, owner address, links) ---- */
+.ref-id-bar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 28px 0 14px 0;
+}
+
+.ref-id-cell {
+  background: var(--pitch-washi);
+  border-radius: 6px;
+  padding: 14px 18px;
+}
+
+.ref-id-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--pitch-karakurenai);
+  margin-bottom: 6px;
+}
+
+.ref-id-value code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--pitch-ink);
+  word-break: break-all;
+  background: none;
+  padding: 0;
+}
+
+.ref-id-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 8px 0 24px 0;
+}
+
+.ref-id-actions a {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--pitch-ruri);
+  text-decoration: none;
+  padding: 6px 12px;
+  border: 1px solid var(--pitch-rule);
+  border-radius: 4px;
+  background: white;
+  transition: border-color 0.12s ease;
+}
+
+.ref-id-actions a:hover {
+  border-color: var(--pitch-karakurenai);
+}
+
+.ref-note {
+  margin-top: 18px;
+  font-size: 13px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--pitch-ink-soft);
+  border-left: 3px solid var(--pitch-ruri);
+  padding-left: 14px;
+}
+
+.ref-note code {
+  background: var(--pitch-washi);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+/* ---- dNFT schema rows ---- */
+.dnft-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  background: white;
+  border: 1px solid var(--pitch-rule);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.dnft-row {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 24px;
+  padding: 14px 22px;
+  border-top: 1px solid var(--pitch-rule);
+  align-items: baseline;
+}
+
+.dnft-row:first-child {
+  border-top: none;
+}
+
+.dnft-key {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  color: var(--pitch-karakurenai);
+  font-weight: 500;
+}
+
+.dnft-val {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--pitch-ink);
+}
+
+.dnft-val code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  background: var(--pitch-washi);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+/* ---- VTEAI section ---- */
+.vteai-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 28px;
+}
+
+.vteai-col {
+  background: white;
+  border: 1px solid var(--pitch-rule);
+  border-radius: 8px;
+  padding: 24px 26px;
+}
+
+.vteai-col-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--pitch-karakurenai);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--pitch-karakurenai);
+}
+
+.vteai-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.vteai-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 0;
+  border-top: 1px solid var(--pitch-rule);
+}
+
+.vteai-list li:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.vteai-list strong {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  color: var(--pitch-ruri);
+  font-weight: 500;
+}
+
+.vteai-list span {
+  font-size: 13px;
+  color: var(--pitch-ink-soft);
+  line-height: 1.5;
+}
+
+.vteai-list code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  background: var(--pitch-washi);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.vteai-status {
+  margin-top: 24px;
+  background: var(--pitch-washi);
+  border-radius: 8px;
+  padding: 18px 22px;
+}
+
+.vteai-status-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 18px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  align-items: baseline;
+}
+
+.vteai-status-row:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.vteai-status-key {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--pitch-karakurenai);
+  letter-spacing: 0.04em;
+}
+
+.vteai-status-value {
+  font-size: 13px;
+  color: var(--pitch-ink);
+  line-height: 1.5;
+}
+
+.vteai-status-value strong {
+  color: var(--pitch-ruri);
+}
+
+.vteai-status-value a {
+  color: var(--pitch-ruri);
+  text-decoration: underline;
+  text-decoration-color: rgba(40, 58, 140, 0.3);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  word-break: break-all;
+}
+
+/* ---- Audit chain anatomy ---- */
+.audit-chain-diagram {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 28px;
+}
+
+.audit-node {
+  background: white;
+  border: 1px solid var(--pitch-rule);
+  border-radius: 8px;
+  padding: 18px 24px;
+}
+
+.audit-node-primary {
+  border-color: var(--pitch-ruri);
+  border-width: 2px;
+  background: var(--pitch-washi);
+}
+
+.audit-node-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--pitch-karakurenai);
+  margin-bottom: 8px;
+}
+
+.audit-node-content {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--pitch-ink);
+}
+
+.audit-node-content code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  background: rgba(40, 58, 140, 0.08);
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: var(--pitch-ruri);
+}
+
+.audit-node-meta {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--pitch-ink-soft);
+  margin-top: 6px;
+}
+
+.audit-arrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--pitch-ink-soft);
+  text-align: center;
+  padding: 10px 0;
+  letter-spacing: 0.06em;
+}
+
+.audit-witnesses {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.audit-witness {
+  background: white;
+  border: 1px solid var(--pitch-rule);
+  border-left: 4px solid var(--pitch-karakurenai);
+  border-radius: 0 6px 6px 0;
+  padding: 16px 18px;
+}
+
+.audit-witness-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--pitch-ruri);
+  margin-bottom: 8px;
+}
+
+.audit-witness-detail {
+  font-size: 13px;
+  color: var(--pitch-ink);
+  line-height: 1.5;
+}
+
+.audit-witness-detail code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  background: var(--pitch-washi);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.audit-verification {
+  margin-top: 32px;
+  background: var(--pitch-washi);
+  border-radius: 8px;
+  padding: 22px 26px;
+}
+
+.audit-verification-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--pitch-karakurenai);
+  margin-bottom: 14px;
+}
+
+.audit-verification-steps {
+  margin: 0 0 14px 0;
+  padding-left: 24px;
+  font-size: 14px;
+  color: var(--pitch-ink);
+  line-height: 1.6;
+}
+
+.audit-verification-steps li {
+  padding: 4px 0;
+}
+
+.audit-verification-note {
+  margin: 14px 0 0 0;
+  font-size: 14px;
+  color: var(--pitch-ink);
+  line-height: 1.55;
+  border-top: 1px solid var(--pitch-rule);
+  padding-top: 14px;
+}
+
+.audit-verification-note strong {
+  color: var(--pitch-karakurenai);
+  font-weight: 600;
+}
+
+/* -------------------------------------------------------------------------- */
 /* Responsive scaling — only loosely, this is presented at 1080p/1440p mostly */
 /* -------------------------------------------------------------------------- */
 
@@ -769,4 +1151,9 @@ body.pitch-body {
     grid-template-columns: 1fr 1fr;
   }
   .techstack-grid { grid-template-columns: 1fr; }
+  .ref-id-bar { grid-template-columns: 1fr; }
+  .dnft-row { grid-template-columns: 1fr; gap: 6px; }
+  .vteai-grid { grid-template-columns: 1fr; }
+  .vteai-status-row { grid-template-columns: 1fr; gap: 4px; }
+  .audit-witnesses { grid-template-columns: 1fr; }
 }

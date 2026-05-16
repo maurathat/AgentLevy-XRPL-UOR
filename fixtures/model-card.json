@@ -71,6 +71,7 @@
     "name": "UOR-ADDR-1",
     "status": "UOR-Foundation-adopted-2026-05",
     "spec": "https://github.com/UOR-Foundation/uor-addr-1",
+    "foundation_reference": "https://uor-foundation.github.io/UOR-Framework/",
     "canonicalization": "JCS-RFC8785 + NFC + SHA-256",
     "rust_reference": "https://crates.io/crates/uor-foundation"
   },

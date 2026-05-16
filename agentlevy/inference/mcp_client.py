@@ -204,10 +204,18 @@ class UORMCPClient:
         self.close()
 
     def open(self) -> None:
-        """Open the HTTP client, run the initialize handshake, store session id."""
+        """Open the HTTP client, run the initialize handshake, store session id.
+
+        Honors ``INFERENCE_UOR_MCP_INSECURE=true`` to bypass SSL hostname
+        verification — needed when ``mcp.uor.foundation`` is temporarily serving
+        a cert with a hostname mismatch. Insecure mode is gated by env var so
+        production deployments remain strict by default.
+        """
         if self._http is not None:
             return
-        self._http = httpx.Client(timeout=self.timeout)
+        import os as _os
+        verify = not (_os.environ.get("INFERENCE_UOR_MCP_INSECURE", "false").strip().lower() == "true")
+        self._http = httpx.Client(timeout=self.timeout, verify=verify)
         init_req = {
             "jsonrpc": "2.0",
             "id": str(uuid.uuid4()),

@@ -300,6 +300,12 @@ A: I shouldn't ask anyone to believe it on faith. The reference implementation e
 **Q: *"What if a fork of your protocol takes off instead of yours?"***
 A: Forks of the protocol are encouraged — it's open. The standards-author position isn't forkable; the Foundation adoption is dated and public. The reference-implementation distribution head start is 12–18 months. Forks would have to either implement the standards I wrote (in which case they validate the moat) or break them (in which case they lose interoperability).
 
+**Q: *"Do all MCP servers have to be UOR-native for this to work?"***
+A: No — UOR-ADDR-1 is a capability any MCP server can choose to expose, not a requirement of MCP itself. Like HTTPS layered onto HTTP. Existing MCP servers — Anthropic's filesystem, GitHub, Slack — don't need to know about UOR to coexist with mine. Tomorrow any of them can add a `verify_uor_address` tool without rewriting anything. That's why this is viral adoption, not all-or-nothing rip-and-replace. Same playbook as TLS: optional capability, incremental adoption, eventually default for anything that needs verifiability.
+
+**Q: *"How does an agent know there's a content address — does it have to search?"***
+A: The agent doesn't search for the address — it **computes** it. Content addressing is deterministic by design. Same canonical input always produces the same SHA-256. Agent A computes the address when it asks. Agent B computes the same address when it asks. The server's cache lookup is O(1) — no search, no discovery, no consensus needed. The only real discovery problem is *which server has the cert I want*, and that's solved by MCP servers acting as agent-native resolvers — the same way DNS resolves URLs for human-driven browsers. **UOR-ADDR-1 is the URI of the Internet of Agents. MCP is its DNS.**
+
 ### On the team
 
 **Q: *"Solo founder — how do you handle that?"***
@@ -448,8 +454,12 @@ Buildable as a `POST /verify-document` endpoint on top of the existing protocol 
 ## Handoff materials (carry to the venue)
 
 - **One-liner for the badge:** *"Maura Clark — RoyaltAI · UOR Foundation member · pay-per-call AI inference with cryptographic royalty"*
-- **Repo URL:** `github.com/maurathat/AgentLevy-XRPL-UOR`
+- **Repo URL:** `github.com/maurathat/AgentLevy-XRPL-UOR` (public)
 - **Standards repo:** `github.com/UOR-Foundation/uor-addr-1`
+- **UOR Foundation reference site:** `uor-foundation.github.io/UOR-Framework/` (canonical "Browse the reference" — Ontology Inventory, Resolution Pipeline, Define / Resolve / Certify)
+- **PRISM/UOR Gamma deck (deep-dive):** `gamma.app/docs/PRISM-UOR-The-Coordinate-System-the-Agent-Economy-Has-Been-Missin-qe7y5ttqaundszz`
+- **Mainnet dNFT (live):** Bithomp `000800005C0D75FC05056348A634785AC427B30E2AAD1A60B2A688C20636D728`
+- **dNFT metadata JSON (live, public):** `raw.githubusercontent.com/maurathat/AgentLevy-XRPL-UOR/main/fixtures/model-card.json`
 - **Live demo URL (post-deploy):** TBD — write on cards
 - **Contact:** enterpriseroofing@gmail.com (per user memory)
 

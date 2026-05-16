@@ -584,6 +584,36 @@
 </section>
 
 <!-- ========================================================
+     SECTION 5.8 — The design insight (mental model handle for the room)
+     ======================================================== -->
+<section class="pitch-section pitch-section-insight">
+  <div class="pitch-content">
+    <div class="eyebrow">The design insight</div>
+    <h2>The agent doesn't search for the address — it <em>computes</em> it.</h2>
+
+    <div class="insight-body">
+      <p class="insight-lede">
+        Content addressing is deterministic by design. Same canonical input always
+        produces the same SHA-256. Agent A computes the address when it asks.
+        Agent B computes the same address when it asks. The server's cache lookup
+        is O(1) — no search, no discovery, no consensus needed.
+      </p>
+
+      <p class="insight-lede">
+        The only real discovery problem is <em>which server has the cert I want</em>.
+        That's solved by MCP servers acting as agent-native resolvers — the same way
+        DNS resolves URLs for human-driven browsers.
+      </p>
+    </div>
+
+    <div class="insight-handle">
+      <span>UOR-ADDR-1 is the <strong>URI</strong> of the Internet of Agents.</span>
+      <span>MCP is its <strong>DNS</strong>.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
      SECTION 6 — Phase 4: Compliance Stack (the composition)
      ======================================================== -->
 <section class="pitch-section pitch-section-stack">

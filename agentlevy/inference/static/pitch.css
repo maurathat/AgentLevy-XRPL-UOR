@@ -1135,6 +1135,73 @@ body.pitch-body {
 }
 
 /* -------------------------------------------------------------------------- */
+/* Section 5.8 — The design insight (hero pull-quote section)                 */
+/* -------------------------------------------------------------------------- */
+
+.pitch-section-insight {
+  background: var(--pitch-ruri);
+  color: var(--pitch-paper);
+}
+
+.pitch-section-insight .eyebrow {
+  color: var(--pitch-washi);
+}
+
+.pitch-section-insight h2 {
+  color: var(--pitch-paper);
+  font-size: 52px;
+  line-height: 1.1;
+  max-width: 1000px;
+  margin-bottom: 36px;
+}
+
+.pitch-section-insight h2 em {
+  color: var(--pitch-karakurenai);
+  font-style: normal;
+  font-weight: 700;
+}
+
+.insight-body {
+  max-width: 820px;
+  margin-bottom: 56px;
+}
+
+.insight-lede {
+  font-size: 19px;
+  line-height: 1.6;
+  color: rgba(246, 247, 250, 0.82);
+  margin: 0 0 24px 0;
+}
+
+.insight-lede em {
+  color: var(--pitch-washi);
+  font-style: italic;
+  font-weight: 500;
+}
+
+.insight-lede:last-child { margin-bottom: 0; }
+
+.insight-handle {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 36px;
+  line-height: 1.25;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--pitch-paper);
+  border-top: 1px solid rgba(246, 247, 250, 0.18);
+  padding-top: 32px;
+  max-width: 900px;
+}
+
+.insight-handle strong {
+  color: var(--pitch-karakurenai);
+  font-weight: 700;
+}
+
+/* -------------------------------------------------------------------------- */
 /* Responsive scaling — only loosely, this is presented at 1080p/1440p mostly */
 /* -------------------------------------------------------------------------- */
 
@@ -1156,4 +1223,6 @@ body.pitch-body {
   .vteai-grid { grid-template-columns: 1fr; }
   .vteai-status-row { grid-template-columns: 1fr; gap: 4px; }
   .audit-witnesses { grid-template-columns: 1fr; }
+  .pitch-section-insight h2 { font-size: 34px; }
+  .insight-handle { font-size: 24px; }
 }

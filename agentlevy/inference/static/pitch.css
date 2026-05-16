@@ -28,9 +28,10 @@ body.pitch-body {
   font-size: 17px;
   line-height: 1.55;
 
-  scroll-snap-type: y mandatory;
-  overflow-y: scroll;
-  height: 100vh;
+  /* "proximity" instead of "mandatory" so sections that grow taller than the
+     viewport can scroll naturally without the snap forcibly clipping content
+     above or below. Snap still gives slide-like feel when content fits 100vh. */
+  scroll-snap-type: y proximity;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -40,12 +41,22 @@ body.pitch-body {
 .pitch-section {
   min-height: 100vh;
   scroll-snap-align: start;
-  padding: 64px 80px;
+  padding: 80px 80px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* Dense sections start at top so content doesn't get center-clipped off-screen.
+     Hero sections override to "center" below. */
+  justify-content: flex-start;
   position: relative;
+}
+
+/* Hero / pull-quote sections — center the content because they're intentionally
+   short and the slide-like feel works. */
+.pitch-section-thesis,
+.pitch-section-ask,
+.pitch-section-insight {
+  justify-content: center;
 }
 
 .pitch-section + .pitch-section {

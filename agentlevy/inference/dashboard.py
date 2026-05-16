@@ -418,8 +418,13 @@ def register_dashboard_routes(app: FastAPI, server: "InferenceServer") -> None:
     _demo_running = {"flag": False}
 
     DEMO_PROMPT = (
-        "Draft a polite 2-sentence reschedule email for a meeting "
-        "running 15 minutes late."
+        "Summarize this TechCrunch article in three bullets: "
+        "Acme Robotics raised a $120M Series B led by Andreessen Horowitz "
+        "at a $1.2B valuation. The Boston-based humanoid warehouse robotics "
+        "startup, founded by former Boston Dynamics engineers Sarah Chen and "
+        "Marcus Rivera, claims a sub-0.1% drop rate on delicate inventory and "
+        "has signed pilots with three Fortune 500 retailers. Commercial "
+        "shipping begins Q3 2026."
     )
 
     @app.post("/demo/run")

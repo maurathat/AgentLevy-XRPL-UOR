@@ -156,11 +156,18 @@ def main() -> None:
     parser.add_argument(
         "--prompt",
         default=(
-            "Draft a polite 2-sentence reschedule email for a meeting "
-            "running 15 minutes late."
+            "Summarize this TechCrunch article in three bullets: "
+            "Acme Robotics raised a $120M Series B led by Andreessen Horowitz "
+            "at a $1.2B valuation. The Boston-based humanoid warehouse robotics "
+            "startup, founded by former Boston Dynamics engineers Sarah Chen and "
+            "Marcus Rivera, claims a sub-0.1% drop rate on delicate inventory and "
+            "has signed pilots with three Fortune 500 retailers. Commercial "
+            "shipping begins Q3 2026."
         ),
         help="The prompt both agents will ask. Default is a head-of-distribution "
-             "agent query that lands well on stage.",
+             "summarization query that lands well on stage — universal, no domain "
+             "context required. Use --prompt to swap for booth-side enterprise "
+             "demos (e.g. beneficial-owner extraction).",
     )
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8765)

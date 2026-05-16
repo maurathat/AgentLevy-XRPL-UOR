@@ -58,7 +58,7 @@ DEFAULT_METADATA_URI = (
     "https://raw.githubusercontent.com/maurathat/AgentLevy-XRPL-UOR/"
     "main/fixtures/model-card.json"
 )
-DEFAULT_MODEL_NAME = "AgentLevy Demo Model NFT — Claude Haiku 4.5"
+DEFAULT_MODEL_NAME = "RoyaltAI Demo LLM NFT — Claude Haiku 4.5"
 NFT_TAXON = 1
 
 
@@ -90,19 +90,22 @@ def main() -> None:
     dotenv_path = repo_root / ".env"
     load_dotenv(dotenv_path, override=True)
 
-    rpc_url = os.environ.get("XRPL_RPC_URL", "").strip()
-    if not rpc_url:
-        raise SystemExit("XRPL_RPC_URL is not set in .env")
+    # Route through the wallets module so Mainnet seeds come from macOS Keychain
+    # with correct algorithm auto-detection (Xaman default is secp256k1; xrpl-py's
+    # Wallet.from_seed defaults to ed25519 which would derive wrong addresses).
+    from agentlevy.inference import wallets  # noqa: E402
 
-    owner_seed = args.owner_seed or os.environ.get("XRPL_INFERENCE_MODEL_OWNER_SEED", "").strip()
-    if not owner_seed:
-        raise SystemExit(
-            "XRPL_INFERENCE_MODEL_OWNER_SEED is not set in .env. "
-            "Generate a wallet via the XRPL faucet, fund it, then set the seed."
-        )
+    if args.owner_seed:
+        # Explicit override path (Testnet only — Mainnet seeds should never be on CLI)
+        from xrpl.constants import CryptoAlgorithm
+        algo = CryptoAlgorithm.ED25519 if args.owner_seed.startswith("sEd") else CryptoAlgorithm.SECP256K1
+        owner = Wallet.from_seed(args.owner_seed, algorithm=algo)
+    else:
+        owner = wallets.get_wallet("model_owner")
 
-    owner = Wallet.from_seed(owner_seed)
-    print(f"Network: {rpc_url}")
+    rpc_url = wallets.rpc_url()
+    network_name = wallets.network()
+    print(f"Network: {network_name} ({rpc_url})")
     print(f"Model owner wallet: {owner.classic_address}")
     print(f"Metadata URI:       {args.metadata_uri}")
     print(f"Model name:         {args.model_name}")
@@ -149,10 +152,12 @@ def main() -> None:
             "Check the tx by hash on the explorer."
         )
 
+    explorer_host = "bithomp.com/explorer" if network_name == "mainnet" else "testnet.xrpl.org/nft"
     print()
     print(f"NFTokenID: {nft_id}")
     print(f"Owner:     {owner.classic_address}")
-    print(f"Explorer:  https://testnet.xrpl.org/nft/{nft_id}")
+    print(f"Explorer:  https://{explorer_host}/{nft_id}")
+    print(f"           (also viewable at https://livenet.xrpl.org/nft/{nft_id})" if network_name == "mainnet" else "")
     print()
 
     if args.no_write:

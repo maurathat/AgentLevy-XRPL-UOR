@@ -261,13 +261,13 @@ This section is **non-normative**. Implementations are free to use any determini
 
 ### Content addressing — UOR-ADDR-1
 
-Implementers MAY use [UOR-ADDR-1](https://uor.foundation) (Universal Object Reference Address, community proposal, April 2026) as the derivation method for `taskSpecHash` and for the content addresses of inputs, outputs, and any nested attestation references. UOR-ADDR-1 specifies:
+Implementers SHOULD use [UOR-ADDR-1](https://github.com/UOR-Foundation/uor-addr-1) (Universal Object Reference Address, **UOR Foundation–adopted, May 2026**) as the derivation method for `taskSpecHash` and for the content addresses of inputs, outputs, and any nested attestation references. UOR-ADDR-1 specifies:
 
 - Canonicalization via JCS (RFC 8785) with prior NFC normalization (UAX #15)
 - Address envelope `sha256:<64 hex>` derived from the canonical bytes
 - Algebraic representation under the UOR PRISM ring algebra (Q(31), 256-bit, MIT-licensed reference implementation)
 
-Adopting UOR-ADDR-1 yields content addresses that are byte-identical to the UOR Foundation's canonical reference and resolvable by any UOR-aware tool without per-vendor translation. It is not required by this ERC.
+Adopting UOR-ADDR-1 yields content addresses that are byte-identical to the UOR Foundation's canonical reference and resolvable by any UOR-aware tool without per-vendor translation. **Adoption of UOR-ADDR-1 is the recommended path for cross-chain byte-identical task spec hashes** — implementations of this ERC that compute `taskSpecHash` via UOR-ADDR-1 will produce the same value for the same canonical input on Ethereum, XRPL, Solana, Cosmos, or any other settlement substrate, without per-chain translation. Implementers MAY substitute another deterministic canonicalization scheme (CIDv1, ad-hoc keccak256, etc.) where a specific deployment requires it, provided all parties to the escrow agree on the scheme.
 
 ### Attestation chain envelope — DerivationCert (UOR Certificate)
 

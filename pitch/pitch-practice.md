@@ -92,23 +92,47 @@ If the room feels skeptical or the Coframe framing has already been overused by 
 
 > *"Google handles 8.5 billion searches a day. The top 100 of them get asked millions of times — weather, news, login pages, conversions. When agents are the buyers instead of humans, the same long-tail concentration exists — except today every agent pays full price for the same answer. RoyaltAI changes that. First agent pays full price. Every subsequent agent shares the cached cert at a tenth the cost. The model creator earns royalty on every hit. Watch."*
 
-### Third opening — MCP-native / multi-agent coordination (recommended primary for this room)
+### Third opening — MCP-native / multi-agent coordination
 
-Given the actual investor composition (Topology's thesis explicitly names *"frameworks for multiple agents working together"*, Khosla backs the agent-control-plane thesis via Guild, Nat Friedman cares about mechanism), the **mechanism-first** opener probably lands hardest:
+Given the investor composition (Topology's thesis explicitly names *"frameworks for multiple agents working together"*, Khosla backs the agent-control-plane thesis via Guild, Nat Friedman cares about mechanism), the **mechanism-first** opener lands hard for engineers:
 
 > *"I built the first MCP-native trust layer for agent commerce. Two MCP servers — one consuming the UOR Foundation's canonical reference, one exposing my own — share a content-addressed cert chain. Two agents can ask the same question, the second one pays a tenth as much, and the model creator gets paid royalty on both. Standards I authored, adopted by the UOR Foundation last week. Live demo, real ledger, watch."*
 
 Lead with **infrastructure language** (*"MCP-native trust layer"*, *"content-addressed cert chain"*) over **business language** (*"Bloomberg for agent economy"*, *"$200B TAM"*). The room rewards the former, suspects the latter.
 
-### Choosing between the three openers in real time
+### Fourth opening — Internet of Agents (RECOMMENDED PRIMARY FOR THIS ROOM)
+
+AGI House literally named the event *"Internet of Agents Build Day."* Names the event back to the audience in your first sentence, lands UOR-ADDR-1 as inevitable, slots your demo as the production reference:
+
+> *"AGI House called this the Internet of Agents Build Day. To make that real — autonomous agents transacting, composing, paying each other across chains and vendors — you need exactly what URIs gave the original Internet: one universal way to address content. Not different per chain. Not different per vendor. One open primitive everyone converges on.*
+>
+> *That's UOR-ADDR-1. Foundation-adopted last month, byte-identical verification against the canonical Rust reference, MIT-licensed.*
+>
+> *RoyaltAI is the first production implementation. Pay-per-call AI inference, settling on XRPL Mainnet in RLUSD, with cryptographic royalty enforcement using UOR addresses as the protocol primitive. Real money, real ledger, every cert content-addressed.*
+>
+> *Let me show you."*
+
+The mental model that lands:
+
+| Internet of... | Address primitive | Owner |
+|---|---|---|
+| Documents | URI / URL (RFC 3986) | IETF, neutral |
+| Things (IoT) | IP/MAC + EPC URN | IEEE, neutral |
+| Money | CAIP | ChainAgnostic.org |
+| **Agents** | **UOR-ADDR-1** | **UOR Foundation** ✓ |
+
+Every prior Internet-of-X needed a chain-neutral, vendor-neutral addressing primitive. UOR-ADDR-1 is the only one that exists for agent output today. Without it, every chain reinvents content addressing badly, and agents from different vendors can't compose.
+
+### Choosing between the four openers in real time
 
 | Room signal | Use |
 |---|---|
-| You're 4th or 5th pitcher; Coframe framing already used; audience tired | **Google searches** — universal handle |
+| **AGI House framing fresh; first half of pitchers; audience focused on event theme** | **Internet of Agents** — names event back to them, recommended primary |
+| You're 4th or 5th pitcher; opening framings already used; audience tired | **Google searches** — universal handle |
 | Technical investors visible front-row (Topology, Nat Friedman, Khosla partner); engineers in audience | **MCP-native / multi-agent** — mechanism-first |
-| First few pitchers; audience fresh; host front-and-center | **Coframe / 100 agents per human** — meets them where they are |
+| Coframe sponsorship visible / Josh Payne in the room and event theme already addressed | **Coframe / 100 agents per human** — meets them where they are |
 
-Practice all three. Pick on the walk to the stage.
+Practice all four. Pick on the walk to the stage.
 
 ---
 
@@ -128,6 +152,41 @@ Time-coded beats. The dashboard provenance graph plays out behind you for the fi
 | 6:00–7:00 | — | Buffer for delays, Q&A overflow, applause. |
 
 Don't memorize this verbatim — internalize the beats and improvise the connective tissue.
+
+---
+
+## Prompt-swap strategy (stage vs booth)
+
+The demo's default prompt is set in two places (server-side `DEMO_PROMPT` in `dashboard.py` and CLI default in `run_inference_demo.py`). **Pick the prompt to match the audience in front of you.**
+
+### On stage (5-7 min pitch) — universal summarization
+**Current default:** *"Summarize this TechCrunch article in three bullets: Acme Robotics raised a $120M Series B..."*
+
+Why this lands for AGI House: universal LLM primitive, zero domain context required, cache-hit story is instantly obvious ("100 agents reading the same TechCrunch article today"). Aligns with the Internet of Agents opening.
+
+### At the booth (post-pitch enterprise conversations) — beneficial owners extraction
+**Alternative prompt** (swap when an enterprise/compliance person engages):
+
+> *"Extract the beneficial owners from this paragraph: Westgate Holdings LLC, registered in Delaware, is wholly owned by Westgate Trust, of which Sarah Mitchell (DOB 1972-03-15) and her brother David Mitchell (DOB 1975-08-22) are the sole beneficiaries with 50% interest each."*
+
+Why this lands for KYC/compliance audience: their use case reflected back at them, ties to AgentLevy Phase 2 history, makes the Phase 4 Compliance Stack slide concrete.
+
+### How to swap mid-event
+
+The CLI accepts `--prompt` directly:
+```bash
+python3 scripts/run_inference_demo.py --total-calls=1 --prompt="Extract the beneficial owners from this paragraph..."
+```
+
+For the keyboard-shortcut version on `/pitch`: the `DEMO_PROMPT` constant in `dashboard.py` is hardcoded, so swapping it requires editing the file + restarting the server. Plan ahead: if you know an enterprise person is coming to the booth, restart the server with the beneficial-owners prompt loaded after the main pitch ends.
+
+### Rule of thumb
+
+- **Investor / agent-infra audience** → summarization (universal, head-of-distribution)
+- **Enterprise / compliance audience** → beneficial-owners (specific, "I see my use case")
+- **Engineering audience** → code-generation prompt (e.g., *"Write a Python function that validates an XRPL classic address"*)
+
+The protocol is identical for all three. Only the prompt changes. That IS the pitch — pay-per-call cryptographic royalty works for any inference, not just compliance, not just creative, not just code.
 
 ---
 

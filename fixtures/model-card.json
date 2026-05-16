@@ -1,0 +1,108 @@
+{
+  "name": "RoyaltAI Demo LLM NFT — Claude Haiku 4.5",
+  "description": "On-chain identity for the Claude Haiku 4.5 inference model served by RoyaltAI. Royalty payments for every pay-per-call inference route to the holder of this NFT. Built on the open AgentLevy protocol; settles on XRPL Mainnet in RLUSD; cert chain anchored to Hedera HCS; content addresses live byte-identical against the UOR Foundation reference.",
+  "image": "https://raw.githubusercontent.com/maurathat/AgentLevy-XRPL-UOR/main/fixtures/royaltai-nft.png",
+  "external_url": "https://github.com/maurathat/AgentLevy-XRPL-UOR",
+
+  "schema_version": "royaltai-dnft/0.1",
+  "nftoken_id": "000800005C0D75FC05056348A634785AC427B30E2AAD1A60B2A688C20636D728",
+  "minted_at": "2026-05-16T15:00:00Z",
+  "minted_on": "XRPL-Mainnet",
+
+  "model": {
+    "provider": "Anthropic",
+    "id": "claude-haiku-4-5",
+    "modality": ["text"],
+    "version_pointer": "anthropic:claude-haiku-4-5@2026-04",
+    "canonical_endpoint": "https://royaltai.com/inference"
+  },
+
+  "royalty": {
+    "rate_bps": 5000,
+    "split": {
+      "server_bps": 5000,
+      "model_owner_bps": 5000
+    },
+    "currency": "RLUSD",
+    "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+    "settlement_chain": "XRPL-Mainnet",
+    "owner_wallet": "r9PjHvj8kKwA61fTMx5ANpH6BrGmQdrQgf"
+  },
+
+  "usage_restrictions": {
+    "allowed_modalities": ["text"],
+    "disallowed_use_cases": [
+      "high-stakes-medical-diagnosis",
+      "irreversible-financial-trades",
+      "minors-uncontrolled-access"
+    ],
+    "geographic_restrictions": [],
+    "rate_limit_per_caller_per_day": 1000,
+    "max_tokens_per_call": 4096
+  },
+
+  "compliance_attestations": [
+    {
+      "scheme": "Anthropic-Constitutional-AI",
+      "version": "2026.1",
+      "scope": "general-purpose-inference",
+      "uri": "https://www.anthropic.com/safety"
+    },
+    {
+      "scheme": "UOR-Foundation-byte-identity-verified",
+      "version": "UOR-ADDR-1@2026-05",
+      "scope": "content-addressing-of-request-and-response",
+      "uri": "https://github.com/UOR-Foundation/uor-addr-1"
+    }
+  ],
+
+  "parent_model_nft": null,
+
+  "license_terms_uri": "https://raw.githubusercontent.com/maurathat/AgentLevy-XRPL-UOR/main/LICENSE",
+
+  "audit_anchor": {
+    "chain": "Hedera",
+    "network": "testnet",
+    "topic": "0.0.8856047",
+    "purpose": "tamper-evident-cert-anchor"
+  },
+
+  "addressing_standard": {
+    "name": "UOR-ADDR-1",
+    "status": "UOR-Foundation-adopted-2026-05",
+    "spec": "https://github.com/UOR-Foundation/uor-addr-1",
+    "canonicalization": "JCS-RFC8785 + NFC + SHA-256",
+    "rust_reference": "https://crates.io/crates/uor-foundation"
+  },
+
+  "settlement_standard": {
+    "name": "VTEAI",
+    "status": "ERC-draft-2026-04",
+    "spec": "https://github.com/maurathat/AgentLevy-XRPL-UOR/blob/main/pitch/VTEAI-DRAFT.md",
+    "first_reference_impl": "AgentLevy on Base (KYC compliance)",
+    "second_reference_impl": "RoyaltAI on XRPL (pay-per-call inference)"
+  },
+
+  "dynamic_state": {
+    "note": "Counters below are off-chain mutable in v0.1 — tracked in the RoyaltAI cert store and queryable via /api/state. v0.2 of this schema will use XLS-46d tfMutable to push updates into the on-chain URI itself, removing the off-chain dependency.",
+    "endpoint": "https://royaltai.com/api/nft/000800005C0D75FC05056348A634785AC427B30E2AAD1A60B2A688C20636D728/state",
+    "snapshot_at_mint": {
+      "inferences_total": 0,
+      "revenue_total_rlusd": "0.00",
+      "royalties_paid_rlusd": "0.00",
+      "cache_hit_rate": null,
+      "unique_callers": 0
+    }
+  },
+
+  "attributes": [
+    { "trait_type": "Provider", "value": "Anthropic" },
+    { "trait_type": "Model", "value": "Claude Haiku 4.5" },
+    { "trait_type": "Settlement Chain", "value": "XRPL Mainnet" },
+    { "trait_type": "Settlement Currency", "value": "RLUSD" },
+    { "trait_type": "Royalty Rate", "value": "50%" },
+    { "trait_type": "Addressing Standard", "value": "UOR-ADDR-1" },
+    { "trait_type": "Settlement Standard", "value": "VTEAI" },
+    { "trait_type": "Audit Anchor", "value": "Hedera HCS" }
+  ]
+}

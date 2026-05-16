@@ -1,0 +1,772 @@
+/* RoyaltAI pitch deck — scroll-snapped sections.
+   Loads alongside dashboard.css. Brand palette inherited from dashboard.css. */
+
+:root {
+  /* surface the brand colors as scoped names so swatches below read clearly */
+  --pitch-ruri:        #283A8C;
+  --pitch-karakurenai: #B0223A;
+  --pitch-paper:       #F6F7FA;
+  --pitch-washi:       #F4EFE4;
+  --pitch-ink:         #16181F;
+  --pitch-ink-soft:    #45495B;
+  --pitch-rule:        #D9D9D9;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Body + scroll behavior                                                     */
+/* -------------------------------------------------------------------------- */
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body.pitch-body {
+  background: var(--pitch-paper);
+  color: var(--pitch-ink);
+  font-family: 'DM Sans', -apple-system, sans-serif;
+  font-size: 17px;
+  line-height: 1.55;
+
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  height: 100vh;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Section frame                                                              */
+/* -------------------------------------------------------------------------- */
+
+.pitch-section {
+  min-height: 100vh;
+  scroll-snap-align: start;
+  padding: 64px 80px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+.pitch-section + .pitch-section {
+  border-top: 1px solid var(--pitch-rule);
+}
+
+/* The first section (the embedded live dashboard) overrides the centered
+   layout so the dashboard takes the full canvas naturally. */
+.pitch-section-demo {
+  padding: 0;
+  justify-content: flex-start;
+  min-height: 100vh;
+}
+
+.pitch-content {
+  max-width: 1080px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Typography                                                                 */
+/* -------------------------------------------------------------------------- */
+
+.eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--pitch-karakurenai);
+  margin-bottom: 18px;
+}
+
+.pitch-section h2 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 500;
+  font-size: 46px;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  margin: 0 0 28px 0;
+  color: var(--pitch-ink);
+  max-width: 900px;
+}
+
+.lede {
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--pitch-ink-soft);
+  max-width: 760px;
+  margin: 0 0 32px 0;
+}
+
+.lede em {
+  color: var(--pitch-karakurenai);
+  font-style: normal;
+  font-weight: 500;
+}
+
+.lede strong {
+  color: var(--pitch-ink);
+  font-weight: 600;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Section 2 — thesis                                                         */
+/* -------------------------------------------------------------------------- */
+
+.pitch-section-thesis {
+  background: var(--pitch-ruri);
+  color: var(--pitch-paper);
+}
+
+.pitch-section-thesis .eyebrow {
+  color: var(--pitch-washi);
+}
+
+.pitch-section-thesis h2,
+.pitch-section-thesis .lede strong {
+  color: var(--pitch-paper);
+}
+
+.pitch-section-thesis .lede {
+  color: rgba(246, 247, 250, 0.82);
+}
+
+.pitch-section-thesis .lede em {
+  color: var(--pitch-washi);
+}
+
+.thesis-three {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-top: 36px;
+  max-width: 820px;
+}
+
+.thesis-pill {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 22px 16px 18px;
+  background: rgba(246, 247, 250, 0.08);
+  border: 1px solid rgba(246, 247, 250, 0.18);
+  border-radius: 8px;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--pitch-paper);
+}
+
+.thesis-pill .num {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--pitch-karakurenai);
+  color: var(--pitch-paper);
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Section 3 — how it works (three beats, flow with arrows)                   */
+/* -------------------------------------------------------------------------- */
+
+.howitworks-flow {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  gap: 18px;
+  align-items: stretch;
+  margin-top: 32px;
+}
+
+.how-step {
+  background: white;
+  border: 1px solid var(--pitch-rule);
+  border-radius: 8px;
+  padding: 24px 26px;
+  display: flex;
+  flex-direction: column;
+}
+
+.how-step-num {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--pitch-karakurenai);
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.how-step h3 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.2;
+  margin: 0 0 14px 0;
+  color: var(--pitch-ink);
+}
+
+.how-step p {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--pitch-ink-soft);
+}
+
+.how-step p:last-child { margin-bottom: 0; }
+
+.how-step strong { color: var(--pitch-ink); font-weight: 600; }
+.how-step em { color: var(--pitch-karakurenai); font-style: normal; font-weight: 500; }
+.how-step code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  background: var(--pitch-washi);
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: var(--pitch-ruri);
+}
+
+.how-step-arrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 24px;
+  color: var(--pitch-ruri);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Section 3.5 — tech stack (settlement / provenance two-column)              */
+/* -------------------------------------------------------------------------- */
+
+.pitch-section-stack-tech {
+  background: var(--pitch-washi);
+}
+
+.techstack-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  margin-top: 32px;
+}
+
+.techstack-col {
+  background: white;
+  border: 1px solid var(--pitch-rule);
+  border-radius: 8px;
+  padding: 26px 28px;
+}
+
+.techstack-col-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--pitch-karakurenai);
+  margin-bottom: 18px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--pitch-karakurenai);
+}
+
+.techstack-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.techstack-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 0;
+  border-top: 1px solid var(--pitch-rule);
+}
+
+.techstack-list li:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.techstack-list strong {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 14px;
+  color: var(--pitch-ruri);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.techstack-list strong em {
+  font-style: normal;
+  font-size: 11px;
+  color: var(--pitch-ink-soft);
+  background: var(--pitch-washi);
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-left: 6px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.techstack-list span {
+  font-size: 13px;
+  color: var(--pitch-ink-soft);
+  line-height: 1.5;
+}
+
+.techstack-note {
+  margin-top: 28px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--pitch-ink);
+  border-left: 3px solid var(--pitch-ruri);
+  padding-left: 16px;
+  background: white;
+  padding: 14px 16px;
+  border-radius: 0 4px 4px 0;
+}
+
+.techstack-note strong {
+  color: var(--pitch-karakurenai);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Section 4 — math (head-to-head comparison)                                 */
+/* -------------------------------------------------------------------------- */
+
+.math-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 20px;
+  align-items: stretch;
+  margin-top: 36px;
+}
+
+.math-side {
+  background: white;
+  border: 1px solid var(--pitch-rule);
+  border-radius: 8px;
+  padding: 28px 30px;
+}
+
+.math-side-bad {
+  border-color: rgba(176, 34, 58, 0.35);
+}
+
+.math-side-good {
+  border-color: var(--pitch-ruri);
+  background: var(--pitch-washi);
+}
+
+.math-side-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--pitch-ink-soft);
+  margin-bottom: 12px;
+}
+
+.math-side-bad .math-side-label { color: var(--pitch-karakurenai); }
+.math-side-good .math-side-label { color: var(--pitch-ruri); }
+
+.math-stat {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 56px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--pitch-ink);
+  margin-bottom: 8px;
+}
+
+.math-side-bad .math-stat { color: var(--pitch-karakurenai); }
+.math-side-good .math-stat { color: var(--pitch-ruri); }
+
+.math-detail {
+  font-size: 13px;
+  color: var(--pitch-ink-soft);
+  font-family: 'IBM Plex Mono', monospace;
+  margin-bottom: 18px;
+}
+
+.math-side ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.math-side li {
+  font-size: 14px;
+  color: var(--pitch-ink);
+  line-height: 1.5;
+  padding: 6px 0;
+  border-top: 1px solid var(--pitch-rule);
+}
+
+.math-side li:first-child { border-top: none; padding-top: 0; }
+
+.math-vs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fraunces', Georgia, serif;
+  font-style: italic;
+  font-size: 28px;
+  color: var(--pitch-ink-soft);
+}
+
+.math-bottomline {
+  margin-top: 28px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--pitch-ink);
+  border-left: 3px solid var(--pitch-karakurenai);
+  padding-left: 18px;
+}
+
+.math-bottomline strong { color: var(--pitch-ruri); }
+
+/* -------------------------------------------------------------------------- */
+/* Section 5 — standards (card grid)                                          */
+/* -------------------------------------------------------------------------- */
+
+.standards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.standards-card {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border: 1px solid var(--pitch-rule);
+  border-left: 4px solid var(--pitch-karakurenai);
+  border-radius: 0 6px 6px 0;
+  padding: 22px 24px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.standards-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(40, 58, 140, 0.08);
+}
+
+.standards-card-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--pitch-karakurenai);
+  margin-bottom: 10px;
+}
+
+.standards-card-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 26px;
+  font-weight: 500;
+  color: var(--pitch-ruri);
+  line-height: 1.1;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.standards-tag-author {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--pitch-karakurenai);
+  background: rgba(176, 34, 58, 0.08);
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-weight: 400;
+}
+
+.standards-card-subtitle {
+  font-size: 13px;
+  color: var(--pitch-ink-soft);
+  line-height: 1.4;
+  margin-bottom: 16px;
+  flex-grow: 1;
+}
+
+.standards-card-cta {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--pitch-ruri);
+  letter-spacing: 0.04em;
+  margin-top: auto;
+}
+
+.standards-note {
+  margin-top: 24px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--pitch-ink);
+  background: var(--pitch-washi);
+  padding: 14px 18px;
+  border-radius: 6px;
+}
+
+.standards-note code {
+  font-family: 'IBM Plex Mono', monospace;
+  background: white;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+  color: var(--pitch-ruri);
+}
+
+.standards-note strong { color: var(--pitch-karakurenai); }
+
+/* -------------------------------------------------------------------------- */
+/* Section 6 — Phase 4: Compliance Stack                                      */
+/* -------------------------------------------------------------------------- */
+
+.pitch-section-stack {
+  background: linear-gradient(180deg, var(--pitch-paper) 0%, var(--pitch-washi) 100%);
+}
+
+.stack-diagram {
+  margin: 32px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+}
+
+.stack-layer {
+  background: white;
+  border: 1px solid var(--pitch-rule);
+  border-radius: 8px;
+  padding: 22px 28px;
+}
+
+.stack-layer-outer {
+  border-color: var(--pitch-ruri);
+  border-width: 2px;
+}
+
+.stack-layer-inner {
+  border-color: var(--pitch-karakurenai);
+  border-width: 2px;
+  background: var(--pitch-washi);
+}
+
+.stack-layer-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--pitch-karakurenai);
+  margin-bottom: 10px;
+}
+
+.stack-layer-outer .stack-layer-label {
+  color: var(--pitch-ruri);
+}
+
+.stack-layer-body {
+  font-size: 15px;
+  color: var(--pitch-ink);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.stack-arrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--pitch-ink-soft);
+  text-align: center;
+  padding: 10px 0;
+  letter-spacing: 0.08em;
+}
+
+.inner-chain {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.inner-cell {
+  background: white;
+  border: 1px solid var(--pitch-rule);
+  border-radius: 4px;
+  padding: 12px 14px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--pitch-ink);
+  line-height: 1.4;
+}
+
+.inner-cell.cache {
+  background: var(--pitch-karakurenai);
+  color: var(--pitch-paper);
+  border-color: var(--pitch-karakurenai);
+}
+
+.inner-cell.cache em {
+  font-style: normal;
+  opacity: 0.85;
+  font-size: 11px;
+}
+
+.inner-meta {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--pitch-ink-soft);
+  letter-spacing: 0.04em;
+  padding-top: 8px;
+  border-top: 1px solid var(--pitch-rule);
+}
+
+.stack-payoffs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin: 28px 0;
+}
+
+.stack-payoff {
+  background: white;
+  border: 1px solid var(--pitch-rule);
+  border-radius: 6px;
+  padding: 20px 22px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--pitch-ink);
+}
+
+.stack-payoff-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--pitch-ruri);
+  margin-bottom: 8px;
+}
+
+.stack-buildnote {
+  font-size: 14px;
+  color: var(--pitch-ink-soft);
+  border-left: 3px solid var(--pitch-ruri);
+  padding-left: 16px;
+  margin-top: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.stack-buildnote strong {
+  color: var(--pitch-ruri);
+}
+
+.stack-buildnote code {
+  background: var(--pitch-washi);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Section 7 — the ask                                                        */
+/* -------------------------------------------------------------------------- */
+
+.pitch-section-ask {
+  background: var(--pitch-ink);
+  color: var(--pitch-paper);
+}
+
+.pitch-section-ask .eyebrow {
+  color: var(--pitch-washi);
+}
+
+.pitch-section-ask h2 {
+  color: var(--pitch-paper);
+}
+
+.pitch-section-ask .lede {
+  color: rgba(246, 247, 250, 0.78);
+}
+
+.pitch-section-ask .lede strong {
+  color: var(--pitch-washi);
+}
+
+.ask-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 28px 0;
+}
+
+.ask-card {
+  background: rgba(246, 247, 250, 0.05);
+  border: 1px solid rgba(246, 247, 250, 0.18);
+  border-radius: 6px;
+  padding: 18px 20px;
+}
+
+.ask-card-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--pitch-washi);
+  margin-bottom: 8px;
+}
+
+.ask-card-value {
+  font-size: 14px;
+  color: var(--pitch-paper);
+  line-height: 1.45;
+}
+
+.ask-card-value a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(246, 247, 250, 0.4);
+}
+
+.ask-card-value a:hover {
+  text-decoration-color: var(--pitch-karakurenai);
+}
+
+.ask-close {
+  font-size: 18px;
+  color: var(--pitch-paper);
+  margin-top: 24px;
+  line-height: 1.55;
+}
+
+.ask-close strong {
+  color: var(--pitch-karakurenai);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Responsive scaling — only loosely, this is presented at 1080p/1440p mostly */
+/* -------------------------------------------------------------------------- */
+
+@media (max-width: 980px) {
+  .pitch-section { padding: 48px 40px; }
+  .pitch-section h2 { font-size: 32px; }
+  .howitworks-flow { grid-template-columns: 1fr; }
+  .how-step-arrow { transform: rotate(90deg); padding: 8px 0; }
+  .math-grid { grid-template-columns: 1fr; }
+  .math-vs { padding: 6px 0; }
+  .math-stat { font-size: 42px; }
+  .standards-grid { grid-template-columns: 1fr; }
+  .stack-payoffs, .ask-grid, .inner-chain {
+    grid-template-columns: 1fr 1fr;
+  }
+  .techstack-grid { grid-template-columns: 1fr; }
+}

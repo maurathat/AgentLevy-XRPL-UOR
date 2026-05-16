@@ -93,8 +93,8 @@
 ┌──────────────────────────────────────────────────────────┐
 │  UOR-ADDR-1                    (addressing)              │
 │  Universal Addressing for Agent Content                  │
-│  Community proposal, April 27 2026 — Maura Clark + co.   │
-│  STATE: v0.1 draft, Rust crates published, recruiting    │
+│  Foundation-adopted May 2026 — Maura Clark + Alex Flom   │
+│  STATE: live byte-identical reference, recruiting chains │
 └──────────────────────────────────────────────────────────┘
                           ▲
                           │ built on...
@@ -130,7 +130,7 @@
 
 ### What to say if you're recruiting collaborators (Slide 3 only, ~45 seconds)
 
-> *"Two standards in play. VTEAI is the on-chain settlement interface — I authored the draft a month ago, AgentLevy on Flare was the first implementation, this one on XRPL is the second. UOR-ADDR-1 is the addressing layer — chain-agnostic canonical identity for agent-produced content, built on PRISM, proposed last week, Rust crates live on crates.io. The agent economy is converging on chain-specific identity silos right now. UOR-ADDR-1 stops that, the same way CAIP stopped chain-specific account silos. We need collaborators on Solidity and TypeScript reference implementations and on chain bindings. If you build on a chain that isn't XRPL or Rust, find me at Consensus — we'd rather have a working binding than a written spec."*
+> *"Two standards in play. VTEAI is the on-chain settlement interface — I authored the draft in April, AgentLevy on Base was the first reference implementation, this RoyaltAI build on XRPL is the second. UOR-ADDR-1 is the addressing layer — chain-agnostic canonical identity for agent-produced content, built on PRISM, **Foundation-adopted in May 2026, co-authored with Alex Flom**, Rust crates live on crates.io. The agent economy is converging on chain-specific identity silos right now. UOR-ADDR-1 stops that, the same way CAIP stopped chain-specific account silos. We need collaborators on Solidity and TypeScript reference implementations and on chain bindings. If you build on a chain that isn't XRPL or Rust, find me at the booth — we'd rather have a working binding than a written spec."*
 
 ### What to say if you have 90 seconds (Slide 1 + 2)
 
@@ -175,6 +175,6 @@
 - UOR-Framework (Rust + Lean ontology, MIT): https://github.com/UOR-Foundation/UOR-Framework
 - UOR Foundation Rust crates: https://crates.io/crates/uor-foundation
 - VTEAI ERC draft (CC0): [`pitch/VTEAI-DRAFT.md`](VTEAI-DRAFT.md)
-- UOR-ADDR-1 community proposal: [`pitch/UOR-ADDR-PROPOSAL.md`](UOR-ADDR-PROPOSAL.md)
+- UOR-ADDR-1 (Foundation-adopted, May 2026): [`pitch/UOR-ADDR-PROPOSAL.md`](UOR-ADDR-PROPOSAL.md) — also at https://github.com/UOR-Foundation/uor-addr-1
 - Moca airkit (intended agent-identity framework): https://docs.moca.network/airkit
 - AgentLevy uses: PRISM @ commit `6cafdac`, vendored at `vendor/prism.py`

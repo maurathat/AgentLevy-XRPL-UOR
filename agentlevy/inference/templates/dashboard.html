@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RoyaltAI · Live Inference Economy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=DM+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/dashboard.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">●</span>
+    <span class="brand-name">RoyaltAI</span>
+    <span class="brand-tagline">Live Inference Economy</span>
+  </div>
+  <div class="status">
+    <span class="status-dot" id="live-dot"></span>
+    <span id="status-text">connecting…</span>
+    <span class="status-sep">·</span>
+    <span id="seq-counter">seq 0</span>
+  </div>
+</header>
+
+<!-- Inference request banner — updates live as new requests arrive. Shows the
+     prompt, the UOR address it canonicalized to, and the cache-hit/miss tier. -->
+<div class="request-banner" id="request-banner">
+  <div class="request-banner-label">CURRENT REQUEST</div>
+  <div class="request-banner-prompt" id="request-banner-prompt">awaiting first request…</div>
+  <div class="request-banner-meta">
+    <span class="request-banner-uor"><span class="meta-label">UOR address</span> <span id="request-banner-uor">—</span></span>
+    <span class="request-banner-tier" id="request-banner-tier">—</span>
+  </div>
+</div>
+
+<main class="canvas">
+  <!--
+    The provenance graph. Fixed positions, vanilla SVG. Each node has data-* attributes
+    so dashboard.js can toggle classes for animations.
+  -->
+  <svg id="graph" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid meet">
+
+    <!-- Edge definitions go first so they sit behind nodes -->
+    <g id="edges">
+      <line class="edge edge-pay" id="edge-agent-a-to-server"
+            x1="200" y1="180" x2="380" y2="280"
+            data-edge="agent_a-server" />
+      <line class="edge edge-pay" id="edge-agent-b-to-server"
+            x1="200" y1="420" x2="380" y2="320"
+            data-edge="agent_b-server" />
+      <line class="edge edge-call" id="edge-server-to-anthropic"
+            x1="520" y1="270" x2="640" y2="120"
+            data-edge="server-anthropic" />
+      <line class="edge edge-mint" id="edge-server-to-cert"
+            x1="520" y1="300" x2="600" y2="300"
+            data-edge="server-cert" />
+      <line class="edge edge-anchor" id="edge-cert-to-hcs"
+            x1="765" y1="330" x2="880" y2="460"
+            data-edge="cert-hcs" />
+      <line class="edge edge-verify" id="edge-cert-to-uor"
+            x1="765" y1="270" x2="880" y2="140"
+            data-edge="cert-uor" />
+      <line class="edge edge-royalty" id="edge-server-to-owner"
+            x1="520" y1="320" x2="990" y2="300"
+            data-edge="server-owner" />
+    </g>
+
+    <!-- Nodes -->
+    <g id="nodes">
+
+      <!-- Agent A -->
+      <g class="node node-agent" id="node-agent-a" data-actor="agent_a"
+         transform="translate(80,140)">
+        <rect class="node-bg" width="220" height="80" rx="6" />
+        <text class="node-title" x="14" y="24">Agent A</text>
+        <text class="node-addr" x="14" y="44" data-field="address">no wallet yet</text>
+        <text class="node-bal" x="14" y="64"><tspan data-field="balance">—</tspan>
+          <tspan class="node-bal-suffix"> <tspan data-currency-label>XRP</tspan></tspan></text>
+      </g>
+
+      <!-- Agent B -->
+      <g class="node node-agent" id="node-agent-b" data-actor="agent_b"
+         transform="translate(80,380)">
+        <rect class="node-bg" width="220" height="80" rx="6" />
+        <text class="node-title" x="14" y="24">Agent B</text>
+        <text class="node-addr" x="14" y="44" data-field="address">no wallet yet</text>
+        <text class="node-bal" x="14" y="64"><tspan data-field="balance">—</tspan>
+          <tspan class="node-bal-suffix"> <tspan data-currency-label>XRP</tspan></tspan></text>
+      </g>
+
+      <!-- Server -->
+      <g class="node node-server" id="node-server" data-actor="server"
+         transform="translate(380,260)">
+        <rect class="node-bg" width="140" height="80" rx="6" />
+        <text class="node-title" x="14" y="24">Inference Server</text>
+        <text class="node-addr" x="14" y="44" data-field="address">…</text>
+        <text class="node-bal" x="14" y="64"><tspan data-field="balance">—</tspan>
+          <tspan class="node-bal-suffix"> <tspan data-currency-label>XRP</tspan></tspan></text>
+      </g>
+
+      <!-- Anthropic (external, dims when unused) -->
+      <g class="node node-external node-dim" id="node-anthropic"
+         transform="translate(560,60)">
+        <rect class="node-bg" width="180" height="60" rx="6" />
+        <text class="node-title" x="14" y="22">Anthropic</text>
+        <text class="node-detail" x="14" y="40">external LLM</text>
+        <text class="node-detail" x="14" y="54" data-field="calls">0 calls this session</text>
+      </g>
+
+      <!-- CERT (the star — initially empty, materializes on mint).
+           Width widened from 130 → 165 so the "DerivationCert" title and
+           uor-address truncation fit without clipping the right edge. -->
+      <g class="node node-cert empty" id="node-cert"
+         transform="translate(600,260)">
+        <rect class="node-bg" width="165" height="80" rx="6" />
+        <text class="node-title" x="14" y="24">DerivationCert</text>
+        <text class="node-detail" x="14" y="44" data-field="cert_uor">no cert minted</text>
+        <text class="node-detail" x="14" y="60" data-field="hit_count"></text>
+      </g>
+
+      <!-- UOR Foundation MCP (witness — top right) -->
+      <g class="node node-witness" id="node-uor-mcp"
+         transform="translate(880,80)">
+        <rect class="node-bg" width="220" height="60" rx="6" />
+        <text class="node-title" x="14" y="22">UOR Foundation MCP</text>
+        <text class="node-detail" x="14" y="40">canonical reference</text>
+        <text class="node-detail" x="14" y="54" data-field="receipts">0 receipts L1</text>
+      </g>
+
+      <!-- Hedera HCS (witness — bottom right). Shows the seq number of the
+           original cert anchor + a cumulative access count, so the audience
+           sees that "1 anchor serves N reads" — that IS the cost-efficiency
+           argument, made visible. -->
+      <g class="node node-witness" id="node-hcs"
+         transform="translate(880,440)">
+        <rect class="node-bg" width="220" height="72" rx="6" />
+        <text class="node-title" x="14" y="22">Hedera HCS</text>
+        <text class="node-detail" x="14" y="38" data-field="topic">topic …</text>
+        <text class="node-detail" x="14" y="52" data-field="latest_seq">no anchors yet</text>
+        <text class="node-detail" x="14" y="66" data-field="hits_witnessed" style="fill: var(--karakurenai);">0 access events</text>
+      </g>
+
+      <!-- Model NFT Owner (rightmost). Widened to 210px so the LLM NFT name
+           fits on a single line. data-actor MUST be present so renderActors()
+           + applyOptimisticBalance() can find the node for royalty updates. -->
+      <g class="node node-owner" id="node-owner" data-actor="model_owner"
+         transform="translate(990,260)">
+        <rect class="node-bg" width="210" height="80" rx="6" />
+        <text class="node-title node-title-compact" x="14" y="24" data-field="model_name">Model NFT Owner</text>
+        <text class="node-addr" x="14" y="44" data-field="address">…</text>
+        <text class="node-bal" x="14" y="64"><tspan data-field="balance">—</tspan>
+          <tspan class="node-bal-suffix"> <tspan data-currency-label>XRP</tspan> (royalties)</tspan></text>
+      </g>
+
+    </g>
+
+    <!-- Floating edge labels (settlement amounts + witness labels).
+         Positions tuned so each label sits along its edge midpoint without
+         overlapping a node's bounding box. -->
+    <g id="edge-labels">
+      <text class="edge-label" id="label-edge-agent-a-to-server"
+            x="305" y="245">—</text>
+      <text class="edge-label" id="label-edge-agent-b-to-server"
+            x="305" y="358">—</text>
+      <text class="edge-label" id="label-edge-server-to-owner"
+            x="880" y="288">royalty</text>
+      <text class="edge-label" id="label-edge-cert-to-hcs"
+            x="810" y="412">anchor</text>
+      <text class="edge-label" id="label-edge-cert-to-uor"
+            x="810" y="198">verify</text>
+    </g>
+  </svg>
+
+  <!-- Right sidebar: aggregate metrics, standards stack, recent events -->
+  <aside class="sidebar">
+
+    <section class="panel panel-metrics">
+      <h3>Agent Economy · Live</h3>
+      <div class="metric-grid">
+        <div class="metric">
+          <div class="metric-value" data-metric="total_inferences">0</div>
+          <div class="metric-label">inferences</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value" data-metric="cache_hit_rate_pct">0%</div>
+          <div class="metric-label">cache hit rate</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value" data-metric="total_rlusd_volume">0.00</div>
+          <div class="metric-label"><span data-currency-label>XRP</span> volume</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value" data-metric="total_royalty_paid">0.00</div>
+          <div class="metric-label">royalty distributed</div>
+        </div>
+      </div>
+      <div class="metric-flat">
+        <span>Anthropic calls saved by cache:</span>
+        <span data-metric="anthropic_calls_saved_by_cache">0</span>
+      </div>
+      <div class="metric-flat metric-cost">
+        <span>Anthropic spend (actual):</span>
+        <span data-metric="anthropic_spend_actual">$0.0000</span>
+      </div>
+      <div class="metric-flat metric-cost metric-cost-saved">
+        <span>Saved by cache:</span>
+        <span data-metric="anthropic_spend_saved">$0.0000</span>
+      </div>
+    </section>
+
+    <section class="panel panel-standards">
+      <h3>Standards Stack</h3>
+      <ol class="stack">
+        <li>
+          <span class="stack-name">VTEAI</span>
+          <span class="stack-detail">ERC draft · authored by Maura Clark · CC0</span>
+        </li>
+        <li>
+          <span class="stack-name">UOR-ADDR-1</span>
+          <span class="stack-detail">Foundation-adopted · co-authored · live byte-identity ✓</span>
+        </li>
+        <li>
+          <span class="stack-name">Prism framework</span>
+          <span class="stack-detail">UOR Foundation Rust substrate · uor-foundation-sdk</span>
+        </li>
+      </ol>
+      <div class="bloomberg-note">
+        Same cert chain underneath:
+        <strong>protocol</strong> + <strong>settlement</strong> + <strong>analytics</strong>.
+        Bloomberg for the agent economy.
+      </div>
+    </section>
+
+    <section class="panel panel-events">
+      <h3>Recent events</h3>
+      <ol id="event-list" class="event-list"></ol>
+    </section>
+
+  </aside>
+</main>
+
+<footer class="bottombar">
+  <div class="legend">
+    <span class="legend-item"><span class="legend-swatch swatch-pay"></span>RLUSD payment</span>
+    <span class="legend-item"><span class="legend-swatch swatch-mint"></span>cert mint / cache hit</span>
+    <span class="legend-item"><span class="legend-swatch swatch-anchor"></span>Hedera anchor</span>
+    <span class="legend-item"><span class="legend-swatch swatch-verify"></span>UOR verify</span>
+    <span class="legend-item"><span class="legend-swatch swatch-royalty"></span>royalty</span>
+  </div>
+  <div class="endpoint" id="uor-mcp-endpoint">mcp.uor.foundation/mcp</div>
+</footer>
+
+<script src="/static/dashboard.js"></script>
+</body>
+</html>

@@ -28,9 +28,11 @@ body.pitch-body {
   font-size: 17px;
   line-height: 1.55;
 
-  /* Body is the scroll container. Proximity snap (not mandatory) so long
-     sections scroll naturally without the snap forcibly clipping content. */
-  scroll-snap-type: y proximity;
+  /* Mandatory snap forces each section to align to viewport top — no
+     in-between states where two sections share the screen. Sections that
+     happen to be taller than 100vh still scroll internally before the snap
+     advances to the next. */
+  scroll-snap-type: y mandatory;
   overflow-y: auto;
   height: 100vh;
 }
@@ -42,7 +44,10 @@ body.pitch-body {
 .pitch-section {
   min-height: 100vh;
   scroll-snap-align: start;
-  padding: 80px 80px;
+  /* More generous top/bottom padding gives each section its own "page" feel
+     even when content extends past 100vh — prevents the previous section's
+     footer from crowding the next section's eyebrow + headline. */
+  padding: 100px 80px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -51,6 +56,18 @@ body.pitch-body {
   justify-content: flex-start;
   position: relative;
 }
+
+/* Alternating backgrounds so adjacent sections never look like one
+   continuous wall of text. Light/cream/light pattern reads as distinct
+   slides without needing extra dividers. */
+.pitch-section-howitworks      { background: var(--pitch-paper); }
+.pitch-section-stack-tech      { background: var(--pitch-washi); }
+.pitch-section-math            { background: var(--pitch-paper); }
+.pitch-section-standards       { background: var(--pitch-washi); }
+.pitch-section-dnft            { background: var(--pitch-paper); }
+.pitch-section-vteai           { background: var(--pitch-washi); }
+.pitch-section-auditchain      { background: var(--pitch-paper); }
+.pitch-section-stack           { background: var(--pitch-washi); }
 
 /* Hero / pull-quote sections — center the content because they're intentionally
    short and the slide-like feel works. */

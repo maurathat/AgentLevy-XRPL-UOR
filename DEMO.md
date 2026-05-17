@@ -6,7 +6,8 @@
 
 | Where | What you'll see |
 |---|---|
-| **Pitch deck (Vercel, static)** | `https://royaltai-deck-y40ab4g0s-maurathats-projects.vercel.app` — full deck, all 11 sections, dashboard showing post-demo snapshot |
+| **▶ Live demo video (Loom, ~2 min)** | https://www.loom.com/share/fb8499e5300b41c18072d36dc66af30a — Maura runs the full Mainnet demo end-to-end |
+| **Pitch deck (Vercel, static)** | `https://royaltai-deck-y40ab4g0s-maurathats-projects.vercel.app` — full deck, all 11 sections, dashboard showing post-demo snapshot, **Loom embedded at top** |
 | **Live Mainnet dNFT (Bithomp)** | https://bithomp.com/explorer/000800005C0D75FC05056348A634785AC427B30E2AAD1A60B2A688C20636D728 |
 | **Live Mainnet dNFT (XRPL Livenet)** | https://livenet.xrpl.org/nft/000800005C0D75FC05056348A634785AC427B30E2AAD1A60B2A688C20636D728 |
 | **dNFT metadata (full schema)** | https://raw.githubusercontent.com/maurathat/AgentLevy-XRPL-UOR/main/fixtures/model-card.json |

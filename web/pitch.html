@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RoyaltAI · Internet of Agents Build Day, May 16 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=DM+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/dashboard.css">
+  <link rel="stylesheet" href="/static/pitch.css">
+</head>
+<body class="pitch-body">
+<div style="position: fixed; top: 0; left: 0; right: 0; background: #283A8C; color: #F4EFE4; padding: 6px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.04em; z-index: 1000; text-align: center; border-bottom: 1px solid #B0223A;">
+  Static deck snapshot · live demo runs on the booth machine ·
+  <a href="https://github.com/maurathat/AgentLevy-XRPL-UOR" target="_blank" style="color: #F4EFE4; text-decoration: underline;">github.com/maurathat/AgentLevy-XRPL-UOR</a> ·
+  <a href="https://bithomp.com/explorer/000800005C0D75FC05056348A634785AC427B30E2AAD1A60B2A688C20636D728" target="_blank" style="color: #F4EFE4; text-decoration: underline;">live NFT on Mainnet ↗</a>
+</div>
+
+<!-- ========================================================
+     SECTION 1 — Live demo (the dashboard embedded directly)
+     ======================================================== -->
+<section class="pitch-section pitch-section-demo">
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">●</span>
+      <span class="brand-name">RoyaltAI</span>
+      <span class="brand-tagline">Live Inference Economy</span>
+    </div>
+    <div class="status">
+      <span class="status-dot" id="live-dot"></span>
+      <span id="status-text">connecting…</span>
+      <span class="status-sep">·</span>
+      <span id="seq-counter">seq 0</span>
+    </div>
+  </header>
+
+  <div class="request-banner" id="request-banner">
+    <div class="request-banner-label">CURRENT REQUEST</div>
+    <div class="request-banner-prompt" id="request-banner-prompt">awaiting first request…</div>
+    <div class="request-banner-meta">
+      <span class="request-banner-uor"><span class="meta-label">UOR address</span> <span id="request-banner-uor">—</span></span>
+      <span class="request-banner-tier" id="request-banner-tier">—</span>
+    </div>
+  </div>
+
+  <main class="canvas">
+    <svg id="graph" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid meet">
+      <g id="edges">
+        <line class="edge edge-pay" id="edge-agent-a-to-server" x1="200" y1="180" x2="380" y2="280" data-edge="agent_a-server" />
+        <line class="edge edge-pay" id="edge-agent-b-to-server" x1="200" y1="420" x2="380" y2="320" data-edge="agent_b-server" />
+        <line class="edge edge-call" id="edge-server-to-anthropic" x1="520" y1="270" x2="640" y2="120" data-edge="server-anthropic" />
+        <line class="edge edge-mint" id="edge-server-to-cert" x1="520" y1="300" x2="600" y2="300" data-edge="server-cert" />
+        <line class="edge edge-anchor" id="edge-cert-to-hcs" x1="730" y1="330" x2="880" y2="460" data-edge="cert-hcs" />
+        <line class="edge edge-verify" id="edge-cert-to-uor" x1="730" y1="270" x2="880" y2="140" data-edge="cert-uor" />
+        <line class="edge edge-royalty" id="edge-server-to-owner" x1="520" y1="320" x2="990" y2="300" data-edge="server-owner" />
+      </g>
+      <g id="nodes">
+        <g class="node node-agent" id="node-agent-a" data-actor="agent_a" transform="translate(80,140)">
+          <rect class="node-bg" width="220" height="80" rx="6" />
+          <text class="node-title" x="14" y="24">Agent A</text>
+          <text class="node-addr" x="14" y="44" data-field="address">no wallet yet</text>
+          <text class="node-bal" x="14" y="64"><tspan data-field="balance">—</tspan>
+            <tspan class="node-bal-suffix"> <tspan data-currency-label>XRP</tspan></tspan></text>
+        </g>
+        <g class="node node-agent" id="node-agent-b" data-actor="agent_b" transform="translate(80,380)">
+          <rect class="node-bg" width="220" height="80" rx="6" />
+          <text class="node-title" x="14" y="24">Agent B</text>
+          <text class="node-addr" x="14" y="44" data-field="address">no wallet yet</text>
+          <text class="node-bal" x="14" y="64"><tspan data-field="balance">—</tspan>
+            <tspan class="node-bal-suffix"> <tspan data-currency-label>XRP</tspan></tspan></text>
+        </g>
+        <g class="node node-server" id="node-server" data-actor="server" transform="translate(380,260)">
+          <rect class="node-bg" width="140" height="80" rx="6" />
+          <text class="node-title" x="14" y="24">Inference Server</text>
+          <text class="node-addr" x="14" y="44" data-field="address">…</text>
+          <text class="node-bal" x="14" y="64"><tspan data-field="balance">—</tspan>
+            <tspan class="node-bal-suffix"> <tspan data-currency-label>XRP</tspan></tspan></text>
+        </g>
+        <g class="node node-external node-dim" id="node-anthropic" transform="translate(560,60)">
+          <rect class="node-bg" width="180" height="60" rx="6" />
+          <text class="node-title" x="14" y="22">Anthropic</text>
+          <text class="node-detail" x="14" y="40">external LLM</text>
+          <text class="node-detail" x="14" y="54" data-field="calls">0 calls this session</text>
+        </g>
+        <g class="node node-cert empty" id="node-cert" transform="translate(600,260)">
+          <rect class="node-bg" width="130" height="80" rx="6" />
+          <text class="node-title" x="14" y="24">DerivationCert</text>
+          <text class="node-detail" x="14" y="44" data-field="cert_uor">no cert minted</text>
+          <text class="node-detail" x="14" y="60" data-field="hit_count"></text>
+        </g>
+        <g class="node node-witness" id="node-uor-mcp" transform="translate(880,80)">
+          <rect class="node-bg" width="220" height="60" rx="6" />
+          <text class="node-title" x="14" y="22">UOR Foundation MCP</text>
+          <text class="node-detail" x="14" y="40">canonical reference</text>
+          <text class="node-detail" x="14" y="54" data-field="receipts">0 receipts L1</text>
+        </g>
+        <g class="node node-witness" id="node-hcs" transform="translate(880,440)">
+          <rect class="node-bg" width="220" height="72" rx="6" />
+          <text class="node-title" x="14" y="22">Hedera HCS</text>
+          <text class="node-detail" x="14" y="38" data-field="topic">topic …</text>
+          <text class="node-detail" x="14" y="52" data-field="latest_seq">no anchors yet</text>
+          <text class="node-detail" x="14" y="66" data-field="hits_witnessed" style="fill: var(--karakurenai);">0 access events</text>
+        </g>
+        <g class="node node-owner" id="node-owner" data-actor="model_owner" transform="translate(990,260)">
+          <rect class="node-bg" width="210" height="80" rx="6" />
+          <text class="node-title node-title-compact" x="14" y="24" data-field="model_name">Model NFT Owner</text>
+          <text class="node-addr" x="14" y="44" data-field="address">…</text>
+          <text class="node-bal" x="14" y="64"><tspan data-field="balance">—</tspan>
+            <tspan class="node-bal-suffix"> <tspan data-currency-label>XRP</tspan> (royalties)</tspan></text>
+        </g>
+      </g>
+      <g id="edge-labels">
+        <text class="edge-label" id="label-edge-agent-a-to-server" x="305" y="245">—</text>
+        <text class="edge-label" id="label-edge-agent-b-to-server" x="305" y="358">—</text>
+        <text class="edge-label" id="label-edge-server-to-owner" x="880" y="288">royalty</text>
+        <text class="edge-label" id="label-edge-cert-to-hcs" x="810" y="412">anchor</text>
+        <text class="edge-label" id="label-edge-cert-to-uor" x="810" y="198">verify</text>
+      </g>
+    </svg>
+
+    <aside class="sidebar">
+      <section class="panel panel-metrics">
+        <h3>Agent Economy · Live</h3>
+        <div class="metric-grid">
+          <div class="metric"><div class="metric-value" data-metric="total_inferences">0</div><div class="metric-label">inferences</div></div>
+          <div class="metric"><div class="metric-value" data-metric="cache_hit_rate_pct">0%</div><div class="metric-label">cache hit rate</div></div>
+          <div class="metric"><div class="metric-value" data-metric="total_rlusd_volume">0.0000</div><div class="metric-label"><span data-currency-label>XRP</span> volume</div></div>
+          <div class="metric"><div class="metric-value" data-metric="total_royalty_paid">0.0000</div><div class="metric-label">royalty distributed</div></div>
+        </div>
+        <div class="metric-flat"><span>Anthropic calls saved by cache:</span><span data-metric="anthropic_calls_saved_by_cache">0</span></div>
+        <div class="metric-flat metric-cost"><span>Anthropic spend (actual):</span><span data-metric="anthropic_spend_actual">$0.0000</span></div>
+        <div class="metric-flat metric-cost metric-cost-saved"><span>Saved by cache:</span><span data-metric="anthropic_spend_saved">$0.0000</span></div>
+      </section>
+
+      <section class="panel panel-standards">
+        <h3>Standards Stack</h3>
+        <ol class="stack">
+          <li><span class="stack-name">VTEAI</span><span class="stack-detail">ERC draft · authored by Maura Clark · CC0</span></li>
+          <li><span class="stack-name">UOR-ADDR-1</span><span class="stack-detail">Foundation-adopted · co-authored · live byte-identity ✓</span></li>
+          <li><span class="stack-name">Prism framework</span><span class="stack-detail">UOR Foundation Rust substrate · uor-foundation-sdk</span></li>
+        </ol>
+        <div class="bloomberg-note">Same cert chain underneath: <strong>protocol</strong> + <strong>settlement</strong> + <strong>analytics</strong>. Bloomberg for the agent economy.</div>
+      </section>
+
+      <section class="panel panel-events">
+        <h3>Recent events</h3>
+        <ol id="event-list" class="event-list"></ol>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="bottombar">
+    <div class="legend">
+      <span class="legend-item"><span class="legend-swatch swatch-pay"></span>XRP payment</span>
+      <span class="legend-item"><span class="legend-swatch swatch-mint"></span>cert mint / cache hit</span>
+      <span class="legend-item"><span class="legend-swatch swatch-anchor"></span>Hedera anchor</span>
+      <span class="legend-item"><span class="legend-swatch swatch-verify"></span>UOR verify</span>
+      <span class="legend-item"><span class="legend-swatch swatch-royalty"></span>royalty</span>
+    </div>
+    <div class="endpoint" id="uor-mcp-endpoint">mcp.uor.foundation/mcp</div>
+  </footer>
+
+  <div class="scroll-cue" aria-hidden="true">scroll for the pitch ↓</div>
+</section>
+
+<!-- ========================================================
+     SECTION 2 — The thesis
+     ======================================================== -->
+<section class="pitch-section pitch-section-thesis">
+  <div class="pitch-content">
+    <div class="eyebrow">The thesis</div>
+    <h2>The internet wasn't built for 100&nbsp;agents per human.</h2>
+    <p class="lede">
+      Coframe's site says it: <em>soon, for every human, 100 agents will use the internet.</em>
+      If every one of those agents has its own ChatGPT or Claude subscription, the economy collapses —
+      subscriptions don't scale to autonomous buyers. If they share memory via content-addressed receipts,
+      the economy works.
+    </p>
+    <p class="lede">
+      <strong>RoyaltAI</strong> is the protocol for that.
+      Pay-per-call AI inference with cryptographic memoization and royalty enforcement to model creators.
+      The first MCP-native trust layer for agent commerce.
+    </p>
+    <div class="thesis-three">
+      <div class="thesis-pill"><span class="num">1</span>Subscriptions break for autonomous agents.</div>
+      <div class="thesis-pill"><span class="num">2</span>The same answer paid for repeatedly is a cost-explosion at 100×.</div>
+      <div class="thesis-pill"><span class="num">3</span>Content-addressed memory + per-call payment = the only economics that scales.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     SECTION 3 — How it works (3-step diagram)
+     ======================================================== -->
+<section class="pitch-section pitch-section-howitworks">
+  <div class="pitch-content">
+    <div class="eyebrow">How it works</div>
+    <h2>Three beats. Same answer, second agent, tenth the cost.</h2>
+    <div class="howitworks-flow">
+      <div class="how-step">
+        <div class="how-step-num">1</div>
+        <h3>Agent A pays</h3>
+        <p>Agent A submits a request. Server computes the UOR address from <code>model</code> + <code>prompt</code> + <code>hour bucket</code> via JCS-RFC8785 + SHA-256. 402 quote: <strong>0.010 XRP</strong>.</p>
+        <p>Agent pays on XRPL with the UOR address in the memo. Server verifies the payment, runs Anthropic, signs a <code>DerivationCert</code>, anchors to Hedera HCS, routes 50&nbsp;% royalty to the model NFT owner.</p>
+      </div>
+      <div class="how-step-arrow">→</div>
+      <div class="how-step">
+        <div class="how-step-num">2</div>
+        <h3>Agent B asks the same question</h3>
+        <p>Different wallet. They've never heard of Agent&nbsp;A. But the canonicalization is deterministic per <strong>UOR-ADDR-1</strong>, so both agents arrive at the server with the <em>same</em> UOR address.</p>
+        <p>Server checks its cert store: <strong>cache hit</strong>. 402 quote: <strong>0.001 XRP</strong> — ten times cheaper. No Anthropic call. The model creator still earns royalty on the cache hit.</p>
+      </div>
+      <div class="how-step-arrow">→</div>
+      <div class="how-step">
+        <div class="how-step-num">3</div>
+        <h3>The audit holds</h3>
+        <p>Three independent witnesses bind the cert: <strong>XRPL</strong> settles, <strong>Hedera HCS</strong> consensus-timestamps, <strong>UOR Foundation MCP</strong> signs an ed25519 receipt that the address matches the canonical reference.</p>
+        <p>Anyone with public keys can recompute the chain. No vendor needs to still exist. The audit verifies in 2046 the same way it verifies today.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     SECTION 3.5 — Tech stack (what each piece is)
+     ======================================================== -->
+<section class="pitch-section pitch-section-stack-tech">
+  <div class="pitch-content">
+    <div class="eyebrow">Under the hood</div>
+    <h2>Open primitives, end to end. No proprietary glue.</h2>
+    <p class="lede">
+      Every component is either a public chain, an open standard, or open-source code I wrote.
+      Nothing is locked behind a vendor — the audit verifies in 2046 the same way it verifies today.
+    </p>
+
+    <div class="techstack-grid">
+
+      <div class="techstack-col">
+        <div class="techstack-col-label">Settlement</div>
+        <ul class="techstack-list">
+          <li>
+            <strong>XRPL Mainnet</strong>
+            <span>Real-money payments, sub-3-second finality, fees in fractions of a cent</span>
+          </li>
+          <li>
+            <strong>RLUSD</strong>
+            <span>Ripple-issued USD stablecoin — settlement currency, no FX risk</span>
+          </li>
+          <li>
+            <strong>HTTP 402 (x402-style)</strong>
+            <span>Pay-per-call: 402 quote → submit payment → retry with txid proof</span>
+          </li>
+          <li>
+            <strong>XLS-20 dNFT</strong>
+            <span>Model identity NFT — royalty routes to whoever holds the token</span>
+          </li>
+          <li>
+            <strong>XLS-100 SmartEscrow <em>(Phase 2.8)</em></strong>
+            <span>Atomic finish-function settlement — payment releases on cert match</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="techstack-col">
+        <div class="techstack-col-label">Provenance</div>
+        <ul class="techstack-list">
+          <li>
+            <strong>DerivationCert</strong>
+            <span>Ed25519-signed receipt with input + output content addresses</span>
+          </li>
+          <li>
+            <strong>UOR-ADDR-1</strong>
+            <span>Foundation-adopted content addressing — JCS-RFC8785 + NFC + SHA-256</span>
+          </li>
+          <li>
+            <strong>Hedera HCS</strong>
+            <span>Tamper-evident consensus timestamp anchor — topic 0.0.8856047</span>
+          </li>
+          <li>
+            <strong>UOR Foundation MCP</strong>
+            <span>Live byte-identity verification — every cert cross-checked against the reference</span>
+          </li>
+          <li>
+            <strong>Anthropic Claude Haiku 4.5</strong>
+            <span>The inference model — but the cert chain works with any LLM</span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <p class="techstack-note">
+      Three independent witnesses on every cert: <strong>XRPL</strong> settles, <strong>Hedera</strong> consensus-timestamps,
+      <strong>UOR Foundation MCP</strong> signs an ed25519 receipt that the address matches the canonical reference.
+      No single vendor needs to still exist for the chain to verify.
+    </p>
+  </div>
+</section>
+
+<!-- ========================================================
+     SECTION 4 — The math
+     ======================================================== -->
+<section class="pitch-section pitch-section-math">
+  <div class="pitch-content">
+    <div class="eyebrow">The math</div>
+    <h2>One Anthropic call, ten served queries, ninety percent saved.</h2>
+    <div class="math-grid">
+      <div class="math-side math-side-bad">
+        <div class="math-side-label">Without RoyaltAI</div>
+        <div class="math-stat">$0.0150</div>
+        <div class="math-detail">10 agents × 1 Anthropic call each</div>
+        <ul>
+          <li>Every agent pays full inference cost</li>
+          <li>Model creator: no royalty mechanism</li>
+          <li>Audit: vendor-trusted database logs</li>
+        </ul>
+      </div>
+      <div class="math-vs">vs</div>
+      <div class="math-side math-side-good">
+        <div class="math-side-label">With RoyaltAI</div>
+        <div class="math-stat">$0.0285</div>
+        <div class="math-detail">1 Anthropic call + 9 cache hits, royalty routed on all 10</div>
+        <ul>
+          <li>1 cache miss · 9 cache hits · 90&nbsp;% hit rate</li>
+          <li>Model creator: earns royalty on every served call, on-chain</li>
+          <li>Audit: XRPL + Hedera + UOR Foundation MCPS receipt</li>
+        </ul>
+      </div>
+    </div>
+    <p class="math-bottomline">
+      <strong>Scale to 100K inferences/day on a hot query</strong> and the savings are real budget-meeting numbers.
+      The model creator earns royalty 100,000 times instead of 1 — Anthropic gets a perpetual revenue stream on
+      cached output they otherwise wouldn't see.
+    </p>
+  </div>
+</section>
+
+<!-- ========================================================
+     SECTION 5 — Standards moat
+     ======================================================== -->
+<section class="pitch-section pitch-section-standards">
+  <div class="pitch-content">
+    <div class="eyebrow">Defensibility</div>
+    <h2>Foundation-backed standard, not a startup spec.</h2>
+    <p class="lede">
+      Two standards I authored, plus the substrate I contribute to.
+      The reference implementation is in the repo. Anyone who wants standards-aligned
+      verifiable agent commerce has to implement specs I wrote on a substrate I co-maintain.
+    </p>
+    <div class="standards-grid">
+      <a class="standards-card" href="https://github.com/maurathat/verifiable-agent-settlement-standards/blob/main/pitch/VTEAI-DRAFT.md" target="_blank" rel="noreferrer">
+        <div class="standards-card-tag">ERC DRAFT · CC0 · APRIL 2026</div>
+        <div class="standards-card-title">VTEAI <span class="standards-tag-author">we authored</span></div>
+        <div class="standards-card-subtitle">Verified Task Escrow + Attestation Interface</div>
+        <div class="standards-card-cta">Read the draft ↗</div>
+      </a>
+      <a class="standards-card" href="https://uor-foundation.github.io/UOR-Framework/" target="_blank" rel="noreferrer">
+        <div class="standards-card-tag">UOR FOUNDATION · ADOPTED · MAY 2026</div>
+        <div class="standards-card-title">UOR-ADDR-1 <span class="standards-tag-author">we authored</span></div>
+        <div class="standards-card-subtitle">Universal Object Reference Address</div>
+        <div class="standards-card-cta">Browse the reference ↗ &nbsp;&nbsp; <span style="opacity:0.6">·</span> &nbsp;&nbsp; <a href="https://github.com/UOR-Foundation/uor-addr-1" target="_blank" rel="noreferrer" style="color:inherit; text-decoration:underline;">Spec repo ↗</a></div>
+      </a>
+      <a class="standards-card" href="https://github.com/UOR-Foundation/prism" target="_blank" rel="noreferrer">
+        <div class="standards-card-tag">UOR FOUNDATION · MIT · VENDORED</div>
+        <div class="standards-card-title">PRISM</div>
+        <div class="standards-card-subtitle">Algebraic content-addressed coordinate system</div>
+        <div class="standards-card-cta">Source ↗</div>
+      </a>
+    </div>
+    <p class="standards-note">
+      Verified live byte-identical against <code>mcp.uor.foundation/encode_address</code>.
+      Not "interoperable" — <strong>byte-identical</strong>. Same SHA-256 over same canonical bytes,
+      cross-checked against the
+      <a href="https://uor-foundation.github.io/UOR-Framework/" target="_blank" rel="noreferrer" style="color: var(--pitch-karakurenai); text-decoration: underline;">Foundation's canonical Rust implementation</a>
+      in May 2026.
+    </p>
+  </div>
+</section>
+
+<!-- ========================================================
+     SECTION 5.5 — Reference: dNFT schema
+     ======================================================== -->
+<section class="pitch-section pitch-section-reference pitch-section-dnft">
+  <div class="pitch-content">
+    <div class="eyebrow">Reference · dNFT schema</div>
+    <h2>The model NFT carries a typed schema, not a vibes-based JSON.</h2>
+    <p class="lede">
+      Eight dynamic fields, signed standards refs, and a snapshot of mutable state.
+      Any marketplace can render this. Live on Mainnet now.
+    </p>
+
+    <div class="ref-id-bar">
+      <div class="ref-id-cell">
+        <div class="ref-id-label">NFTokenID</div>
+        <div class="ref-id-value"><code>000800005C0D75FC05056348A634785AC427B30E2AAD1A60B2A688C20636D728</code></div>
+      </div>
+      <div class="ref-id-cell">
+        <div class="ref-id-label">Owner wallet</div>
+        <div class="ref-id-value"><code>r9PjHvj8kKwA61fTMx5ANpH6BrGmQdrQgf</code></div>
+      </div>
+    </div>
+
+    <div class="ref-id-actions">
+      <a href="https://bithomp.com/explorer/000800005C0D75FC05056348A634785AC427B30E2AAD1A60B2A688C20636D728" target="_blank" rel="noreferrer">View on Bithomp ↗</a>
+      <a href="https://raw.githubusercontent.com/maurathat/AgentLevy-XRPL-UOR/main/fixtures/model-card.json" target="_blank" rel="noreferrer">Raw metadata JSON ↗</a>
+      <a href="https://livenet.xrpl.org/nft/000800005C0D75FC05056348A634785AC427B30E2AAD1A60B2A688C20636D728" target="_blank" rel="noreferrer">XRPL Livenet ↗</a>
+    </div>
+
+    <div class="dnft-grid">
+      <div class="dnft-row">
+        <span class="dnft-key">royalty</span>
+        <span class="dnft-val">rate_bps · split (server / model_owner) · currency · settlement chain · owner wallet</span>
+      </div>
+      <div class="dnft-row">
+        <span class="dnft-key">usage_restrictions</span>
+        <span class="dnft-val">allowed modalities · disallowed use cases · geographic limits · rate limit per caller per day · max tokens per call</span>
+      </div>
+      <div class="dnft-row">
+        <span class="dnft-key">compliance_attestations</span>
+        <span class="dnft-val">array of {scheme, version, scope, uri} — current: Anthropic Constitutional AI + UOR Foundation byte-identity</span>
+      </div>
+      <div class="dnft-row">
+        <span class="dnft-key">parent_model_nft</span>
+        <span class="dnft-val">NFTokenID of the predecessor model (null for genesis mints) — enables versioned royalty inheritance</span>
+      </div>
+      <div class="dnft-row">
+        <span class="dnft-key">version_pointer</span>
+        <span class="dnft-val">provider-namespaced model version, e.g. <code>anthropic:claude-haiku-4-5@2026-04</code></span>
+      </div>
+      <div class="dnft-row">
+        <span class="dnft-key">license_terms_uri</span>
+        <span class="dnft-val">URL to the legal license governing royalty payouts and usage</span>
+      </div>
+      <div class="dnft-row">
+        <span class="dnft-key">audit_anchor</span>
+        <span class="dnft-val">Hedera HCS topic id where cert content-addresses are anchored (independent witness)</span>
+      </div>
+      <div class="dnft-row">
+        <span class="dnft-key">dynamic_state</span>
+        <span class="dnft-val">snapshot + endpoint for mutable counters (inferences_total, revenue_total_rlusd, royalties_paid_rlusd, cache_hit_rate, unique_callers)</span>
+      </div>
+    </div>
+
+    <p class="ref-note">
+      Schema version <code>royaltai-dnft/0.1</code>. v0.2 will use XLS-46d
+      <code>tfMutable</code> to push state-counter updates directly into the on-chain URI itself,
+      removing the off-chain dependency.
+    </p>
+  </div>
+</section>
+
+<!-- ========================================================
+     SECTION 5.6 — Reference: VTEAI settlement standard
+     ======================================================== -->
+<section class="pitch-section pitch-section-reference pitch-section-vteai">
+  <div class="pitch-content">
+    <div class="eyebrow">Reference · VTEAI</div>
+    <h2>Verified Task Escrow + Attestation Interface.</h2>
+    <p class="lede">
+      The ERC draft I authored in April. Defines the on-chain settlement interface
+      for agent commerce — escrow a payment, commit to a task hash, release on
+      verifier attestation. Chain-neutral. CC0-licensed. The standard underneath
+      both AgentLevy on Base and RoyaltAI on XRPL.
+    </p>
+
+    <div class="vteai-grid">
+
+      <div class="vteai-col">
+        <div class="vteai-col-label">What VTEAI standardizes</div>
+        <ul class="vteai-list">
+          <li>
+            <strong>TaskSpec hash</strong>
+            <span>content commitment to acceptance criteria, verification manifest</span>
+          </li>
+          <li>
+            <strong>Attestation hash</strong>
+            <span>verifier-signed proof that work matched the spec</span>
+          </li>
+          <li>
+            <strong>Settlement interface</strong>
+            <span>escrow → commit → release pattern; payout method-agnostic (push or pull)</span>
+          </li>
+          <li>
+            <strong>Composability</strong>
+            <span>verifier trust model is implementation-specific — deterministic server, TEE, decentralized verifier, FDC, all allowed</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="vteai-col">
+        <div class="vteai-col-label">Reference implementations</div>
+        <ul class="vteai-list">
+          <li>
+            <strong>AgentLevy on Base</strong>
+            <span>KYC compliance · HashlockEscrow Solidity contract · ~100 LOC · ✓ Deployed Sepolia</span>
+          </li>
+          <li>
+            <strong>RoyaltAI on XRPL ← you're watching this one</strong>
+            <span>Pay-per-call inference · Native XRPL escrow + RLUSD · ✓ Live on Mainnet today</span>
+          </li>
+          <li>
+            <strong>Marketplace layer (future)</strong>
+            <span>General-purpose agent jobs · ~5-day build on the existing substrate · scoped in <code>docs/PHASE_5</code></span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="vteai-status">
+      <div class="vteai-status-row">
+        <span class="vteai-status-key">UOR-ADDR-1 reference</span>
+        <span class="vteai-status-value"><strong>SHOULD</strong> (upgraded from MAY in May 2026 update — Foundation-adopted UOR-ADDR-1 is now the recommended canonicalization for cross-chain byte-identical task spec hashes)</span>
+      </div>
+      <div class="vteai-status-row">
+        <span class="vteai-status-key">Status</span>
+        <span class="vteai-status-value">ERC draft · author: Maura Clark · CC0 · April 2026</span>
+      </div>
+      <div class="vteai-status-row">
+        <span class="vteai-status-key">Spec</span>
+        <span class="vteai-status-value"><a href="https://github.com/maurathat/AgentLevy-XRPL-UOR/blob/main/pitch/VTEAI-DRAFT.md" target="_blank" rel="noreferrer">github.com/maurathat/AgentLevy-XRPL-UOR/blob/main/pitch/VTEAI-DRAFT.md</a></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     SECTION 5.7 — Reference: Audit chain anatomy
+     ======================================================== -->
+<section class="pitch-section pitch-section-reference pitch-section-auditchain">
+  <div class="pitch-content">
+    <div class="eyebrow">Reference · audit chain anatomy</div>
+    <h2>Three independent witnesses on every cert. Verifiable in 2046 from public keys alone.</h2>
+
+    <div class="audit-chain-diagram">
+
+      <div class="audit-node">
+        <div class="audit-node-label">Request</div>
+        <div class="audit-node-content">
+          <code>JCS(deep_NFC({ model, prompt, hour_bucket }))</code>
+          <div class="audit-node-meta">→ <code>sha256:&lt;64 hex&gt;</code> = request UOR address</div>
+        </div>
+      </div>
+
+      <div class="audit-arrow">↓ signed by inference server</div>
+
+      <div class="audit-node audit-node-primary">
+        <div class="audit-node-label">DerivationCert</div>
+        <div class="audit-node-content">
+          Ed25519 signature over <code>{ request_uor, model_nft, response_bytes, timestamp }</code>
+          <div class="audit-node-meta">→ <code>cert UOR address</code></div>
+        </div>
+      </div>
+
+      <div class="audit-arrow">↓ anchored to three independent witnesses</div>
+
+      <div class="audit-witnesses">
+        <div class="audit-witness">
+          <div class="audit-witness-label">XRPL Mainnet</div>
+          <div class="audit-witness-detail">Payment txid records UOR address in memo. Real-money settlement is the witness.</div>
+        </div>
+        <div class="audit-witness">
+          <div class="audit-witness-label">Hedera HCS</div>
+          <div class="audit-witness-detail">Cert UOR submitted to topic <code>0.0.8856047</code>. Consensus timestamp + sequence number = tamper-evident ordering on a chain independent of XRPL.</div>
+        </div>
+        <div class="audit-witness">
+          <div class="audit-witness-label">UOR Foundation MCP</div>
+          <div class="audit-witness-detail">Live byte-identity check: server's computed address verified byte-equal to canonical Rust reference. ed25519 receipt signed by Foundation.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="audit-verification">
+      <div class="audit-verification-label">What a regulator does in 2046 to verify a 2026 cert</div>
+      <ol class="audit-verification-steps">
+        <li>Re-canonicalize the request bytes with JCS + NFC + SHA-256 (UOR-ADDR-1, 5 lines of Python).</li>
+        <li>Ed25519-verify the cert signature with the inference server's public key.</li>
+        <li>Hash the response bytes; confirm match against cert's output content address.</li>
+        <li>Pull Hedera HCS message at the recorded sequence number; confirm cert UOR address matches.</li>
+        <li>Pull XRPL transaction by txid; confirm memo contains the UOR address.</li>
+      </ol>
+      <p class="audit-verification-note">
+        <strong>No vendor needs to be online.</strong>
+        Anthropic could be acquired, AgentLevy could shut down, this server could be offline —
+        the cert chain still verifies because the witnesses are independent public ledgers and a foundation-adopted standard.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     SECTION 5.8 — The design insight (mental model handle for the room)
+     ======================================================== -->
+<section class="pitch-section pitch-section-insight">
+  <div class="pitch-content">
+    <div class="eyebrow">The design insight</div>
+    <h2>The agent doesn't search for the address — it <em>computes</em> it.</h2>
+
+    <div class="insight-body">
+      <p class="insight-lede">
+        Content addressing is deterministic by design. Same canonical input always
+        produces the same SHA-256. Agent A computes the address when it asks.
+        Agent B computes the same address when it asks. The server's cache lookup
+        is O(1) — no search, no discovery, no consensus needed.
+      </p>
+
+      <p class="insight-lede">
+        The only real discovery problem is <em>which server has the cert I want</em>.
+        That's solved by MCP servers acting as agent-native resolvers — the same way
+        DNS resolves URLs for human-driven browsers.
+      </p>
+    </div>
+
+    <div class="insight-handle">
+      <span>UOR-ADDR-1 is the <strong>URI</strong> of the Internet of Agents.</span>
+      <span>MCP is its <strong>DNS</strong>.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     SECTION 6 — Phase 4: Compliance Stack (the composition)
+     ======================================================== -->
+<section class="pitch-section pitch-section-stack">
+  <div class="pitch-content">
+    <div class="eyebrow">Phase 4 · The substrate composes</div>
+    <h2>Bolt this under a KYC workflow and every LLM call gets its own receipt.</h2>
+    <p class="lede">
+      Today's compliance audit proves the work happened. It cannot prove
+      <em>which model</em> produced the determination. Stack the inference cert chain
+      underneath the compliance cert chain — same UOR-ADDR-1 primitive at both layers —
+      and the regulator can walk from "this sanctions result was signed by this agent"
+      down to "this exact model produced this exact extraction, paid for in this exact
+      RLUSD transaction, with royalty routed to this exact model NFT."
+    </p>
+
+    <div class="stack-diagram">
+      <div class="stack-layer stack-layer-outer">
+        <div class="stack-layer-label">KYC engagement (Base)</div>
+        <div class="stack-layer-body">
+          TaskSpec → DerivationCert (compliance result) → HashlockEscrow releases USDC
+        </div>
+      </div>
+      <div class="stack-arrow">references by content address ↓</div>
+      <div class="stack-layer stack-layer-inner">
+        <div class="stack-layer-label">Inference layer (XRPL · what you saw above)</div>
+        <div class="stack-layer-body">
+          <div class="inner-chain">
+            <span class="inner-cell">cert: extract owners</span>
+            <span class="inner-cell">cert: screen owner A</span>
+            <span class="inner-cell cache">cert: screen owner B <em>(cache hit)</em></span>
+            <span class="inner-cell">cert: summarize result</span>
+          </div>
+          <div class="inner-meta">
+            Each cert: paid via RLUSD · royalty to model NFT owner · UOR-anchored ·
+            Hedera-witnessed
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stack-payoffs">
+      <div class="stack-payoff">
+        <div class="stack-payoff-label">Regulator</div>
+        Audit goes one layer deeper. Model swaps are detectable.
+        Re-verification works in 2030 with no vendor online.
+      </div>
+      <div class="stack-payoff">
+        <div class="stack-payoff-label">Model creator</div>
+        Mint an NFT, set royalty terms. Every enterprise inference auto-pays you
+        with cryptographic proof.
+      </div>
+      <div class="stack-payoff">
+        <div class="stack-payoff-label">Compliance buyer</div>
+        Cross-customer cache: Bank A's screen of "Maura Clark" becomes Bank B's
+        cache hit next month. Compliance becomes a market.
+      </div>
+    </div>
+
+    <p class="stack-buildnote">
+      <strong>Build cost:</strong> ~250 LOC. ~1–2 days, not 1 month.
+      The substrate already exists — both layers use UOR-ADDR-1, both already chain
+      certs via <code>input_addresses</code>. The integration is a client library,
+      not a new protocol.
+    </p>
+  </div>
+</section>
+
+<!-- ========================================================
+     SECTION 7 — The ask
+     ======================================================== -->
+<section class="pitch-section pitch-section-ask">
+  <div class="pitch-content">
+    <div class="eyebrow">Who · what · ask</div>
+    <h2>Maura Clark · UOR Foundation member · co-author of UOR-ADDR-1</h2>
+    <p class="lede">
+      The protocol is open — Apache 2.0, CC0, MIT-vendored.
+      The commercial layer is <strong>Kessai</strong> — enterprise SaaS, visualizer UI,
+      regulatory-evidence packs, channel licensing.
+    </p>
+    <div class="ask-grid">
+      <div class="ask-card">
+        <div class="ask-card-label">Repo</div>
+        <div class="ask-card-value"><a href="https://github.com/maurathat/AgentLevy-XRPL-UOR" target="_blank" rel="noreferrer">github.com/maurathat/AgentLevy-XRPL-UOR</a></div>
+      </div>
+      <div class="ask-card">
+        <div class="ask-card-label">Standards</div>
+        <div class="ask-card-value">
+          <a href="https://uor-foundation.github.io/UOR-Framework/" target="_blank" rel="noreferrer">uor-foundation.github.io/UOR-Framework</a><br>
+          <a href="https://github.com/UOR-Foundation/uor-addr-1" target="_blank" rel="noreferrer">UOR-Foundation/uor-addr-1</a>
+        </div>
+      </div>
+      <div class="ask-card">
+        <div class="ask-card-label">PRISM/UOR deep-dive</div>
+        <div class="ask-card-value"><a href="https://gamma.app/docs/PRISM-UOR-The-Coordinate-System-the-Agent-Economy-Has-Been-Missin-qe7y5ttqaundszz" target="_blank" rel="noreferrer">Gamma deck ↗</a></div>
+      </div>
+      <div class="ask-card">
+        <div class="ask-card-label">Raising · Hiring</div>
+        <div class="ask-card-value">Seed open · senior Python/TS · founding engineer · co-founder track</div>
+      </div>
+    </div>
+    <p class="ask-close">
+      <strong>Find me at the booth.</strong>
+      Live demo running at the top of this page — refresh, watch the chain settle in 30 seconds.
+    </p>
+  </div>
+</section>
+
+<script src="/static/dashboard.js"></script>
+</body>
+</html>

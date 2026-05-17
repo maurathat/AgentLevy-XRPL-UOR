@@ -1,0 +1,670 @@
+/* RoyaltAI dashboard — brand kit colors and typography from
+   pitch/agentlevy-demo-deck.md SLIDE 1 brand table. */
+
+:root {
+  --ruri: #283A8C;
+  --ruri-700: #1c2c70;
+  --ruri-300: #5a6db9;
+  --karakurenai: #B0223A;
+  --karakurenai-glow: rgba(176, 34, 58, 0.45);
+  --paper: #F6F7FA;
+  --washi: #F4EFE4;
+  --ink: #14172a;
+  --ink-soft: #4a4f6b;
+  --line: rgba(40, 58, 140, 0.18);
+  --line-strong: rgba(40, 58, 140, 0.55);
+
+  --pay: var(--ruri);
+  --mint: #2c8a55;     /* fresh green for new cert */
+  --hit: var(--karakurenai);
+  --anchor: #8a5a2c;   /* warm brown for Hedera */
+  --verify: #6b3aa3;   /* indigo-violet for UOR Foundation */
+  --royalty: #c98a18;  /* amber for royalty flow */
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.45;
+  overflow: hidden;
+}
+
+body { display: flex; flex-direction: column; }
+
+/* ============================================================ */
+/* Top bar                                                      */
+/* ============================================================ */
+
+.topbar {
+  flex: 0 0 auto;
+  height: 60px;
+  background: var(--ruri);
+  color: var(--washi);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  box-shadow: 0 1px 0 var(--ruri-700);
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.brand-mark {
+  color: var(--karakurenai);
+  font-size: 18px;
+  line-height: 1;
+  align-self: center;
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+}
+
+.brand-tagline {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 13px;
+  color: rgba(244, 239, 228, 0.7);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: rgba(244, 239, 228, 0.8);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #888;
+  display: inline-block;
+}
+
+.status-dot.live {
+  background: #4ade80;
+  box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.6);
+  animation: pulse 2s ease-out infinite;
+}
+
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.6); }
+  70%  { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+}
+
+.status-sep { opacity: 0.4; }
+
+/* ============================================================ */
+/* Request banner — current inference prompt + UOR addr         */
+/* ============================================================ */
+
+.request-banner {
+  flex: 0 0 auto;
+  background: var(--washi);
+  border-bottom: 1px solid var(--line);
+  padding: 12px 28px 14px;
+  display: grid;
+  grid-template-columns: 130px 1fr auto;
+  align-items: center;
+  gap: 18px;
+  transition: background 0.4s ease;
+}
+
+.request-banner.flash {
+  background: #ffffff;
+  box-shadow: 0 1px 0 rgba(40, 58, 140, 0.12) inset;
+  animation: request-banner-flash 1.2s ease-out;
+}
+
+@keyframes request-banner-flash {
+  0%   { background: #FFF5E8; }
+  100% { background: var(--washi); }
+}
+
+.request-banner-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ruri);
+}
+
+.request-banner-prompt {
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.35;
+  max-width: 720px;
+}
+
+.request-banner-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+
+.request-banner-uor .meta-label {
+  color: var(--ink-soft);
+  margin-right: 4px;
+}
+
+.request-banner-uor #request-banner-uor {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.request-banner-tier {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 3px;
+  background: rgba(40, 58, 140, 0.1);
+  color: var(--ruri);
+}
+
+.request-banner-tier.miss {
+  background: rgba(44, 138, 85, 0.12);
+  color: #1e6b3e;
+}
+
+.request-banner-tier.hit {
+  background: rgba(176, 34, 58, 0.12);
+  color: var(--karakurenai);
+}
+
+/* ============================================================ */
+/* Main canvas (graph + sidebar)                                */
+/* ============================================================ */
+
+.canvas {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  min-height: 0;
+}
+
+#graph {
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(ellipse at 50% 50%, #ffffff 0%, var(--paper) 70%, #eaecf3 100%);
+  border-right: 1px solid var(--line);
+}
+
+/* ============================================================ */
+/* Edges (lines)                                                */
+/* ============================================================ */
+
+.edge {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  opacity: 0;
+  transition: stroke 0.3s ease, stroke-width 0.3s ease;
+}
+
+.edge.active { opacity: 1; }
+
+/* Flash animation — retriggers every time activateEdge() is called, so even
+   edges already at opacity:1 get a visible pulse on each new event.
+   The line appears instantly at opacity:1 (so the connection is visible the
+   moment the event fires, before the connected node finishes its own fade-in)
+   and the stroke-width pulses from 6 → 2.5 for the "alive" feel. */
+.edge.flashing {
+  animation: edge-flash 0.9s ease-out;
+}
+
+@keyframes edge-flash {
+  0%   { opacity: 1; stroke-width: 6; }
+  100% { opacity: 1; stroke-width: 2.5; }
+}
+
+/* Edge labels animate in too, so they visibly appear with their edge. Opacity
+   only to avoid the SVG-coords vs CSS-transform conflict that plagues SVG
+   <text> elements with x/y attributes. */
+.edge-label.flashing {
+  animation: label-flash 0.9s ease-out;
+}
+
+@keyframes label-flash {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.edge.edge-pay     { stroke: var(--pay); }
+.edge.edge-call    { stroke: var(--anchor); stroke-dasharray: 4 4; }
+.edge.edge-mint    { stroke: var(--mint); }
+.edge.edge-anchor  { stroke: var(--anchor); }
+.edge.edge-verify  { stroke: var(--verify); stroke-dasharray: 6 4; }
+.edge.edge-royalty { stroke: var(--royalty); }
+
+/* Cache-hit pulse along the matching agent's payment edge */
+.edge.hit-flash {
+  stroke: var(--karakurenai) !important;
+  stroke-width: 4;
+  animation: hit-pulse 1.4s ease-out 0s 2;
+}
+
+@keyframes hit-pulse {
+  0%   { filter: drop-shadow(0 0 0 transparent); }
+  40%  { filter: drop-shadow(0 0 6px var(--karakurenai-glow)); }
+  100% { filter: drop-shadow(0 0 0 transparent); }
+}
+
+/* Edge labels (RLUSD amounts, "verify", "anchor", "royalty") */
+.edge-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  fill: var(--ink-soft);
+  text-anchor: middle;
+  opacity: 0;
+  transition: opacity 0.3s ease, fill 0.3s ease;
+  pointer-events: none;
+}
+
+.edge-label.visible { opacity: 1; }
+.edge-label.hit { fill: var(--karakurenai); font-weight: 500; }
+
+/* ============================================================ */
+/* Nodes                                                        */
+/* ============================================================ */
+
+.node .node-bg {
+  fill: white;
+  stroke: var(--line-strong);
+  stroke-width: 1.5;
+  filter: drop-shadow(0 1px 2px rgba(20, 23, 42, 0.06));
+  transition: fill 0.3s ease, stroke 0.3s ease, filter 0.3s ease;
+}
+
+.node .node-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  fill: var(--ink);
+}
+
+/* Compact title for nodes whose label can be long (Model NFT Owner gets the
+   model name string from .env). Slightly smaller font + tighter letter
+   spacing so "AgentLevy Demo LLM NFT" fits on one line in a 210px-wide box. */
+.node .node-title.node-title-compact {
+  font-size: 13.5px;
+  letter-spacing: -0.005em;
+}
+
+.node .node-addr {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--ink-soft);
+}
+
+.node .node-bal {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  fill: var(--ink);
+}
+
+.node .node-bal-suffix { font-size: 10px; fill: var(--ink-soft); }
+
+/* Balance optimistic-update flash — fires whenever a payment_validated or
+   royalty_dispatched event arrives and the dashboard ticks the displayed
+   balance down (or up for the royalty recipient) before the next /api/state
+   poll has had time to catch up with the on-chain truth. */
+[data-field="balance"].balance-pulse {
+  animation: balance-pulse 1.3s ease-out;
+}
+
+@keyframes balance-pulse {
+  0%   { fill: var(--karakurenai); font-weight: 700; }
+  100% { fill: var(--ink);          font-weight: 500; }
+}
+
+.node .node-detail {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--ink-soft);
+}
+
+/* Per-actor accents */
+
+.node-server .node-bg {
+  fill: var(--washi);
+  stroke: var(--ruri);
+  stroke-width: 2;
+}
+
+.node-owner .node-bg {
+  fill: white;
+  stroke: var(--royalty);
+  stroke-width: 2;
+}
+
+.node-witness .node-bg {
+  fill: white;
+  stroke: var(--verify);
+  stroke-width: 1.5;
+}
+
+.node-witness#node-hcs .node-bg { stroke: var(--anchor); }
+
+.node-external .node-bg {
+  fill: rgba(255, 255, 255, 0.6);
+  stroke-dasharray: 3 3;
+}
+
+.node-dim { opacity: 0.45; }
+.node-dim .node-bg { fill: rgba(244, 239, 228, 0.5); }
+
+/* CERT node — the star */
+
+.node-cert .node-bg {
+  fill: var(--ruri);
+  stroke: var(--ruri-700);
+  stroke-width: 2;
+}
+
+.node-cert .node-title { fill: var(--washi); }
+.node-cert .node-detail { fill: rgba(244, 239, 228, 0.78); }
+
+.node-cert.empty .node-bg {
+  fill: white;
+  stroke: var(--line);
+  stroke-dasharray: 4 4;
+}
+
+.node-cert.empty .node-title { fill: var(--ink-soft); }
+.node-cert.empty .node-detail { fill: var(--ink-soft); }
+
+/* Cache-hit flash: the cert node briefly highlights karakurenai. Explicitly
+   force a solid (not dashed) stroke so the .empty state's stroke-dasharray
+   doesn't bleed through during the animation — otherwise the red border
+   reads as broken/segmented "two edges". Also a tighter drop-shadow so the
+   glow doesn't extend so far that it looks like a second box outline. */
+.node-cert.hit-flash .node-bg {
+  fill: var(--karakurenai);
+  stroke: var(--karakurenai);
+  stroke-width: 3;
+  stroke-dasharray: none;
+  filter: drop-shadow(0 0 10px var(--karakurenai-glow));
+  animation: cert-hit-pulse 1.0s ease-out 0s 1;
+}
+
+@keyframes cert-hit-pulse {
+  0%   { filter: drop-shadow(0 0 4px var(--karakurenai-glow));  stroke-width: 2; }
+  40%  { filter: drop-shadow(0 0 14px var(--karakurenai-glow)); stroke-width: 3.5; }
+  100% { filter: drop-shadow(0 0 6px var(--karakurenai-glow));  stroke-width: 2.5; }
+}
+
+/* Node "appear" animation when materializing — DISABLED. The fade-in from
+   opacity 0 was causing a perceived "flash and disappear" effect on the cert
+   because the empty-state node was briefly visible at its real position
+   before the fade-in began. The cert now just snaps into its materialized
+   state when the cert_minted event fires (empty class removed → solid Ruri
+   blue). Reads cleaner on stage. */
+.node.materialize {
+  animation: none;
+}
+
+/* ============================================================ */
+/* Sidebar (right column)                                       */
+/* ============================================================ */
+
+.sidebar {
+  background: var(--paper);
+  padding: 18px 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.panel {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 1px rgba(20, 23, 42, 0.03);
+}
+
+.panel h3 {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ruri);
+  margin-bottom: 12px;
+}
+
+/* Metrics panel */
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.metric {
+  background: var(--washi);
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.metric-value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 24px;
+  color: var(--ruri);
+  line-height: 1.1;
+}
+
+.metric-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--ink-soft);
+  letter-spacing: 0.02em;
+  margin-top: 2px;
+}
+
+.metric-flat {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-soft);
+  display: flex;
+  justify-content: space-between;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+}
+
+.metric-flat span:last-child {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.metric-flat.metric-cost span:last-child { color: var(--ruri); font-weight: 600; }
+.metric-flat.metric-cost-saved span:last-child { color: #1e6b3e; font-weight: 700; }
+
+/* Standards panel */
+
+.stack {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 0;
+}
+
+.stack li {
+  border-left: 3px solid var(--ruri);
+  padding-left: 10px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+.stack-name {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.stack-detail {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  margin-top: 1px;
+}
+
+.bloomberg-note {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line);
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.bloomberg-note strong {
+  color: var(--ruri);
+  font-style: normal;
+}
+
+/* Events panel */
+
+.event-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 220px;
+  overflow-y: auto;
+  padding-left: 0;
+}
+
+.event-list li {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink);
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: var(--washi);
+  border-left: 3px solid var(--line);
+  animation: event-appear 0.35s ease-out 0s 1;
+}
+
+@keyframes event-appear {
+  0%   { opacity: 0; transform: translateX(6px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+.event-list li.event-payment_validated  { border-left-color: var(--pay); }
+.event-list li.event-cert_minted        { border-left-color: var(--mint); }
+.event-list li.event-cache_hit          { border-left-color: var(--karakurenai); background: rgba(176, 34, 58, 0.06); }
+.event-list li.event-hcs_anchored       { border-left-color: var(--anchor); }
+.event-list li.event-royalty_dispatched { border-left-color: var(--royalty); }
+.event-list li.event-uor_mcps_receipt   { border-left-color: var(--verify); }
+
+.event-time { color: var(--ink-soft); margin-right: 6px; }
+.event-kind { font-weight: 500; color: var(--ruri); margin-right: 6px; }
+.event-detail { color: var(--ink-soft); }
+
+/* ============================================================ */
+/* Bottom bar                                                   */
+/* ============================================================ */
+
+.bottombar {
+  flex: 0 0 auto;
+  height: 44px;
+  background: var(--washi);
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.legend {
+  display: flex;
+  gap: 18px;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-swatch {
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.legend-swatch.swatch-pay     { background: var(--pay); }
+.legend-swatch.swatch-mint    { background: var(--mint); }
+.legend-swatch.swatch-anchor  { background: var(--anchor); }
+.legend-swatch.swatch-verify  { background: var(--verify); }
+.legend-swatch.swatch-royalty { background: var(--royalty); }
+
+.endpoint {
+  font-weight: 500;
+  color: var(--ruri);
+}
+
+/* ============================================================ */
+/* Responsive — projector vs laptop                              */
+/* ============================================================ */
+
+@media (max-width: 1280px) {
+  .canvas { grid-template-columns: 1fr 320px; }
+  .sidebar { padding: 12px; gap: 10px; }
+  .panel { padding: 12px; }
+  .metric-value { font-size: 21px; }
+}
+
+@media (min-width: 1600px) {
+  body { font-size: 16px; }
+  .canvas { grid-template-columns: 1fr 420px; }
+  .metric-value { font-size: 28px; }
+}

@@ -1,0 +1,18 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/pitch.html" },
+    { "source": "/pitch", "destination": "/pitch.html" },
+    { "source": "/dashboard", "destination": "/dashboard.html" },
+    { "source": "/api/state", "destination": "/api/state.json" },
+    { "source": "/api/events", "destination": "/api/state.json" }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Content-Type", "value": "application/json" },
+        { "key": "Cache-Control", "value": "public, max-age=60" }
+      ]
+    }
+  ]
+}

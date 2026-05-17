@@ -243,12 +243,14 @@ body { display: flex; flex-direction: column; }
    moment the event fires, before the connected node finishes its own fade-in)
    and the stroke-width pulses from 6 → 2.5 for the "alive" feel. */
 .edge.flashing {
-  animation: edge-flash 0.9s ease-out;
+  animation: edge-flash 1.8s ease-out;
 }
 
 @keyframes edge-flash {
-  0%   { opacity: 1; stroke-width: 6; }
-  100% { opacity: 1; stroke-width: 2.5; }
+  0%   { opacity: 1; stroke-width: 10; filter: drop-shadow(0 0 6px currentColor); }
+  20%  { opacity: 1; stroke-width: 8;  filter: drop-shadow(0 0 4px currentColor); }
+  60%  { opacity: 1; stroke-width: 4;  filter: drop-shadow(0 0 0 transparent); }
+  100% { opacity: 1; stroke-width: 2.5; filter: none; }
 }
 
 /* Edge labels animate in too, so they visibly appear with their edge. Opacity

@@ -1,4 +1,18 @@
-# AgentLevy — XRPL × PRISM × Hedera
+# AgentLevy → RoyaltAI
+
+> ### ▶ **[Watch the 2-minute demo video](https://www.loom.com/share/fb8499e5300b41c18072d36dc66af30a)** — Maura runs the full RoyaltAI demo on XRPL Mainnet.
+>
+> 📦 **[Live pitch deck (Vercel)](https://royaltai-deck-y40ab4g0s-maurathats-projects.vercel.app)** · 🪙 **[Mainnet dNFT on Bithomp](https://bithomp.com/explorer/000800005C0D75FC05056348A634785AC427B30E2AAD1A60B2A688C20636D728)** · 📖 **[How to run the demo (DEMO.md)](DEMO.md)**
+
+**RoyaltAI** — pay-per-call AI inference settling on XRPL Mainnet in RLUSD, with cryptographic royalty enforcement to model creators via XLS-20 dynamic NFTs. Built on the open AgentLevy protocol substrate, using UOR-ADDR-1 (Foundation-adopted, May 2026) for canonical content addressing.
+
+**Submitted to:** AGI House Internet of Agents Build Day · May 16, 2026.
+
+---
+
+> **Phase 2 history (below).** This repo was originally an AgentLevy KYC-compliance demo built for Consensus EasyA. The Phase 3 RoyaltAI inference work is in [`agentlevy/inference/`](agentlevy/inference/) and is documented in [DEMO.md](DEMO.md). The Phase 2 / KYC content below is preserved for reference.
+
+---
 
 > **Status: Phase 2.3 complete; Phase 2.4 next.** A from-scratch rebuild of AgentLevy on top of XRPL settlement, PRISM-based content addressing, and **Hedera Consensus Service for tamper-evident timestamping** of every cert. Targets the Consensus EasyA hackathon (May 5–7, 2026).
 

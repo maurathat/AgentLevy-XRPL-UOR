@@ -28,11 +28,11 @@ body.pitch-body {
   font-size: 17px;
   line-height: 1.55;
 
-  /* Mandatory snap forces each section to align to viewport top — no
-     in-between states where two sections share the screen. Sections that
-     happen to be taller than 100vh still scroll internally before the snap
-     advances to the next. */
-  scroll-snap-type: y mandatory;
+  /* Proximity snap (not mandatory) so sections taller than 100vh can scroll
+     naturally inside themselves — needed for content-dense sections like
+     dNFT schema and Phase 4 stack where the full content list otherwise gets
+     cut off by aggressive snap behavior. */
+  scroll-snap-type: y proximity;
   overflow-y: auto;
   height: 100vh;
 }
@@ -44,10 +44,7 @@ body.pitch-body {
 .pitch-section {
   min-height: 100vh;
   scroll-snap-align: start;
-  /* More generous top/bottom padding gives each section its own "page" feel
-     even when content extends past 100vh — prevents the previous section's
-     footer from crowding the next section's eyebrow + headline. */
-  padding: 100px 80px;
+  padding: 60px 80px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -111,12 +108,29 @@ body.pitch-body {
 .pitch-section h2 {
   font-family: 'Fraunces', Georgia, serif;
   font-weight: 500;
-  font-size: 46px;
+  font-size: 40px;
   line-height: 1.12;
   letter-spacing: -0.01em;
-  margin: 0 0 28px 0;
+  margin: 0 0 20px 0;
   color: var(--pitch-ink);
   max-width: 900px;
+}
+
+/* Reference sections — denser content, smaller h2 so the lede and grid fit. */
+.pitch-section-dnft h2,
+.pitch-section-vteai h2,
+.pitch-section-auditchain h2,
+.pitch-section-stack h2 {
+  font-size: 32px;
+  margin-bottom: 14px;
+}
+
+.pitch-section-dnft .lede,
+.pitch-section-vteai .lede,
+.pitch-section-auditchain .lede,
+.pitch-section-stack .lede {
+  font-size: 16px;
+  margin-bottom: 18px;
 }
 
 .lede {
@@ -663,17 +677,17 @@ body.pitch-body {
 .stack-payoffs {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-  margin: 28px 0;
+  gap: 14px;
+  margin: 20px 0;
 }
 
 .stack-payoff {
   background: white;
   border: 1px solid var(--pitch-rule);
   border-radius: 6px;
-  padding: 20px 22px;
-  font-size: 14px;
-  line-height: 1.5;
+  padding: 14px 18px;
+  font-size: 13px;
+  line-height: 1.45;
   color: var(--pitch-ink);
 }
 
@@ -879,9 +893,9 @@ body.pitch-body {
 
 .dnft-row {
   display: grid;
-  grid-template-columns: 220px 1fr;
-  gap: 24px;
-  padding: 14px 22px;
+  grid-template-columns: 200px 1fr;
+  gap: 20px;
+  padding: 9px 20px;
   border-top: 1px solid var(--pitch-rule);
   align-items: baseline;
 }
@@ -892,14 +906,14 @@ body.pitch-body {
 
 .dnft-key {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 13px;
+  font-size: 12px;
   color: var(--pitch-karakurenai);
   font-weight: 500;
 }
 
 .dnft-val {
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 13px;
+  line-height: 1.4;
   color: var(--pitch-ink);
 }
 

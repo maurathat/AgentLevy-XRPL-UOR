@@ -3,6 +3,10 @@
 .env.local
 .env.*.local
 
+# Local-only pitch documents (not for public source control)
+pitch/kessai-funding-deck.md
+pitch/kessai-onepager.md
+
 # --- Python ---
 __pycache__/
 *.py[cod]

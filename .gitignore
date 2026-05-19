@@ -7,6 +7,13 @@
 pitch/kessai-funding-deck.md
 pitch/kessai-onepager.md
 
+# Archived pitch material (kept locally; preserved in git history)
+pitch/old-*.md
+
+# Empty Phase 2 package stubs (kept locally; preserved in git history)
+agentlevy/agents/__init__.py
+agentlevy/protocol/__init__.py
+
 # --- Python ---
 __pycache__/
 *.py[cod]

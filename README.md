@@ -1,6 +1,6 @@
 # AgentLevy → RoyaltAI
 
-> ### ▶ **[Watch the 2-minute demo video](https://www.loom.com/share/fb8499e5300b41c18072d36dc66af30a)** — Maura runs the full RoyaltAI demo on XRPL Mainnet.
+> ### ▶ **[Watch the 6-minute demo video](https://www.loom.com/share/fb8499e5300b41c18072d36dc66af30a)** — Maura runs the full RoyaltAI demo on XRPL Mainnet.
 >
 > 📦 **[Live pitch deck (Vercel)](https://royaltai-deck-y40ab4g0s-maurathats-projects.vercel.app)** · 🪙 **[Mainnet dNFT on Bithomp](https://bithomp.com/explorer/000800005C0D75FC05056348A634785AC427B30E2AAD1A60B2A688C20636D728)** · 📖 **[How to run the demo (DEMO.md)](DEMO.md)**
 
@@ -10,126 +10,179 @@
 
 ---
 
-> **Phase 2 history (below).** This repo was originally an AgentLevy KYC-compliance demo built for Consensus EasyA. The Phase 3 RoyaltAI inference work is in [`agentlevy/inference/`](agentlevy/inference/) and is documented in [DEMO.md](DEMO.md). The Phase 2 / KYC content below is preserved for reference.
+## What this proves
 
----
+Every inference request triggers one real XRPL Mainnet transaction that:
 
-> **Status: Phase 2.3 complete; Phase 2.4 next.** A from-scratch rebuild of AgentLevy on top of XRPL settlement, PRISM-based content addressing, and **Hedera Consensus Service for tamper-evident timestamping** of every cert. Targets the Consensus EasyA hackathon (May 5–7, 2026).
+1. **Settles** — agent wallet pays the inference server in RLUSD (verifiable on Bithomp)
+2. **Computes** — server calls Anthropic Claude Haiku 4.5
+3. **Mints a cert** — `DerivationCert` content-addressed via UOR-ADDR-1 (JCS-RFC8785 + NFC + SHA-256)
+4. **Anchors to Hedera** — cert hash submitted to HCS topic `0.0.8856047` (independent witness)
+5. **Cross-validates against UOR Foundation MCP** — live byte-identity check against the canonical Rust reference
+6. **Pays royalty** — 50/50 split between server operator and model NFT owner, atomic with the payment
 
-A protocol-layer demo: two AI agents negotiate and execute a KYC compliance task, sign each step with content-addressed derivation certificates (PRISM triads), settle on XRPL in **RLUSD**, and anchor every cert hash to a Hedera HCS topic for second-ledger audit-trail ordering — producing an audit trail that can be verified from public keys alone, across two independent ledgers, without trusting either agent.
+When a second agent asks the same question, the canonical UOR address matches and the server returns the prior cert at a 10× discount — no Anthropic call, but the royalty still flows. *The prior cert is the citation.* That is the value: pay-per-call inference with cryptographic memoization.
 
-## The two-ledger architecture
+Three independent witnesses bind every cert: XRPL Payment txid (settlement), Hedera HCS sequence number (consensus timestamp), UOR Foundation MCP receipt (ed25519-signed by the canonical reference server). Verifiable from public keys alone, across three independent systems, without trusting any single agent.
 
-| Layer | Chain | Role |
-|---|---|---|
-| **Settlement** | XRPL (WASM Devnet) | XLS-100 Smart Escrow with WASM `FinishFunction` releases RLUSD when the cert hash matches the value committed at escrow creation. |
-| **Audit anchor** | Hedera (testnet) | Every signed `DerivationCert` has its content address submitted to a Hedera Consensus Service topic. HCS provides an authoritative consensus timestamp + sequence number — a tamper-evident ordering of when each cert existed, on a chain independent of XRPL. |
+See [DEMO.md](DEMO.md) for the full run-through, on-chain identifiers, and verification steps.
 
-Settlement says *the money moved*. The HCS anchor says *the cert existed at this exact moment, witnessed by Hedera's consensus*. Together: verifiable from public keys alone, across two independent ledgers.
+## The standards stack
 
----
+| Standard | Status | Author | Use |
+|---|---|---|---|
+| **VTEAI** | ERC draft, CC0, April 2026 | Maura Clark | Settlement interface (escrow + attestation) |
+| **UOR-ADDR-1** | UOR Foundation–adopted, May 2026 | Maura Clark + Alex Flom | Content addressing (`sha256:<hex>`) |
+| **PRISM** | UOR Foundation, MIT, vendored | UOR Foundation | Algebraic ring substrate (Q(31), 256-bit) |
 
-## What's here right now
+VTEAI's `taskSpecHash` uses UOR-ADDR-1 (per the May 2026 v1.1 spec update). Same canonical input on any chain → same address. Cross-chain byte-identical task spec hashes by construction.
 
-- ✅ **Phase 0.7** — repository scaffolding (directory tree, deps, env template, doc placeholders)
-- ✅ **Phase 0.1** — venv on Python 3.13, all deps installed (`xrpl-py`, `pydantic`, `cryptography`, `httpx`, `click`, `anthropic`, `python-dotenv`)
-- ✅ **Phase 0.2** — PRISM vendored at `vendor/prism.py` (pinned `6cafdac`), API verified, [CANONICAL_FORM.md](CANONICAL_FORM.md) filled in, `agentlevy/primitives/fingerprint.py` + `display.py` + `prism_layer/triad.py` implemented at **Q(31)** (UOR-canonical 32-byte width), `scripts/test_prism.py` passes (7/7 assertions). **★ Verified byte-for-byte against UOR Passport addresses** via live `mcp.uor.foundation/encode_address` — see [`docs/UOR_PASSPORT_VERIFIED.md`](docs/UOR_PASSPORT_VERIFIED.md).
-- ✅ **Phase 0.4** — XRPL testnet wallets funded (10 XRP each), `scripts/test_xrpl.py` confirms `Wallet.from_seed` / `submit_and_wait` round-trip works on xrpl-py 4.5.0
-- ✅ **Phase 0.6** — Anthropic API connectivity + tool use confirmed via `scripts/test_llm.py` (model `claude-sonnet-4-5`, structured-output extraction works end-to-end)
-- ✅ **Phase 0.8** — XLS-100 `SmartEscrow` is **enabled on WASM Devnet** (rippled 3.2.0-b0), not on Testnet/Devnet (3.1.2). Phase 2.8 targets **Path A** (real WASM `FinishFunction`) on `wasm.devnet.rippletest.net`. See [docs/NETWORK_CHOICE.md](docs/NETWORK_CHOICE.md).
-- ✅ **Phase 0.9** — existing AgentLevy code reviewed; decision = fresh-repo-with-narrative-port (code rewrites from scratch; pitch material + VTEAI spec ported). See [MIGRATION_NOTES.md](MIGRATION_NOTES.md).
-- ✅ **Phase 2.3 — Primitives complete.** `agentlevy/primitives/` has `canonical`, `fingerprint`, `signing`, `task_spec`, `cert` (+ `display`). 87 tests pass. `TaskSpec.currency` defaults to **RLUSD** per Phase 2.8 decision; XRP also supported.
-- ✅ **Phase 2.X (in progress) — Hedera HCS audit anchor.** Topic created on testnet (`0.0.8856047`), operator credentials configured in `.env`, [`scripts/setup_hcs_topic.py`](scripts/setup_hcs_topic.py) is one-shot reusable. Anchor module (`agentlevy/hedera_layer/anchor.py`) lands next; `MOCK_HEDERA=true` keeps the demo runnable without live testnet calls.
-
-None of the application components below are implemented yet — only the layout.
+## Repo layout
 
 ```
 AgentLevy-XRPL-UOR/
-├── README.md               # this file
-├── CANONICAL_FORM.md       # single source of truth for canonicalization
-├── requirements.txt        # pinned core deps (incl. click for PRISM CLI)
-├── .env.example            # template for API keys + XRPL seeds
-├── .gitignore
-├── vendor/                 # third-party code, vendored
-│   ├── prism.py            #   from UOR-Foundation/prism @ 6cafdac (MIT)
+├── README.md                   # this file
+├── DEMO.md                     # how to run the Mainnet demo end-to-end
+├── CANONICAL_FORM.md           # single source of truth for canonicalization
+├── MIGRATION_NOTES.md          # Phase 2 history (KYC demo) → Phase 3 (RoyaltAI)
+├── requirements.txt
+├── .env.example
+├── vendor/
+│   ├── prism.py                # UOR-Foundation/prism @ 6cafdac (MIT)
 │   └── LICENSE-prism
 ├── agentlevy/
-│   ├── primitives/         # canonical bytes, fingerprint, task spec, cert, signing
-│   ├── llm/                # LLM client, prompts, schemas, cache
-│   ├── agents/             # buyer, compliance, sanctions
-│   ├── xrpl_layer/         # XRPL settlement (RLUSD escrow on WASM Devnet)
-│   ├── hedera_layer/       # HCS audit-trail anchor (cert hashes -> consensus timestamp)
-│   ├── prism_layer/        # AgentLevy's PRISM wrapper (Q(31) engine, UOR-canonical width)
-│   └── protocol/           # bounded-turn negotiation
-├── scripts/                # test_prism.py, test_xrpl.py, test_llm.py
-├── fixtures/               # cached LLM responses (deterministic demo)
-│   └── synthetic/          # synthetic KYC documents
-└── tests/
+│   ├── primitives/             # canonical, fingerprint, signing, task_spec, cert
+│   ├── prism_layer/            # PRISM wrapper (Q(31), UOR-canonical width)
+│   ├── llm/                    # Anthropic client, prompts, schemas, deterministic cache
+│   ├── xrpl_layer/             # XRPL settlement (RLUSD Payments on Mainnet)
+│   ├── hedera_layer/           # HCS anchor — cert hashes → consensus timestamp
+│   └── inference/              # ★ Phase 3 — RoyaltAI: server, agent, cert store,
+│                               #   NFT, payment, royalty, dashboard, MCP client
+├── web/
+│   ├── pitch.html              # static pitch deck (also served by FastAPI)
+│   ├── dashboard.html          # post-demo snapshot dashboard
+│   ├── api/                    # Vercel serverless wrappers
+│   ├── static/                 # CSS, fonts, brand assets
+│   └── vercel.json
+├── scripts/
+│   ├── start_demo_session.sh   # one-command demo launcher
+│   ├── run_inference_demo.py   # CLI driver for the inference flow
+│   ├── setup_inference_demo.py # one-shot bootstrap
+│   ├── setup_rlusd_trust_lines.py
+│   ├── mint_model_nft.py       # mints the XLS-20 dynamic model NFT
+│   ├── check_inference_balances.py
+│   ├── migrate_seeds_to_keychain.py  # moves Mainnet seeds to macOS Keychain
+│   ├── setup_hcs_topic.py
+│   ├── test_prism.py | test_xrpl.py | test_llm.py
+│   └── make_braille_visuals.py
+├── docs/                       # LANDSCAPE, NETWORK_CHOICE, TERMINOLOGY,
+│                               # UOR_PASSPORT_VERIFIED, PHASE_2_DESIGN, …
+├── pitch/                      # decks, whitepaper, VTEAI draft, UOR-ADDR proposal,
+│                               # diagrams, talk-track material
+├── fixtures/                   # cached LLM responses, model-card.json, synthetic KYC
+├── mcp/                        # MCP server configs
+└── tests/                      # 157 tests (canonical, cert, signing, task_spec,
+                                #   hedera anchor, inference, LLM stack)
 ```
 
-## Phase plan
+## Quick start
 
-- **Phase 0** (Apr 27–29) — environment setup, PRISM verification, XRPL testnet wallets, LLM API connectivity
-- **Phase 1** (Apr 30 – May 1) — Vegas pitch buffer, no build expected
-- **Phase 2** (May 2 – May 4) — primitives, PRISM wrapper, LLM cache layer, agent skeletons, negotiation protocol, end-to-end local demo, XRPL escrow
-- **Phase 2.X** (May 4) — **Hedera HCS audit anchor**: every cert's content address submitted to a Hedera Consensus Service topic for tamper-evident timestamping + ordering. Topic created (`0.0.8856047`); anchor module + integration next.
-- **Phase 3** (May 5–7) — Consensus hackathon polish + ship
-
-## Setup (Phase 0)
-
-**Requires Python ≥ 3.10** (PRISM uses `int.bit_count()`). On macOS, the system
-Python is typically 3.9 — use a python.org install or `pyenv`/`asdf`.
+**Prerequisites:** Python 3.13+, `ANTHROPIC_API_KEY` in `.env`, and either Mainnet wallet seeds in the macOS Keychain (via `scripts/migrate_seeds_to_keychain.py`) or Testnet seeds in `.env`.
 
 ```bash
-# 1. Python 3.10+ venv (using 3.13 here)
-/Library/Frameworks/Python.framework/Versions/3.13/bin/python3 -m venv .venv
-source .venv/bin/activate
-pip install --upgrade pip
-pip install -r requirements.txt
+git clone https://github.com/maurathat/AgentLevy-XRPL-UOR.git
+cd AgentLevy-XRPL-UOR
+python3 -m venv .venv && source .venv/bin/activate
+pip install --upgrade pip && pip install -r requirements.txt
+cp .env.example .env   # fill in keys
 
-# 2. Environment
-cp .env.example .env
-# Fill in ANTHROPIC_API_KEY and the three XRPL_*_SEED values.
-
-# 3. PRISM is already vendored at vendor/prism.py — no separate install.
-#    Pinned to commit 6cafdac (Feb 16, 2026); see vendor/__init__.py.
-
-# 4. Verify
-python scripts/test_prism.py    # ✓ Phase 0.2 — passes (Q(31), all 7 assertions, UOR-canonical width)
-python scripts/test_xrpl.py     # not yet written (Phase 0.3)
-python scripts/test_llm.py      # not yet written (Phase 0.6)
+bash scripts/start_demo_session.sh
+# → FastAPI on localhost:8765, pitch deck at http://localhost:8765/pitch
+# → focus the tab, press 1 (cache miss) then 9 (cache hits)
 ```
 
-> **Why vendor instead of `pip install -e .`?** PRISM is distributed as a
-> single `prism.py` file with no `setup.py` or `pyproject.toml`. Vendoring the
-> file (verified byte-identical to the pinned upstream commit) gives us a
-> self-contained repo with no path coupling — anyone cloning AgentLevy gets a
-> working `from vendor.prism import Q, ...` immediately, no `~/prism` setup
-> required. See [CANONICAL_FORM.md](CANONICAL_FORM.md) for the full integration
-> pattern, including the SHA-256 fingerprint that bridges canonical bytes to
-> PRISM ring elements at quantum `Q(31)` (256-bit, UOR-canonical width).
+Full walkthrough, on-chain identifiers, and verification steps in [DEMO.md](DEMO.md).
+
+## Architecture
+
+```
+                    ┌──────────────────────────┐
+                    │  pitch.html  (browser)   │
+                    │  press 1 / press 9       │
+                    └──────────────────────────┘
+                                ↓
+                                POST /demo/run
+                                ↓
+        ┌──────────────────────────────────────────────────┐
+        │   FastAPI server (uvicorn :8765)                 │
+        │   - x402-style 402 → quote → retry pattern       │
+        │   - UOR-ADDR-1 canonicalization                  │
+        │   - DerivationCert mint (Ed25519)                │
+        │   - Cert store (in-memory, keyed by UOR address) │
+        └──────────────────────────────────────────────────┘
+                                ↓
+              ┌─────────────────┴─────────────────┐
+              ↓                                   ↓
+       ┌─────────────┐                     ┌─────────────┐
+       │   XRPL      │                     │   Hedera    │
+       │   Mainnet   │                     │   HCS       │
+       │ (settlement)│                     │  (anchor)   │
+       └─────────────┘                     └─────────────┘
+              ↑                                   ↑
+              │                                   │
+              │       ┌─────────────────┐         │
+              │       │ Anthropic Claude│         │
+              │       │   Haiku 4.5     │         │
+              │       └─────────────────┘         │
+              │                                   │
+              └─── UOR Foundation MCP ───────────┘
+                   (live byte-identity check)
+```
 
 ## Critical reading before touching code
 
-Read [CANONICAL_FORM.md](CANONICAL_FORM.md) **first**. The single most likely class of bug to lose this hackathon to is canonical-form drift between modules, which produces silent triad mismatches that take hours to diagnose. The discipline is: one module produces canonical bytes, everything else consumes its output.
+Read [CANONICAL_FORM.md](CANONICAL_FORM.md) **first**. The single class of bug most likely to break this system is canonical-form drift between modules, which produces silent triad / address mismatches that take hours to diagnose. The discipline is: one module produces canonical bytes, everything else consumes its output.
 
-## Pitch & landscape reference
+## Phase history
 
-- [`docs/LANDSCAPE.md`](docs/LANDSCAPE.md) — where AgentLevy sits in the agent-economy stack. Covers x402, AP2, Hedera AgentKit, MemWal, Kleros, Flare FDC, etc. Use as Q&A prep at Consensus.
-- [`docs/PHASE_2_DESIGN.md`](docs/PHASE_2_DESIGN.md) — design decisions for Phase 2 build, including determinism trade-offs and demo scenarios.
-- [`pitch/`](pitch/) — narrative material ported from old AgentLevy (VTEAI ERC draft, decks, demo scripts, architecture diagrams).
+This repo was originally an AgentLevy KYC-compliance demo built for Consensus EasyA (May 5–7, 2026). The Phase 3 RoyaltAI inference work lives in [`agentlevy/inference/`](agentlevy/inference/). See [MIGRATION_NOTES.md](MIGRATION_NOTES.md) for the Phase 2 → Phase 3 narrative.
+
+| Phase | Window | Deliverable |
+|---|---|---|
+| 0 | Apr 27–29 | Environment, PRISM verification, XRPL testnet wallets, LLM connectivity |
+| 2 | May 2–4 | Primitives, PRISM wrapper, LLM cache, KYC agent skeletons, XRPL escrow |
+| 2.X | May 4 | Hedera HCS audit anchor (topic `0.0.8856047`) |
+| **3** | **May 5 – May 16** | **RoyaltAI: Mainnet inference + XLS-20 dNFT + royalty split + MCP cross-validation** |
+
+## Pitch & reference material
+
+- [`docs/LANDSCAPE.md`](docs/LANDSCAPE.md) — where AgentLevy/RoyaltAI sits in the agent-economy stack (x402, AP2, Hedera AgentKit, MemWal, Kleros, Flare FDC, etc.)
+- [`docs/TERMINOLOGY.md`](docs/TERMINOLOGY.md) — glossary for the standards stack
+- [`docs/NETWORK_CHOICE.md`](docs/NETWORK_CHOICE.md) — why Mainnet RLUSD vs WASM Devnet SmartEscrow
+- [`docs/UOR_PASSPORT_VERIFIED.md`](docs/UOR_PASSPORT_VERIFIED.md) — byte-identity verification against the UOR Foundation reference
+- [`pitch/WHITEPAPER.md`](pitch/WHITEPAPER.md) — AgentLevy whitepaper v1.0
+- [`pitch/VTEAI-DRAFT.md`](pitch/VTEAI-DRAFT.md) — VTEAI ERC draft (CC0)
+- [`pitch/UOR-ADDR-PROPOSAL.md`](pitch/UOR-ADDR-PROPOSAL.md) — UOR-ADDR-1 proposal
 
 ## References
 
 - PRISM: https://github.com/UOR-Foundation/prism
+- UOR Framework (Foundation-adopted): https://uor-foundation.github.io/UOR-Framework/
 - xrpl-py: https://github.com/XRPLF/xrpl-py
+- XLS-20 NFTs: https://xrpl.org/non-fungible-token-overview.html
 - XLS-100 Smart Escrows: https://xls.xrpl.org/xls/XLS-0100-smart-escrows.html
-- XRPL testnet: https://testnet.xrpl.org/
-- XRPL devnet: https://devnet.xrpl.org/
+- XRPL Mainnet explorer (Bithomp): https://bithomp.com/
 - Hedera Consensus Service (HCS): https://docs.hedera.com/hedera/sdks-and-apis/sdks/consensus-service
 - Hiero Python SDK: https://github.com/hiero-ledger/hiero-sdk-python
-- HashScan (Hedera testnet explorer): https://hashscan.io/testnet/
-  - This project's anchor topic: https://hashscan.io/testnet/topic/0.0.8856047
+- This project's HCS topic: https://hashscan.io/testnet/topic/0.0.8856047
+
+## Contact
+
+- **Maura Clark** — UOR Foundation member, co-author of UOR-ADDR-1
+- GitHub: [@maurathat](https://github.com/maurathat)
+- Email: mauraclark@proton.me
+- Hiring: senior Python/TS engineer (founding engineer / co-founder track)
+- Raising: pre-seed, open
 
 ## License
 

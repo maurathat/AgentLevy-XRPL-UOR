@@ -1,4 +1,8 @@
-# AgentLevy → RoyaltAI
+# AgentLevy
+
+**AI inference you pay for per call in RLUSD on XRPL Mainnet, with every answer certified and royalties paid to the model owner automatically.**
+
+*Naming: AgentLevy is the protocol and this repo is its XRPL + UOR implementation. RoyaltAI is the pay-per-call inference app built on it for the May 2026 AGI House build day.*
 
 > ### ▶ **[Watch the 6-minute demo video](https://www.loom.com/share/fb8499e5300b41c18072d36dc66af30a)** — Maura runs the full RoyaltAI demo on XRPL Mainnet.
 >
@@ -7,6 +11,16 @@
 **RoyaltAI** — pay-per-call AI inference settling on XRPL Mainnet in RLUSD, with cryptographic royalty enforcement to model creators via XLS-20 dynamic NFTs. Built on the open AgentLevy protocol substrate, using UOR-ADDR-1 (Foundation-adopted, May 2026) for canonical content addressing.
 
 **Submitted to:** AGI House Internet of Agents Build Day · May 16, 2026.
+
+### Mainnet transactions from the May 16 demo run
+
+| Step | Amount | XRPL Mainnet tx |
+|---|---|---|
+| Agent A pays for inference (cache miss) | 0.01 RLUSD | [`4387C291…E641`](https://bithomp.com/explorer/4387C291CD77B06853BB2B7AF93B59A589C039EF57CA496E7797451A5EB3E641) |
+| Royalty to model NFT owner | 0.005 RLUSD | [`6FBE99BF…7892`](https://bithomp.com/explorer/6FBE99BFDF97C3441A5B08B7C3FCB5004F7F6210DEC5B1413BBF66CFB8A17892) |
+| Repeat request served from cache (10× discount) | 0.001 RLUSD | [`B116B7C6…4EC1`](https://bithomp.com/explorer/B116B7C66E70268859FA7AF413F44AE0D4E0650022BE59A5C3AEADB6C43D4EC1) |
+
+The full event log for the run is in [`web/api/state.json`](web/api/state.json).
 
 ---
 
@@ -17,7 +31,7 @@ Every inference request triggers one real XRPL Mainnet transaction that:
 1. **Settles** — agent wallet pays the inference server in RLUSD (verifiable on Bithomp)
 2. **Computes** — server calls Anthropic Claude Haiku 4.5
 3. **Mints a cert** — `DerivationCert` content-addressed via UOR-ADDR-1 (JCS-RFC8785 + NFC + SHA-256)
-4. **Anchors to Hedera** — cert hash submitted to HCS topic `0.0.8856047` (independent witness)
+4. **Anchors to Hedera** — cert hash submitted to HCS topic `0.0.8856047` on Hedera testnet (independent witness)
 5. **Cross-validates against UOR Foundation MCP** — live byte-identity check against the canonical Rust reference
 6. **Pays royalty** — 50/50 split between server operator and model NFT owner, atomic with the payment
 
@@ -174,7 +188,7 @@ This repo was originally an AgentLevy KYC-compliance demo built for Consensus Ea
 - XRPL Mainnet explorer (Bithomp): https://bithomp.com/
 - Hedera Consensus Service (HCS): https://docs.hedera.com/hedera/sdks-and-apis/sdks/consensus-service
 - Hiero Python SDK: https://github.com/hiero-ledger/hiero-sdk-python
-- This project's HCS topic: https://hashscan.io/testnet/topic/0.0.8856047
+- This project's HCS topic (Hedera testnet): https://hashscan.io/testnet/topic/0.0.8856047
 
 ## Contact
 
